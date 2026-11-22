@@ -1,0 +1,26 @@
+{
+  "name": "cluau",
+  "owner": {
+    "name": "d3vnmd",
+    "url": "https://github.com/d3vnmd"
+  },
+  "metadata": {
+    "description": "Cluau — a Claude skill for building Roblox Studio games the right way.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "cluau",
+      "source": "./",
+      "description": "Senior Roblox engineer + game designer + UI artist skill: modern Luau, secure remotes, DataStores, monetization policy, anti-slop UI.",
+      "version": "1.0.0",
+      "author": {
+        "name": "d3vnmd"
+      },
+      "homepage": "https://github.com/d3vnmd/cluau",
+      "license": "MIT",
+      "category": "development",
+      "keywords": ["roblox", "luau", "game-development"]
+    }
+  ]
+}

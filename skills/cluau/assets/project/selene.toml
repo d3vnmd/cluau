@@ -1,0 +1,9 @@
+# Selene linter config — https://kampfkarren.github.io/selene/
+std = "roblox"
+
+[lints]
+# Roblox-specific deprecations are reported by selene's "deprecated" lint.
+deprecated = "deny"
+global_usage = "deny"
+shadowing = "warn"
+unused_variable = "warn"
