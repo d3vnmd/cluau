@@ -1,5 +1,7 @@
 # Sharp Edges — The Bugs That Ship
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 A severity-ranked catalog of the mistakes that actually reach live Roblox games (and that AI assistants make most). Use it two ways: **before writing** a system, scan the rows for its area; **when reviewing** code, cite the ID in each finding. Grow this file from real incidents. (Format inspired by excaldev/ro-engineer's SE catalog, MIT.)
 
 Severity: **CRITICAL** = data loss, duplication, money, or full exploit · **HIGH** = exploitable or crash/leak in normal play · **MEDIUM** = lag, wrong behavior in edge cases · **LOW** = maintainability.
@@ -41,6 +43,46 @@ Severity: **CRITICAL** = data loss, duplication, money, or full exploit · **HIG
 | CX-33 | LOW | Types | Strict mode "passes" while code is wrong | `:: any` casts to silence errors | Narrow with `typeof`/`IsA`; fix the type | — |
 | CX-34 | LOW | Tuning | Every balance change needs a code edit | Hard-coded numbers in logic | Frozen Config / ConfigService for live values | — |
 | CX-35 | LOW | Legacy | Deprecated API in new code | Training-data habits (`wait`, `BodyVelocity`, `LoadAnimation` on Humanoid, PhysicsService, pre-Async names) | `deprecated-apis.md` + generated `deprecated-index.md` | CL0xx, CL2xx |
+
+| CX-36 | CRITICAL | Trading | Items duplicated in trades | Client-held trade state; executing on a client "confirm" message; reading inventories before a yield and writing after | Server-owned session; re-validate both inventories at execution; mutate both in one synchronous block (`TradeLogic.apply`) | — |
+| CX-37 | CRITICAL | Trading | Last-second swap ("bait-and-switch") | Ready/confirm not tied to the offer version; no quiet period | Any change clears both ready flags; ready carries the version; execute after a quiet period | — |
+| CX-38 | CRITICAL | Trading | Same item given away twice | Trade executed twice (double ready, retries) | Per-session `executing` flag; one session per player | — |
+| CX-39 | HIGH | Trading | Trading with self or an absent player | Missing identity/presence checks | `userA ~= userB`; both players in server with active profiles at execution | — |
+| CX-40 | HIGH | Trading | Trade succeeds, one save lost after crash | Two keys saved independently | Save both immediately; audit log of trades for rollback | — |
+| CX-41 | HIGH | Rounds | Dead player still "wins" / gets rewards | Participant set not updated on `Died`/leave; rewards computed from all players | Participant set maintained on death/leave/respawn; reward from the set | — |
+| CX-42 | HIGH | Rounds | Handlers from round N fire in round N+1 | Per-round connections never disconnected | Collect round connections; disconnect at round end | — |
+| CX-43 | MEDIUM | Rounds | Empty or 1-player rounds, stuck timers | No minimum-player re-check during intermission/round | Re-check counts while waiting; end early | — |
+| CX-44 | MEDIUM | Rounds | Countdown drifts / flickers per client | Server fires a remote every second; clients use `os.time()` | Replicate `EndsAt` once; clients use `workspace:GetServerTimeNow()` | — |
+| CX-45 | HIGH | Respawn | Abilities/UI break after the first death | References to the old character/Humanoid kept after respawn | Re-bind on `CharacterAdded`; per-character Trove | — |
+| CX-46 | HIGH | Respawn | Player spawns before data loads, gets defaults/free items | `CharacterAutoLoads = true` with data-dependent spawning | `CharacterAutoLoads = false` until profile loads, then `LoadCharacterAsync` | — |
+| CX-47 | MEDIUM | Respawn | Duplicate effects/loops per life | Connecting on `CharacterAdded` without cleaning the previous life | Clean the previous character's Trove first | — |
+| CX-48 | HIGH | Streaming | Nil errors only on phones/large maps | `workspace.Map.Shop.Part` indexing on the client | `WaitForChild(name, timeout)` + nil handling; tag-based discovery; `ModelStreamingMode` for critical models | — |
+| CX-49 | HIGH | Streaming | Server teleports player into unloaded area; falls through | No streaming request before teleport | `player:RequestStreamAroundAsync(position)` before moving them | — |
+| CX-50 | CRITICAL | Teleport | Players arrive with forged rank/items | Trusting `TeleportData` (client-visible and spoofable) | Pass only non-authoritative hints; load truth from DataStore/MemoryStore keyed by server GUID | — |
+| CX-51 | HIGH | Teleport | Data rolled back after hop | Destination loads before origin saved/released the lock | Save + release on leave; destination retries lock with backoff | — |
+| CX-52 | HIGH | Teleport | Party splits / reserved server lost | Deprecated `ReserveServer` flow, code not stored | `ReservedServerId = GenerateGUID()`, stored in MemoryStore; `TeleportAsync` all members together | CL051 |
+| CX-53 | HIGH | Leaderboards | Throttling, "request was added to queue" | Writing OrderedDataStore on every point | Accumulate in memory; flush on a slow cadence + on leave | — |
+| CX-54 | MEDIUM | Leaderboards | Errors on non-integer scores | OrderedDataStore values must be integers | `math.floor`; store scaled integers | — |
+| CX-55 | MEDIUM | MemoryStore | Board/queue silently empties | Items expire (max 45 days) | Set explicit expiration; refresh on write | — |
+| CX-56 | HIGH | Remotes | Client hangs forever on `InvokeServer` | `OnServerInvoke` path that errors or never returns | Always return; pcall inside; prefer RemoteEvent request/response | — |
+| CX-57 | MEDIUM | Remotes | Handler runs twice / out of order | Assuming RemoteEvent ordering across different remotes | Version/sequence numbers for stateful flows | — |
+| CX-58 | HIGH | Physics | Teleported character CFrame contains NaN → server crashes physics | Client-sent CFrame/Vector3 used without finiteness checks | `Guard.vector3` / reject NaN before any physics write | — |
+| CX-59 | HIGH | Tools | Weapon used while unequipped / from backpack | Server trusts tool activation without checking `tool.Parent == character` | Check equip state server-side | — |
+| CX-60 | MEDIUM | Debounce | One player blocks everyone / spam bypasses | Global debounce flag instead of per-player | Per-player debounce tables, cleared on leave | — |
+| CX-61 | MEDIUM | Config | Runtime "attempt to modify a readonly table" or silent tuning edits | Writing into frozen config, or config not frozen | Freeze config deeply; copy before mutating | — |
+| CX-62 | MEDIUM | Randomness | Predictable or biased loot | `math.random` with ad-hoc weights; client-side rolls | Server `Random.new()` + cumulative weights; publish the same odds | — |
+| CX-63 | HIGH | Text | Moderation strike from player-named pets/signs | Filtering once at creation, showing forever | Filter when displayed to others; on failure show default | — |
+| CX-64 | MEDIUM | Input | Abilities fire while typing in chat or with a menu open | Ignoring `gameProcessedEvent`; no menu context | Input Action System contexts (disable Gameplay when menus open) | — |
+| CX-65 | MEDIUM | Performance | Server FPS drops with many NPCs | One Humanoid + script per NPC | Plain server tables + client rendering; single update loop at 5–10 Hz | — |
+
+## How to spot them fast (review heuristics)
+
+- Search for `OnServerEvent`, `OnServerInvoke`, `Triggered`, `MouseClick`, `Touched`, `ProcessReceipt`, `SetAsync`, `GetDataStore`, `TeleportData`, `FireServer` — every hit is a review site.
+- In each handler, trace: argument types → rate limit → state → **any yield?** → mutation. A yield between check and mutation is CX-02/CX-36.
+- Look for state stored on the client (`LocalScript` tables of coins, cooldowns, offers) that the server later trusts.
+- For every `Connect`, ask "what disconnects this?" (CX-13, CX-42, CX-45, CX-47).
+- For every value read from `workspace` on the client, ask "what if it hasn't streamed in?" (CX-48).
+- Run `scripts/luau_lint.py` — rules CL060, CL073, CL110–CL118 flag many of these automatically.
 
 ## Review output format (use for every code review)
 

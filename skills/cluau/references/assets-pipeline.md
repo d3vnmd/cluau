@@ -1,5 +1,7 @@
 # 3D Models & Asset Pipeline — Quality Models That Run on Phones
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 Verified against Roblox Creator Hub docs (creator-docs, 2026-11). Use this whenever the user asks about models, meshes, Blender, textures, materials, rigs, animations, free models, the Creator Store, or AI-generated assets.
 
 ## Contents

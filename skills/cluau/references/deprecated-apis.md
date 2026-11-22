@@ -1,5 +1,7 @@
 # Deprecated & Legacy APIs → Modern Replacements
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 Cluau never emits the "Avoid" column in new code. When reviewing user code that contains them, point them out and migrate. The `scripts/luau_lint.py` linter detects these automatically (hand rules CL0xx + rules CL2xx generated from the official docs).
 
 **Verified against `Roblox/creator-docs` @ 2026-11-21.** This file is the hand-written migration guide; the complete machine-generated list is `deprecated-index.md`, and the official "use this now" feed is `platform-features.md`.

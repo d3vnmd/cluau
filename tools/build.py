@@ -12,6 +12,7 @@ Artifacts (dist/):
 """
 from __future__ import annotations
 
+import glob
 import hashlib
 import json
 import os
@@ -100,6 +101,22 @@ def check() -> str:
     with open(CHANGELOG, encoding="utf-8") as fh:
         if f"## [{version}]" not in fh.read():
             errors.append(f"CHANGELOG.md has no '## [{version}]' section")
+
+    # Freshness: every hand-written reference carries a "Last verified: YYYY-MM-DD" stamp.
+    import datetime
+
+    for ref_path in sorted(glob.glob(os.path.join(SKILL_DIR, "references", "*.md"))):
+        ref_name = os.path.basename(ref_path)
+        if ref_name in ("deprecated-index.md", "platform-features.md"):
+            continue  # generated; carry the docs revision instead
+        with open(ref_path, encoding="utf-8") as fh:
+            m = re.search(r"Last verified: (\d{4}-\d{2}-\d{2})", fh.read())
+        if not m:
+            errors.append(f"references/{ref_name} has no 'Last verified: YYYY-MM-DD' stamp")
+            continue
+        age = (datetime.date.today() - datetime.date.fromisoformat(m.group(1))).days
+        if age > 120:
+            print(f"  ! references/{ref_name} last verified {age} days ago — re-run tools/verify_api_refs.py and restamp")
 
     data_path = os.path.join(SKILL_DIR, "scripts", "data", "deprecated_apis.json")
     if not os.path.isfile(data_path):

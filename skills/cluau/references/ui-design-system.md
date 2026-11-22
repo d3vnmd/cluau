@@ -1,5 +1,7 @@
 # UI Design System — Human-Crafted, Never Slop
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 The goal: a player should believe a professional UI artist designed this interface specifically for *this* game. Generic, template-y, AI-looking UI is a bug.
 
 ## Contents

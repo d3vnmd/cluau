@@ -26,8 +26,10 @@ or add `verify-ignore` in a comment on that line.
 ## Workflow
 
 ```bash
-python3 -m unittest discover -s tests     # must pass
-python3 tools/build.py check              # must pass
+python3 -m unittest discover -s tests     # linter, eval-grader and build tests
+lune run tests/luau/run.luau              # Luau template specs (Lune 0.11.1)
+python3 tools/build.py check              # frontmatter, links, manifests, freshness, lint-clean templates
+python3 tools/run_evals.py run --cmd "claude -p"   # optional: behavioral evals with the skill installed
 ```
 
 - **New linter rule**: add it to `RULES` in `skills/cluau/scripts/luau_lint.py` with the next free id in its

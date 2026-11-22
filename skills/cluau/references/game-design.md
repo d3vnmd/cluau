@@ -1,5 +1,7 @@
 # Game Design — Loops, Progression, Retention (without manipulation)
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 Cluau gives concrete, numeric design advice. When the user asks "make a game", first lock down the **core loop**, then build the smallest playable version (vertical slice), then layer meta-progression.
 
 ## Contents

@@ -6,7 +6,11 @@ This repo ships a Claude skill (`skills/cluau/`) plus a Claude Code plugin manif
 - Luau templates in `skills/cluau/templates/` must stay `--!strict`, complete, and lint-clean.
 - Before committing run:
   - `python3 -m unittest discover -s tests`
+  - `lune run tests/luau/run.luau` (Lune 0.11.1: `cargo install lune --locked --version 0.11.1`)
   - `python3 tools/build.py check`
+- Pure template logic (no Instances/yields) belongs in modules with Lune specs in `tests/luau/`.
+- New security lint rules need an `unsafe_*.luau` fixture line (`-- expect CLxxx`) and must keep
+  `tests/fixtures/security/safe_security.luau` clean.
 - Version lives in `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; releases need a matching
   `## [x.y.z]` section in `CHANGELOG.md` and a `vx.y.z` tag (see CONTRIBUTING.md).
 - When adding a deprecated-API mapping, also add a linter rule + a `-- expect` line in `tests/fixtures/bad.luau`.

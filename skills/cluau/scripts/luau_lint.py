@@ -109,6 +109,53 @@ RULES: list[Rule] = [
     R("CL095", "info", "text", r"(?i)\b(?:welcome to the game|click here|lorem ipsum|awesome shop|item \d+)\b", "Generic placeholder copy — write specific copy in the game's voice."),
 ]
 
+# ── security rules on single lines ─────────────────────────────────────────────
+RULES += [
+    R("CL110", "error", "code", r":\s*SetAsync\s*\([^\n]*\bUserId\b", "`SetAsync` on a per-player key overwrites blindly (rollbacks/dupes across servers) — use session-locked `UpdateAsync` or ProfileStore."),
+    R("CL115", "warn", "code", r"FireServer\s*\([^)\n]*\b(?:[Pp]rice|[Cc]ost|[Aa]mount|[Dd]amage|[Rr]eward|[Cc]oins|[Gg]ems|[Cc]ash|[Mm]oney|[Xx]p)\b", "Client sends a value-bearing argument (price/amount/damage/reward) — send intent only; the server computes values from its own config."),
+]
+
+
+@dataclass(frozen=True)
+class FileRule:
+    """Reported at each `trigger` match when the file contains no `absent` match (and passes `when`)."""
+    id: str
+    severity: str
+    view: str
+    trigger: re.Pattern
+    absent: re.Pattern
+    message: str
+    when: re.Pattern | None = None  # file must contain this (code view) for the rule to apply
+    unless: re.Pattern | None = None  # rule skipped if the file contains this (code view)
+
+
+def FR(rule_id, severity, view, trigger, absent, message, when=None, unless=None) -> FileRule:
+    return FileRule(rule_id, severity, view, re.compile(trigger), re.compile(absent), message,
+                    re.compile(when) if when else None, re.compile(unless) if unless else None)
+
+
+FILE_RULES: list[FileRule] = [
+    FR("CL111", "warn", "code", r"\bProcessReceipt\s*=", r"\bPurchaseId\b",
+       "`ProcessReceipt` never records `PurchaseId` — grants are not idempotent (Roblox retries receipts; the same purchase can reach two servers)."),
+    FR("CL112", "warn", "code", r"ProductPurchaseDecision\s*\.\s*PurchaseGranted",
+       r"\b(?:SaveNow|SetAsync|UpdateAsync|LastSavedData|EndSession|Save\w*)\s*[\(\.:]",
+       "Returns `PurchaseGranted` but nothing in this file persists the grant — save (or wait for ProfileStore `LastSavedData`) before confirming.",
+       when=r"\bProcessReceipt\b"),
+    FR("CL113", "warn", "code", r"\.\s*(?:Triggered|TriggerEnded|MouseClick|RightMouseClick|Touched)\s*:\s*Connect\b",
+       r"\bMagnitude\b|DistanceFromCharacter|GetPartBoundsIn|GetPartsInPart|\bnear\s*\(|\bisNear\w*\s*\(",
+       "Interaction handler without a server distance check — executors can fire ProximityPrompts, ClickDetectors and Touched from anywhere.",
+       unless=r"\bLocalPlayer\b"),
+    FR("CL114", "warn", "code", r"OnServerEvent\s*:\s*Connect\b|\bOnServerInvoke\s*=",
+       r"\btypeof\s*\(|\btype\s*\(|\bGuard\.|\bsanitize\w*\s*\(|\bvalidate\w*\s*\(|\bValidate\w*\s*\(|\bt\.\w+\s*\(",
+       "Remote handler with no argument validation in this file — every argument is `unknown`; check types/ranges (see Guard.luau)."),
+    FR("CL116", "warn", "code", r"PlayerAdded\s*:\s*Connect\b", r"\bGetPlayers\s*\(",
+       "`PlayerAdded` connected without also looping `Players:GetPlayers()` — players who joined before this ran are skipped."),
+    FR("CL117", "warn", "code", r":\s*GetDataStore\s*\(", r"\bBindToClose\b",
+       "DataStore used without `game:BindToClose` — progress since the last autosave is lost on shutdown."),
+    FR("CL118", "warn", "strings", r"Instance\.new\s*\(\s*[\"']ScreenGui[\"']\s*\)", r"\bResetOnSpawn\b",
+       "ScreenGui created without deciding `ResetOnSpawn` (default true destroys HUD/shop on every death)."),
+]
+
 RULES_BY_ID = {rule.id: rule for rule in RULES}
 
 # ── generated rules (CL2xx) from the official docs: scripts/data/deprecated_apis.json ─────────────
@@ -312,6 +359,18 @@ def lint_source(src: str, path: str = "<input>", require_strict: bool = True) ->
                 continue
             findings.append(Finding(path, line_no, col, rule.severity, rule.id, rule.message))
 
+    for frule in FILE_RULES:
+        if frule.when and not frule.when.search(code):
+            continue
+        if frule.unless and frule.unless.search(code):
+            continue
+        if frule.absent.search(views[frule.view]):
+            continue
+        for match in frule.trigger.finditer(views[frule.view]):
+            line_no, col = _locate(starts, match.start())
+            if not suppressed(line_no, frule.id):
+                findings.append(Finding(path, line_no, col, frule.severity, frule.id, frule.message))
+
     hand_lines = {f.line for f in findings}
     for rule_id, severity, view, pattern, messages in GENERATED:
         for match in pattern.finditer(views[view]):
@@ -357,6 +416,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.list_rules:
         for rule in RULES:
             print(f"{rule.id}  {rule.severity:<5}  {rule.message}")
+        for frule in FILE_RULES:
+            print(f"{frule.id}  {frule.severity:<5}  (file-level) {frule.message}")
         print("CL100  info   Add `--!strict` at the top of new scripts.")
         for rule_id, severity, _view, _pattern, messages in GENERATED:
             print(f"{rule_id}  {severity:<5}  generated from official docs: {len(messages)} deprecated names")

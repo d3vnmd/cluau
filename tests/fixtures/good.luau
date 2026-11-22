@@ -35,6 +35,9 @@ local function onPlayer(player: Player)
 	end)
 end
 Players.PlayerAdded:Connect(onPlayer)
+for _, player in Players:GetPlayers() do
+	task.spawn(onPlayer, player)
+end
 
 local event = Instance.new("BindableEvent")
 event:Fire()

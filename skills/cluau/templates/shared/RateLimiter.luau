@@ -7,9 +7,12 @@
 	if not buyLimiter:check(player) then return end
 
 	Buckets keyed by Player are removed automatically on PlayerRemoving.
+	Pure logic: works outside Roblox too (unit-tested with Lune) — pass a custom clock for tests:
+		RateLimiter.new(3, 1, function() return fakeTime end)
 ]]
 
-local Players = game:GetService("Players")
+-- `game` is nil outside Roblox (e.g. Lune unit tests); the limiter still works, just without auto-cleanup.
+local Players: Players? = if game ~= nil then game:GetService("Players") else nil
 
 type Bucket = {
 	tokens: number,
@@ -23,17 +26,19 @@ export type RateLimiter = typeof(setmetatable({} :: {
 	_capacity: number,
 	_refillPerSecond: number,
 	_buckets: { [any]: Bucket },
+	_clock: () -> number,
 }, RateLimiter))
 
 local allLimiters: { RateLimiter } = {}
 
-function RateLimiter.new(capacity: number, refillPerSecond: number): RateLimiter
+function RateLimiter.new(capacity: number, refillPerSecond: number, clock: (() -> number)?): RateLimiter
 	assert(capacity >= 1, "capacity must be >= 1")
 	assert(refillPerSecond > 0, "refillPerSecond must be > 0")
 	local self = setmetatable({
 		_capacity = capacity,
 		_refillPerSecond = refillPerSecond,
 		_buckets = {},
+		_clock = clock or os.clock,
 	}, RateLimiter)
 	table.insert(allLimiters, self)
 	return self
@@ -42,7 +47,10 @@ end
 --- Consumes `cost` tokens (default 1). Returns true if allowed.
 function RateLimiter.check(self: RateLimiter, key: any, cost: number?): boolean
 	local amount = cost or 1
-	local now = os.clock()
+	if amount ~= amount or amount < 0 then
+		return false -- NaN/negative cost would mint tokens
+	end
+	local now = self._clock()
 	local bucket = self._buckets[key]
 	if bucket == nil then
 		bucket = { tokens = self._capacity, updatedAt = now }
@@ -63,10 +71,12 @@ function RateLimiter.reset(self: RateLimiter, key: any)
 	self._buckets[key] = nil
 end
 
-Players.PlayerRemoving:Connect(function(player: Player)
-	for _, limiter in allLimiters do
-		limiter._buckets[player] = nil
-	end
-end)
+if Players then
+	Players.PlayerRemoving:Connect(function(player: Player)
+		for _, limiter in allLimiters do
+			limiter._buckets[player] = nil
+		end
+	end)
+end
 
 return RateLimiter

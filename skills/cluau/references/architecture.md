@@ -1,5 +1,7 @@
 # Architecture — Where Code Lives and Why
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 ## Contents
 1. The replication model in one page
 2. Container cheat-sheet

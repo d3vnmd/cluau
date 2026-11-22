@@ -1,5 +1,7 @@
 # Modern Luau — Language, Types, Style
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 This is the coding standard Cluau follows. It targets current Roblox Luau (strict type checking, new type solver era). When in doubt, choose the simpler, well-established construct.
 
 ## Contents

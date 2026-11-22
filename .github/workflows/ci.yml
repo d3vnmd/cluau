@@ -60,7 +60,7 @@ jobs:
             else
               echo "FAIL $file"; status=1
             fi
-          done < <(find skills/cluau/templates -name '*.luau' -print0)
+          done < <(find skills/cluau/templates tests/luau -name '*.luau' -print0)
           exit $status
 
   docs-verify:
@@ -81,3 +81,23 @@ jobs:
 
       - name: Every Class:Member / Enum.X.Y in the skill must exist
         run: python tools/verify_api_refs.py "$RUNNER_TEMP/creator-docs"
+
+  luau-tests:
+    name: Luau unit tests (Lune)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Lune
+        id: cache-lune
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/lune
+          key: lune-0.11.1-${{ runner.os }}
+
+      - name: Install Lune 0.11.1
+        if: steps.cache-lune.outputs.cache-hit != 'true'
+        run: cargo install lune --locked --version 0.11.1
+
+      - name: Run template specs
+        run: ~/.cargo/bin/lune run tests/luau/run.luau

@@ -47,6 +47,48 @@ class BadFixtureTests(unittest.TestCase):
         self.assertTrue(any(f.rule == "CL100" for f in self.findings))
 
 
+SECURITY = os.path.join(ROOT, "tests", "fixtures", "security")
+
+
+def expected_on_lines(path: str) -> dict[int, list[str]]:
+    expected: dict[int, list[str]] = {}
+    with open(path, encoding="utf-8") as fh:
+        for index, line in enumerate(fh.read().splitlines(), start=1):
+            if "-- expect" in line:
+                expected[index] = re.findall(r"CL\d{3}", line.split("-- expect", 1)[1])
+    return expected
+
+
+class SecurityFixtureTests(unittest.TestCase):
+    def test_unsafe_fixtures_report_every_expected_rule(self):
+        files = sorted(f for f in os.listdir(SECURITY) if f.startswith("unsafe_"))
+        self.assertGreaterEqual(len(files), 5)
+        for name in files:
+            path = os.path.join(SECURITY, name)
+            findings = lint_file(path)
+            for line, rules in expected_on_lines(path).items():
+                for rule in rules:
+                    hits = [f for f in findings if f.line == line and f.rule == rule]
+                    self.assertTrue(hits, f"{name}:{line}: expected {rule}; got {[(f.line, f.rule) for f in findings]}")
+
+    def test_unsafe_fixtures_have_no_unexpected_findings(self):
+        for name in sorted(f for f in os.listdir(SECURITY) if f.startswith("unsafe_")):
+            path = os.path.join(SECURITY, name)
+            expected = expected_on_lines(path)
+            for f in lint_file(path):
+                if f.rule == "CL100":
+                    continue
+                self.assertIn(f.rule, expected.get(f.line, []), f"{name}:{f.line}: unexpected {f.rule}")
+
+    def test_safe_equivalent_is_clean(self):
+        findings = lint_file(os.path.join(SECURITY, "safe_security.luau"))
+        self.assertEqual(findings, [], f"false positives: {findings}")
+
+    def test_file_rule_suppression(self):
+        src = "--!strict\nworkspace.Coin.Touched:Connect(function() end) -- cluau-ignore CL113\n"
+        self.assertEqual([f.rule for f in luau_lint.lint_source(src)], [])
+
+
 class GoodFixtureTests(unittest.TestCase):
     def test_valid_modern_luau_has_no_findings(self):
         findings = lint_file(GOOD)

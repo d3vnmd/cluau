@@ -32,9 +32,17 @@ Modern strict Luau · Exploit-proof networking · Session-locked DataStores · F
 |---|---|
 | `SKILL.md` | Гол "prompt": ажиллах дараалал, заавал хийх өөрийгөө шалгах жагсаалт, архитектур, аюулгүй байдал, UI зарчим, өгөгдөл, монетизаци, гүйцэтгэл |
 | `references/` | 19 гүнзгий гарын авлага: modern Luau, deprecated API (албан ёсны docs-оос автоматаар үүсгэсэн ~560 API), архитектур, **тоглоомын 14 төрлийн playbook**, Server Authority, аюулгүй байдал, DataStore, UI design system, гүйцэтгэлийн хатуу төсөв, монетизаци ба 2026 оны бодлого, **3D загвар/Blender/asset pipeline**, **polish, QA, launch**, sharp-edges (35 алдаа), toolchain, монгол нэр томьёо |
-| `templates/` | 15 бэлэн Luau модуль: bootstrap, `Net`, `Guard`, `RateLimiter`, `Trove`, `Config`, `BufferCodec`, session-lock-той `DataService`, давхардалгүй `MonetizationService`, `ShopService`, `ModerationService` (BanAsync), `Theme`, `Components`, `UIController` |
-| `scripts/luau_lint.py` | 50 гар дүрэм + **Roblox-ийн албан ёсны docs-оос үүсгэсэн 391 deprecated нэр** илрүүлдэг linter (Python, суулгах зүйлгүй). Зөв Luau-г (`math.pow`, `unpack`) буруу гэж тэмдэглэдэггүй |
+| `templates/` | 21 бэлэн Luau модуль: bootstrap, `Net`, `Guard`, `RateLimiter`, `Trove`, `Config`, `BufferCodec`, session-lock-той `DataService`, давхардалгүй `MonetizationService`, `ShopService`, `ModerationService`, **`TradeLogic`/`TradeService` (dupe-гүй солилцоо)**, **`RoundService`**, **`LeaderboardService`**, **`InputController` (Input Action System)**, `Theme`, `Components`, `UIController` |
+| `scripts/luau_lint.py` | 59 гар дүрэм (аюулгүй байдлын CL110–CL118 орсон) + **Roblox-ийн албан ёсны docs-оос үүсгэсэн 391 deprecated нэр**. Зөв Luau-г (`math.pow`, `unpack`) буруу гэж тэмдэглэдэггүй |
 | `scripts/scaffold.py` | Rojo төсөл үүсгэгч (Selene, StyLua, Rokit, `.luaurc`) |
+
+### 1.2 хувилбарт юу шинэ вэ? — өөрийгөө шалгадаг болсон
+
+- **Тест:** цэвэр логиктой template-үүдэд (`RateLimiter`, `Guard`, `BufferCodec`, `Trove`, `TradeLogic`) Lune дээр Studio-гүйгээр ажилладаг 46 тест бий. Хамгаалалтыг санаатай устгахад тест унадаг эсэхийг (mutation) шалгасан.
+- **Бие даасан review:** код бичсэний дараа зохиогчийн бодлыг мэдэхгүй шинэ `cluau-reviewer` agent кодыг "эвдэрсэн" гэж үзээд шалгана. Алдааны каталог 65 болж өргөжсөн (trade dupe, respawn race, streaming nil, teleport data trust…).
+- **Хамгийн эрсдэлтэй системүүдийн template:** Trade, Round, Leaderboard, Input Action System.
+- **Аюулгүй байдлын lint:** `SetAsync` player key-д, `PurchaseId`-гүй `ProcessReceipt`, хадгалахаас өмнө `PurchaseGranted`, зайн шалгалтгүй `Touched`/`ProximityPrompt`, шалгалтгүй remote гэх мэтийг автоматаар барина.
+- **Eval:** монгол, англи 19 хүсэлтээр skill зөв асаж байгаа, хуучирсан код бичихгүй байгаа, монголоор хариулж байгааг хэмждэг.
 
 ### 1.1 хувилбарт юу шинэ вэ?
 
@@ -129,17 +137,23 @@ cluau/
 │   │   ├── game-design.md         loops per genre, progression math, economy, FTUE
 │   │   ├── debugging-testing.md   error → cause → fix table, test checklists
 │   │   └── mongolian-glossary.md  consistent Mongolian terminology
-│   ├── templates/             15 production Luau modules (all --!strict, lint-clean)
-│   │   ├── server/            Main.server, DataService, MonetizationService, ShopService, ModerationService
-│   │   ├── client/            Main.client, UIController
+│   ├── templates/             21 production Luau modules (all --!strict, lint-clean; pure ones unit-tested)
+│   │   ├── server/            Main.server, DataService, MonetizationService, ShopService, ModerationService,
+│   │   │                      TradeLogic + TradeService, RoundService, LeaderboardService
+│   │   ├── client/            Main.client, UIController, InputController
 │   │   ├── shared/            Net, Guard, RateLimiter, Trove, Config, BufferCodec
 │   │   └── ui/                Theme (design tokens), Components (stateful primitives)
 │   ├── scripts/
-│   │   ├── luau_lint.py       50 hand rules + 391 deprecated names generated from official docs
+│   │   ├── luau_lint.py       59 hand rules (incl. security CL110–CL118) + 391 generated deprecated names
 │   │   ├── data/              deprecated_apis.json (generated)
 │   │   └── scaffold.py        Rojo project generator
 │   └── assets/project/        default.project.json, selene.toml, stylua.toml, rokit.toml, .luaurc
-├── tests/                     linter unit tests + bad-code fixture
+├── agents/cluau-reviewer.md   independent adversarial reviewer (Claude Code plugin agent)
+├── evals/cases.json           19 Mongolian/English behavioral evals
+├── tests/
+│   ├── luau/                  Lune specs for pure templates (46 tests)
+│   ├── fixtures/              good/bad/security fixtures for the linter
+│   └── test_*.py              linter, eval-grader tests
 ├── tools/
 │   ├── build.py               validate + package release zips
 │   ├── sync_deprecations.py   regenerate deprecation data from Roblox/creator-docs
@@ -200,6 +214,17 @@ git tag v1.0.0 && git push origin v1.0.0
 ```
 
 The **Release** workflow tests, packages and publishes the GitHub Release with install notes. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### How Cluau checks its own work
+
+| Layer | What it proves | Command |
+|---|---|---|
+| Lune unit tests | Pure template logic (trades, buffers, limits, validation) behaves under edge cases | `lune run tests/luau/run.luau` |
+| cluau-lint | No deprecated/unsafe patterns, security smells, UI slop | `python3 skills/cluau/scripts/luau_lint.py <src>` |
+| API verifier | Every API the skill mentions exists in Roblox's official docs | `python3 tools/verify_api_refs.py <creator-docs>` |
+| Independent review | A fresh agent with no author context hunts shippable defects | `cluau-reviewer` agent / `references/review-workflow.md` |
+| Evals | The skill triggers, answers in Mongolian, and emits lint-clean code | `python3 tools/run_evals.py run --cmd "claude -p"` |
+| Studio playtest | Real engine behavior — **still required**; nothing above replaces it | Server & Clients + a low-end phone |
 
 ### Staying current with Roblox
 

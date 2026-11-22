@@ -1,5 +1,7 @@
 # Polish, QA & Launch — From "Works" to Front-Page Quality
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 Engine/platform facts verified against Roblox docs (2026-11). Game-feel numbers are cross-engine heuristics (no Roblox-specific standard exists) — present them as starting points.
 
 ## Contents

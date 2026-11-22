@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Cluau — a Claude skill for building Roblox Studio games the right way.",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "plugins": [
     {
       "name": "cluau",
       "source": "./",
       "description": "Senior Roblox engineer + game designer + UI artist skill: modern Luau, secure remotes, DataStores, monetization policy, anti-slop UI.",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "d3vnmd"
       },

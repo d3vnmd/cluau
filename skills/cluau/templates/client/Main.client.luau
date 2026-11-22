@@ -9,6 +9,7 @@
 ]]
 
 local CONTROLLER_ORDER = {
+	"InputController", -- first: other controllers subscribe to its actions
 	"UIController",
 }
 

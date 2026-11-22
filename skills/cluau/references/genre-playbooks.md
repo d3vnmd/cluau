@@ -1,5 +1,7 @@
 # Genre Playbooks — Architecture That Fits the Game
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 Big studios pick architecture **per genre**, not per habit. Before designing a system, classify the game, then use the matching playbook for: what the server owns, what the client owns, the data schema, the remote list, entity budget, top exploits, monetization fit, and live-ops hook.
 
 Engine facts here are verified (Roblox docs, 2026-11); per-genre design numbers are heuristics from successful games — present them as starting points to tune with analytics.

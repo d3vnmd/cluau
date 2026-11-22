@@ -51,6 +51,8 @@ After writing — **self-review gate** (mandatory, silent unless something fails
 
 If you can run commands, lint what you produced: `python3 <skill-dir>/scripts/luau_lint.py <paths>` (rules generated from the official deprecation list). Fix every `error`; justify any remaining `warn`. If Studio MCP is connected, verify in a playtest (`references/toolchain-workflow.md` §6).
 
+**Independent review (mandatory for remotes, data, purchases, trades, rounds, teleports):** the author can't grade its own homework. If you can spawn subagents, launch a fresh reviewer — in Claude Code the plugin's **`cluau-reviewer`** agent, elsewhere a general agent with the verbatim prompt in `references/review-workflow.md` — give it the changed files, and fix every CRITICAL/HIGH finding before replying. If you can't spawn agents, do a separate adversarial pass with that checklist and say it was a self-review.
+
 **Evidence honesty:** end with what was actually checked (lint, type check, playtest, nothing) and what remains unverified. Never claim a test, playtest or output you did not run.
 
 ---
@@ -339,11 +341,11 @@ Full detail: `references/performance.md`.
 | Competitive movement, prediction, `AuthorityMode` | `references/server-authority.md` |
 | Models, Blender, textures, rigs, animation, lighting, free models, AI assets | `references/assets-pipeline.md` |
 | Game feel, audio, accessibility, QA, launch, live-ops | `references/polish-qa-launch.md` |
-| Code review, bug hunting, "what can go wrong" | `references/sharp-edges.md` |
+| Code review, bug hunting, "what can go wrong" | `references/sharp-edges.md` (65 ID'd bugs), `references/review-workflow.md` (independent reviewer) |
 | Rojo, CI, Studio MCP verification, evidence levels | `references/toolchain-workflow.md` |
 | Is API X deprecated? What replaced it? | `references/deprecated-index.md` (generated, complete), `references/platform-features.md` (official "use now" feed) |
 
-Templates (copy, then adapt names — they are tested patterns, not pseudo-code):
+Templates (copy, then adapt names). All are `--!strict` and lint-clean; the pure modules (`Guard`, `RateLimiter`, `BufferCodec`, `Trove`, `TradeLogic`) have Lune unit tests in the repository (`tests/luau/`). Engine-facing modules are linted and API-verified but still need a Studio playtest:
 
 | File | Purpose | Type / Location |
 |---|---|---|
@@ -359,6 +361,10 @@ Templates (copy, then adapt names — they are tested patterns, not pseudo-code)
 | `templates/shared/Config.luau` | Frozen shared config (prices, ids, tuning) | ModuleScript in `ReplicatedStorage/Shared` |
 | `templates/shared/BufferCodec.luau` | Compact binary batching + bounds-checked reader for untrusted buffers | ModuleScript in `ReplicatedStorage/Shared` |
 | `templates/server/ModerationService.luau` | Evidence log, strikes, delayed `BanAsync` waves, honeypot flagging | ModuleScript in `ServerScriptService/Services` |
+| `templates/server/TradeLogic.luau` + `TradeService.luau` | Dupe-proof trading: whitelisted bounded offers, version-tied ready, quiet period, atomic two-sided swap (logic unit-tested) | ModuleScripts in `ServerScriptService/Services` |
+| `templates/server/RoundService.luau` | Lobby → Intermission → Round → Results; `Phase`/`EndsAt` attributes; death/leave/respawn handling | ModuleScript in `ServerScriptService/Services` |
+| `templates/server/LeaderboardService.luau` | Live MemoryStore board + slow OrderedDataStore persistence, batched flushes | ModuleScript in `ServerScriptService/Services` |
+| `templates/client/InputController.luau` | Input Action System: Gameplay/Menu contexts, keyboard+gamepad+touch bindings, glyphs | ModuleScript in `StarterPlayerScripts/Controllers` |
 | `templates/ui/Theme.luau` | Design tokens | ModuleScript in `ReplicatedStorage/Shared/UI` |
 | `templates/ui/Components.luau` | Button/Panel/Label/Modal with states, gamepad, safe areas | ModuleScript in `ReplicatedStorage/Shared/UI` |
 | `templates/client/UIController.luau` | Example HUD + shop screen built from components | ModuleScript in `StarterPlayerScripts/Controllers` |

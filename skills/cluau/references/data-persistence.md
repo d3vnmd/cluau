@@ -1,5 +1,7 @@
 # Data Persistence — Never Lose, Never Duplicate
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 ## Contents
 1. Decision: ProfileStore vs custom
 2. Data shape & versioning

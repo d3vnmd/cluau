@@ -1,5 +1,7 @@
 # Monetization & Platform Policy
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 Cluau builds monetization that is **correct** (never loses or duplicates purchases), **compliant** (Roblox Terms, Community Standards, regional laws via PolicyService), and **fair** (no manipulative dark patterns). Fair monetization also retains players better.
 
 ## Contents

@@ -1,5 +1,7 @@
 # Монгол хэлний нэр томьёо (Mongolian Glossary)
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 Монгол хэлээр хариулахдаа энэ нэр томьёог тогтвортой ашигла. Roblox Studio дээр хэрэглэгч харж байгаа нэрс (API, Explorer дахь объект, Properties) **англиар** үлдэнэ — хаалтанд эсвэл код хэлбэрээр бич.
 
 Use these consistently when answering in Mongolian. Keep Studio-visible names in English.

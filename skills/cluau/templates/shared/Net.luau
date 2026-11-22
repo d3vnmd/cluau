@@ -24,6 +24,15 @@ local EVENTS = table.freeze({
 	"DataSnapshot", -- server → client: full player state on join
 	"DataChanged", -- server → client: { [path]: value } deltas
 	"Notify", -- server → client: { kind: string, text: string }
+	-- TradeService
+	"TradeRequest", -- client → server: targetUserId: number
+	"TradeRespond", -- client → server: fromUserId: number, accept: boolean
+	"TradeSetOffer", -- client → server: { [itemId]: count }
+	"TradeSetReady", -- client → server: version: number
+	"TradeCancel", -- client → server: ()
+	"TradeUpdated", -- server → client: trade view snapshot or nil (closed)
+	-- LeaderboardService
+	"LeaderboardUpdated", -- server → client: { { userId, name, value } }
 })
 
 local UNRELIABLE_EVENTS = table.freeze({

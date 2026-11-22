@@ -1,5 +1,7 @@
 # Server Authority (2026) — Engine-Level Prediction & Anti-Movement-Cheat
 
+> Last verified: 2026-11-22 against Roblox/creator-docs @ a23352b (docs snapshot 2026-11-21). Re-verify with `tools/verify_api_refs.py`.
+
 Verified against `Roblox/creator-docs` (2026-11-21). Server Authority reached full release on **2026-07-09**.
 
 ## Contents
@@ -33,7 +35,7 @@ State the trade-off in one line: stronger anti-cheat and smoother contested phys
 ## 3. Turning it on
 
 In Studio: **Workspace → AuthorityMode = Server**. Scripts cannot set it. It automatically enables:
-`StreamingEnabled`, `NextGenerationReplication`, `StarterPlayer.PlayerScriptsUseInputActionSystem` (Input Action System), `SignalBehavior = Deferred`, and `UseFixedSimulation`.
+`StreamingEnabled`, `NextGenerationReplication`, `Workspace.PlayerScriptsUseInputActionSystem` (Input Action System), `SignalBehavior = Deferred`, and `UseFixedSimulation`.
 
 Tell the user exactly this property change; don't pretend code can do it.
 

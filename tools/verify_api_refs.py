@@ -27,13 +27,19 @@ ENUM_TOKEN = re.compile(r"\bEnum\.([A-Za-z0-9]+)\.([A-Za-z0-9_]+)\b")
 IGNORE_PREFIX = {
     "Enum", "Config", "Theme", "Components", "Net", "Guard", "RateLimiter", "Trove", "DataService", "ShopService",
     "MonetizationService", "UIController", "ProfileStore", "Dash", "Timer", "Main", "Shared", "Services", "Controllers",
-    "ReplicatedStorage", "ServerScriptService", "StarterPlayer", "StarterPlayerScripts", "ServerStorage", "Workspace_",
+    "ReplicatedStorage", "ServerScriptService", "StarterPlayerScripts", "ServerStorage", "Workspace_",
     "Window", "Test", "Game", "File", "Settings", "Avatar", "Assistant", "Shift", "Ctrl", "Left", "Studio", "Font",
     "UDim", "UDim2", "Vector2", "Vector3", "CFrame", "Color3", "TweenInfo", "Random", "DateTime", "Ray", "Region3",
     "NumberSequence", "ColorSequence", "NumberRange", "Rect", "PhysicalProperties", "RaycastParams", "OverlapParams",
     "BrickColor", "Instance", "Players_", "TextChannels", "Packages", "BufferCodec", "ModerationService", "Simulation",
 }
 
+
+# Well-known child instances written with dot paths (e.g. `StarterPlayer.StarterPlayerScripts`), not members.
+CHILD_NAMES = {
+    "StarterPlayerScripts", "StarterCharacterScripts", "PlayerGui", "PlayerScripts", "Backpack", "Animator",
+    "HumanoidRootPart", "Humanoid", "Shared", "Remotes", "Services", "Controllers", "Inputs", "GameState",
+}
 
 # Enums used throughout the docs' own code samples but lacking a reference page in the snapshot.
 KNOWN_UNDOCUMENTED_ENUMS = {"FontWeight"}
@@ -92,7 +98,7 @@ def main() -> int:
             if "verify-ignore" in line:
                 continue
             for cls, _sep, member in TOKEN.findall(line):
-                if cls in IGNORE_PREFIX or cls not in classes or len(member) < 2:
+                if cls in IGNORE_PREFIX or cls not in classes or len(member) < 2 or member in CHILD_NAMES:
                     continue
                 checked += 1
                 if not has_member(classes, cls, member):

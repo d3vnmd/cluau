@@ -6,6 +6,37 @@ All notable changes to **cluau** are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-22
+
+Self-verification release: the skill now tests, lints and reviews its own output.
+
+### Added
+- **Luau unit tests (Lune)** — `tests/luau/` specs for `RateLimiter`, `Guard`, `BufferCodec`, `Trove` and
+  `TradeLogic` (46 tests: truncated buffers, NaN, oversized length prefixes, stale trade versions, self-trades,
+  all-or-nothing swaps…). Mutation-checked: removing a guard makes the suite fail. CI job installs Lune.
+- **Independent review mode** — `agents/cluau-reviewer.md` (Claude Code plugin agent) and
+  `references/review-workflow.md` (verbatim reviewer prompt, when review is mandatory, checklists).
+  SKILL.md now requires a fresh reviewer for remotes/data/purchases/trades/rounds/teleports.
+- `sharp-edges.md` grew from 35 to 65 ID'd bugs (trade dupes, bait-and-switch, respawn races, streaming nil,
+  teleport-data trust, leaderboard write spam…) plus fast-review heuristics.
+- **High-risk system templates** — `TradeLogic` + `TradeService` (dupe-proof trading), `RoundService`
+  (Phase/EndsAt replication, death/leave/respawn), `LeaderboardService` (MemoryStore live board + slow
+  OrderedDataStore), `InputController` (Input Action System contexts and bindings).
+- **Security lint rules** — CL110 `SetAsync` on player keys, CL111 non-idempotent `ProcessReceipt`, CL112
+  `PurchaseGranted` without persistence, CL113 prompt/click/touch handlers without distance checks, CL114
+  unvalidated remote handlers, CL115 client sending prices/damage, CL116 `PlayerAdded` without `GetPlayers`,
+  CL117 DataStore without `BindToClose`, CL118 ScreenGui without `ResetOnSpawn` decision; file-level rule
+  engine; unsafe/safe security fixtures.
+- **Bilingual eval suite** — `evals/cases.json` (19 Mongolian/English cases incl. no-trigger cases) and
+  `tools/run_evals.py` (grades responses, lints every Luau code block, checks Mongolian replies; `run --cmd
+  "claude -p"` generates responses). Grader has its own tests.
+- "Last verified" stamps on every hand-written reference, enforced by `tools/build.py check`.
+
+### Fixed
+- `server-authority.md`: `PlayerScriptsUseInputActionSystem` is a Workspace property.
+- `RateLimiter` rejects NaN/negative costs and accepts an injectable clock.
+- `tools/verify_api_refs.py` now also checks `StarterPlayer.*` references.
+
 ## [1.1.0] - 2026-11-22
 
 Deep-research release: rebuilt against Roblox's official docs (`Roblox/creator-docs` @ 2026-11-21) and
@@ -67,6 +98,7 @@ big-studio practice, with ideas adapted from excaldev/ro-engineer (MIT).
 - `tools/build.py` validation and packaging; CI and tag-driven GitHub Release workflows.
 - Bilingual (Mongolian / English) README, example prompts, contributing guide.
 
-[Unreleased]: https://github.com/d3vnmd/cluau/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/d3vnmd/cluau/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.2.0
 [1.1.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.1.0
 [1.0.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.0.0
