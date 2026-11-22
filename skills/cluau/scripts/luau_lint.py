@@ -75,10 +75,12 @@ RULES: list[Rule] = [
     # ── input ─────────────────────────────────────────────────────────────────
     R("CL040", "warn", "code", r":\s*GetMouse\s*\(\s*\)", "`Player:GetMouse()` is legacy — use `UserInputService`/`ContextActionService` and `Camera:ViewportPointToRay` + `workspace:Raycast`."),
     # ── services ──────────────────────────────────────────────────────────────
-    R("CL050", "error", "code", r":\s*(?:CreateCollisionGroup|SetPartCollisionGroup|GetCollisionGroupId|RemoveCollisionGroup|GetCollisionGroupName)\s*\(", "Deprecated collision group API — use `RegisterCollisionGroup` and `BasePart.CollisionGroup = \"Name\"`."),
-    R("CL051", "error", "code", r":\s*(?:Teleport|TeleportToPlaceInstance|TeleportToPrivateServer|TeleportPartyAsync|TeleportToSpawnByName)\s*\(", "Legacy teleport — use `TeleportService:TeleportAsync(placeId, players, TeleportOptions)`."),
+    R("CL050", "error", "code", r":\s*(?:CreateCollisionGroup|SetPartCollisionGroup|GetCollisionGroupId|RemoveCollisionGroup|GetCollisionGroupName)\s*\(", "Deprecated collision group API — use `workspace:RegisterCollisionGroup()`, `workspace:CollisionGroupSetCollidable()` (WorldRoot) and `BasePart.CollisionGroup = \"Name\"`."),
+    R("CL059", "warn", "strings", r"GetService\s*\(\s*[\"']PhysicsService[\"']\s*\)", "`PhysicsService` is deprecated — collision groups are per-world methods on `workspace` (WorldRoot)."),
+    R("CL051", "error", "code", r":\s*(?:Teleport|TeleportToPlaceInstance|TeleportToPrivateServer|TeleportPartyAsync|TeleportToSpawnByName|ReserveServer|ReserveServerAsync)\s*\(", "Legacy teleport — use `TeleportService:TeleportAsync(placeId, players, TeleportOptions)`; for reserved servers set `TeleportOptions.ReservedServerId = HttpService:GenerateGUID(false)`."),
     R("CL052", "error", "code", r":\s*(?:ComputeRawPathAsync|ComputeSmoothPathAsync)\s*\(", "Deprecated pathfinding — use `PathfindingService:CreatePath(params)` + `path:ComputeAsync()`."),
-    R("CL053", "warn", "strings", r"GetService\s*\(\s*[\"']Chat[\"']\s*\)", "Legacy `Chat` service — use `TextChatService` and `TextService:FilterStringAsync`."),
+    R("CL053", "error", "strings", r"GetService\s*\(\s*[\"']Chat[\"']\s*\)", "Legacy `Chat` is gone (2026) — use `TextChatService` (`TextChatCommand`, `TextChannel`, `DisplaySystemMessage`)."),
+    R("CL064", "warn", "code", r"\.\s*Chatted\s*:\s*Connect\b", "`Player.Chatted` command parsing is replaced by `TextChatCommand` (PrimaryAlias, Triggered) under TextChatService."),
     R("CL054", "error", "code", r":\s*(?:FilterStringForBroadcast|FilterStringForPlayerAsync)\s*\(", "Legacy chat filtering — use `TextService:FilterStringAsync` + `GetNonChatStringForBroadcastAsync`."),
     R("CL055", "error", "code", r":\s*UserHasBadge\s*\(", "Use `BadgeService:UserHasBadgeAsync` (server, in pcall)."),
     R("CL056", "warn", "code", r":\s*PlayerOwnsAsset\s*\(", "For game passes use `MarketplaceService:UserOwnsGamePassAsync`."),
@@ -94,10 +96,10 @@ RULES: list[Rule] = [
     R("CL074", "error", "code", NOT_MEMBER + r"LoadLibrary\s*\(", "`LoadLibrary` was removed."),
     R("CL075", "warn", "code", NOT_MEMBER + r"(?:_G|shared)\s*\.", "Avoid `_G`/`shared` globals — use ModuleScripts."),
     R("CL076", "warn", "code", r"\bLoadStringEnabled\b", "Never enable `LoadStringEnabled`."),
+    R("CL077", "error", "code", r"(?m)^\s*(?:class\s+[A-Za-z_]\w*\b|export\s+[a-z_]\w*\s*=)|\b(?:if|while)\s+local\b", "Experimental/unshipped Luau syntax (`class`, `if local`, export-by-value) — not available in Roblox; use metatables / normal locals."),
+    R("CL078", "info", "code", r"\bPromptProductPurchaseFinished\b", "`PromptProductPurchaseFinished` is informational only — grant developer products exclusively in `ProcessReceipt`."),
     # ── stdlib ────────────────────────────────────────────────────────────────
-    R("CL080", "error", "code", r"\btable\s*\.\s*(?:getn|foreach|foreachi|maxn)\b", "Removed Lua 5.0 table function — use `#t` and generalized `for`."),
-    R("CL081", "warn", "code", NOT_MEMBER + r"unpack\s*\(", "Use `table.unpack`."),
-    R("CL082", "warn", "code", r"\bmath\s*\.\s*pow\s*\(", "`math.pow` does not exist in Luau — use `x ^ y`."),
+    R("CL080", "error", "code", r"\btable\s*\.\s*(?:getn|foreach|foreachi)\b", "Removed Lua 5.0 table function — use `#t` and generalized `for`."),
     # ── UI anti-slop ──────────────────────────────────────────────────────────
     R("CL090", "warn", "code", r"\bTextScaled\s*=\s*true\b", "`TextScaled = true` causes inconsistent text sizes — use a type scale (`TextSize`) + `UITextSizeConstraint` only where needed."),
     R("CL091", "warn", "code", r"\bFont\s*=\s*Enum\s*\.\s*Font\s*\.", "Use `FontFace = Font.new(\"rbxasset://fonts/families/<Family>.json\", weight)` for weights and consistency."),
@@ -108,6 +110,57 @@ RULES: list[Rule] = [
 ]
 
 RULES_BY_ID = {rule.id: rule for rule in RULES}
+
+# ── generated rules (CL2xx) from the official docs: scripts/data/deprecated_apis.json ─────────────
+# Regenerate with tools/sync_deprecations.py. Only names deprecated on *every* class are included.
+DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "deprecated_apis.json")
+GENERATED: list[tuple[str, str, str, re.Pattern, dict[str, str]]] = []  # (id, severity, view, pattern, name->message)
+
+
+def _load_generated() -> None:
+    if not os.path.isfile(DATA_PATH):
+        return
+    with open(DATA_PATH, encoding="utf-8") as fh:
+        data = json.load(fh)
+    groups: dict[str, dict[str, str]] = {"method": {}, "member": {}, "global": {}, "lib": {}, "class": {}}
+    for m in data.get("members", []):
+        if not m.get("lint"):
+            continue
+        note = m.get("message") or "deprecated"
+        msg = f"`{m['full']}` is deprecated — {note}"
+        if m["kind"] == "global":
+            groups["global"][m["name"]] = msg
+        elif m["kind"] == "function":
+            groups["lib"][f"{m['owner']}.{m['name']}"] = msg
+        elif m["kind"] in ("method", "callback"):
+            groups["method"][m["name"]] = msg
+        else:
+            groups["member"][m["name"]] = msg
+    for c in data.get("classes", []):
+        if c.get("kind") == "class":
+            groups["class"][c["name"]] = f"`{c['name']}` is deprecated — {c.get('message') or 'do not use in new work.'}"
+
+    def alt(names) -> str:
+        return "|".join(re.escape(n) for n in sorted(names, key=len, reverse=True))
+
+    if groups["method"]:
+        GENERATED.append(("CL200", "error", "code", re.compile(r":\s*(" + alt(groups["method"]) + r")\s*\("), groups["method"]))
+    if groups["member"]:
+        GENERATED.append(("CL201", "warn", "code", re.compile(r"\.\s*(" + alt(groups["member"]) + r")\b(?!\s*\()"), groups["member"]))
+    if groups["global"]:
+        GENERATED.append(("CL202", "error", "code", re.compile(NOT_MEMBER + r"(" + alt(groups["global"]) + r")\s*\("), groups["global"]))
+    if groups["lib"]:
+        lib_pattern = alt(groups["lib"]).replace(r"\.", r"\s*\.\s*")
+        GENERATED.append(("CL202", "error", "code", re.compile(r"\b(" + lib_pattern + r")\b"), {re.sub(r"\s", "", k): v for k, v in groups["lib"].items()}))
+    if groups["class"]:
+        GENERATED.append((
+            "CL203", "error", "strings",
+            re.compile(r"(?:Instance\.new|IsA|FindFirstChildOfClass|FindFirstChildWhichIsA|FindFirstAncestorOfClass|FindFirstAncestorWhichIsA|GetService)\s*\(\s*[\"'](" + alt(groups["class"]) + r")[\"']"),
+            groups["class"],
+        ))
+
+
+_load_generated()
 
 SUPPRESS_RE = re.compile(r"--\s*cluau-ignore\s+([A-Z0-9,\s]+)")
 FILE_SUPPRESS_RE = re.compile(r"--!cluau-ignore-file")
@@ -259,6 +312,15 @@ def lint_source(src: str, path: str = "<input>", require_strict: bool = True) ->
                 continue
             findings.append(Finding(path, line_no, col, rule.severity, rule.id, rule.message))
 
+    hand_lines = {f.line for f in findings}
+    for rule_id, severity, view, pattern, messages in GENERATED:
+        for match in pattern.finditer(views[view]):
+            line_no, col = _locate(starts, match.start())
+            if line_no in hand_lines or suppressed(line_no, rule_id):
+                continue
+            key = re.sub(r"\s", "", match.group(1))
+            findings.append(Finding(path, line_no, col, severity, rule_id, messages.get(key, "Deprecated API.")))
+
     if require_strict and src.strip():
         first_code = next((ln for ln in lines if ln.strip()), "")
         if not any(ln.strip().startswith("--!strict") for ln in lines[:3]) and not first_code.startswith("--!nonstrict"):
@@ -296,6 +358,8 @@ def main(argv: list[str] | None = None) -> int:
         for rule in RULES:
             print(f"{rule.id}  {rule.severity:<5}  {rule.message}")
         print("CL100  info   Add `--!strict` at the top of new scripts.")
+        for rule_id, severity, _view, _pattern, messages in GENERATED:
+            print(f"{rule_id}  {severity:<5}  generated from official docs: {len(messages)} deprecated names")
         return 0
 
     if not args.paths:

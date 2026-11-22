@@ -45,6 +45,18 @@ label.Font = Enum.Font.SourceSans -- expect CL091
 label.BorderSizePixel = 1 -- expect CL092
 label.Text = "💰 Welcome to the Game!" -- expect CL094 and CL095
 
+local chat = game:GetService("Chat") -- expect CL053
+Players.LocalPlayer.Chatted:Connect(function() end) -- expect CL064
+local physics = game:GetService("PhysicsService") -- expect CL059
+local rank = Players.LocalPlayer:GetRankInGroup(1) -- expect CL200
+Players.LocalPlayer:LoadCharacter() -- expect CL200
+local tool = Instance.new("HopperBin") -- expect CL203
+label.TextWrap = true -- expect CL201
+local options = Instance.new("TeleportOptions")
+options.ShouldReserveServer = true -- expect CL201
+if local x = 1 then end -- expect CL077
+game:GetService("MarketplaceService").PromptProductPurchaseFinished:Connect(print) -- expect CL078
+
 -- These must NOT be flagged (strings/comments): "wait(1)", 'spawn()', [[ tick() ]]
 local ok = "task.wait() is fine"
 task.wait(1)

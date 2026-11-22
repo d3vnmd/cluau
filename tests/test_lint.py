@@ -12,6 +12,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LINT_PATH = os.path.join(ROOT, "skills", "cluau", "scripts", "luau_lint.py")
 TEMPLATES = os.path.join(ROOT, "skills", "cluau", "templates")
 BAD = os.path.join(ROOT, "tests", "fixtures", "bad.luau")
+GOOD = os.path.join(ROOT, "tests", "fixtures", "good.luau")
 
 spec = importlib.util.spec_from_file_location("luau_lint", LINT_PATH)
 assert spec and spec.loader
@@ -44,6 +45,23 @@ class BadFixtureTests(unittest.TestCase):
 
     def test_missing_strict_reported(self):
         self.assertTrue(any(f.rule == "CL100" for f in self.findings))
+
+
+class GoodFixtureTests(unittest.TestCase):
+    def test_valid_modern_luau_has_no_findings(self):
+        findings = lint_file(GOOD)
+        self.assertEqual(findings, [], f"false positives in good.luau: {findings}")
+
+
+class GeneratedRuleTests(unittest.TestCase):
+    def test_generated_rules_loaded(self):
+        ids = {rule_id for rule_id, *_ in luau_lint.GENERATED}
+        self.assertTrue({"CL200", "CL201", "CL203"} <= ids, ids)
+
+    def test_async_renames_and_group_apis_flagged(self):
+        src = "--!strict\nlocal r = player:GetRankInGroup(1)\nplayer:LoadCharacter()\nlocal f = player:IsFriendsWith(2)\n"
+        rules = [f.rule for f in luau_lint.lint_source(src)]
+        self.assertEqual(rules.count("CL200"), 3, rules)
 
 
 class TemplateTests(unittest.TestCase):

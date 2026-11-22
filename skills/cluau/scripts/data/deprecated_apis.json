@@ -1,0 +1,4750 @@
+{
+ "source": "https://github.com/Roblox/creator-docs",
+ "source_revision": "a23352b27af917e55e165e4d42583580700d1fbf 2026-11-21",
+ "generated": "2026-11-22",
+ "classes": [
+  {
+   "name": "BevelMesh",
+   "kind": "class",
+   "message": "This object serves no purpose other than being an abstract class that `BlockMesh` and `CylinderMesh` inherit from."
+  },
+  {
+   "name": "BodyAngularVelocity",
+   "kind": "class",
+   "message": "This object is deprecated and should not be used for new work."
+  },
+  {
+   "name": "BodyForce",
+   "kind": "class",
+   "message": "This object is deprecated and should not be used for new work."
+  },
+  {
+   "name": "BodyGyro",
+   "kind": "class",
+   "message": "This object is deprecated and should not be used for new work."
+  },
+  {
+   "name": "BodyMover",
+   "kind": "class",
+   "message": "This class has been deprecated."
+  },
+  {
+   "name": "BodyPosition",
+   "kind": "class",
+   "message": "This object is deprecated and should not be used for new work."
+  },
+  {
+   "name": "BodyThrust",
+   "kind": "class",
+   "message": "This object is deprecated and should not be used for new work."
+  },
+  {
+   "name": "BodyVelocity",
+   "kind": "class",
+   "message": "This object is deprecated and should not be used for new work."
+  },
+  {
+   "name": "CustomEvent",
+   "kind": "class",
+   "message": "`CustomEvents` have been superseded by `BindableEvents` and should not be used in new work."
+  },
+  {
+   "name": "CustomEventReceiver",
+   "kind": "class",
+   "message": "`CustomEvents` have been superseded by `BindableEvents` and should not be used in new work."
+  },
+  {
+   "name": "CylinderMesh",
+   "kind": "class",
+   "message": "This class is deprecated, and `CylinderMeshes` are no longer supported."
+  },
+  {
+   "name": "DoubleConstrainedValue",
+   "kind": "class",
+   "message": "The DoubleConstrainedValue object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values."
+  },
+  {
+   "name": "Flag",
+   "kind": "class",
+   "message": "The `Flag` and `FlagStand` objects were created to allow developers to make 'capture the flag' style games quickly."
+  },
+  {
+   "name": "FlagStand",
+   "kind": "class",
+   "message": "The FlagStand and Flag are deprecated objects that were used to make 'capture the flag' style games."
+  },
+  {
+   "name": "FloorWire",
+   "kind": "class",
+   "message": "The FloorWire object has been deprecated and should not be used in new work."
+  },
+  {
+   "name": "FunctionalTest",
+   "kind": "class",
+   "message": "FunctionalTest has been deprecated, developers are advised to use `TestService` instead."
+  },
+  {
+   "name": "Glue",
+   "kind": "class",
+   "message": "This joint type has been deprecated and should not be used in new work."
+  },
+  {
+   "name": "GuiMain",
+   "kind": "class",
+   "message": "This deprecated class is the original name of the `ScreenGui`."
+  },
+  {
+   "name": "Hat",
+   "kind": "class",
+   "message": "This class has been superseded by the `Accessory` class."
+  },
+  {
+   "name": "Hint",
+   "kind": "class",
+   "message": "With the introduction of Roblox's GUI features hints have been deprecated and `TextLabels` should be used instead for new work."
+  },
+  {
+   "name": "Hole",
+   "kind": "class",
+   "message": "A Hole is an unused type of surface joint."
+  },
+  {
+   "name": "Hopper",
+   "kind": "class",
+   "message": "`Hopper` has been replaced by `StarterPack` and should not be used in new work."
+  },
+  {
+   "name": "HopperBin",
+   "kind": "class",
+   "message": "This deprecated class has been replaced by `Tool`."
+  },
+  {
+   "name": "IntConstrainedValue",
+   "kind": "class",
+   "message": "The IntConstrainedValue object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values."
+  },
+  {
+   "name": "JointsService",
+   "kind": "class",
+   "message": "This service has been deprecated in favor of constraints which should be used for surface connections instead"
+  },
+  {
+   "name": "ManualGlue",
+   "kind": "class",
+   "message": ""
+  },
+  {
+   "name": "ManualSurfaceJointInstance",
+   "kind": "class",
+   "message": ""
+  },
+  {
+   "name": "ManualWeld",
+   "kind": "class",
+   "message": ""
+  },
+  {
+   "name": "Message",
+   "kind": "class",
+   "message": "With the introduction of Roblox's GUI features hints have been deprecated and `TextLabels` should be used instead for new work."
+  },
+  {
+   "name": "MotorFeature",
+   "kind": "class",
+   "message": "A MotorFeature is an unused type of surface joint."
+  },
+  {
+   "name": "OpenCloudApiV1",
+   "kind": "class",
+   "message": "This class is deprecated and should not be used for new work."
+  },
+  {
+   "name": "OpenCloudService",
+   "kind": "class",
+   "message": "This class is deprecated and should not be used for new work."
+  },
+  {
+   "name": "Plane",
+   "kind": "class",
+   "message": ""
+  },
+  {
+   "name": "PointsService",
+   "kind": "class",
+   "message": "This class was once used to control an ancient achievement system since removed and deprecated."
+  },
+  {
+   "name": "RocketPropulsion",
+   "kind": "class",
+   "message": "This object is deprecated and should not be used for new work."
+  },
+  {
+   "name": "Rotate",
+   "kind": "class",
+   "message": "This class works alongside the deprecated `SurfaceType` and should not be used for future work; use `HingeConstraint` instead."
+  },
+  {
+   "name": "RotateP",
+   "kind": "class",
+   "message": "This class works alongside the deprecated `SurfaceType` and should not be used for future work; use `HingeConstraint` instead."
+  },
+  {
+   "name": "RotateV",
+   "kind": "class",
+   "message": "This class works alongside the deprecated `SurfaceType` and should not be used for future work; use `HingeConstraint` instead."
+  },
+  {
+   "name": "SelectionPartLasso",
+   "kind": "class",
+   "message": "SelectionPartLasso has been deprecated."
+  },
+  {
+   "name": "SelectionPointLasso",
+   "kind": "class",
+   "message": "The SelectionPointLasso class is deprecated."
+  },
+  {
+   "name": "SkateboardPlatform",
+   "kind": "class",
+   "message": "The SkateboardPlatform object has been deprecated and is no longer supported by Roblox."
+  },
+  {
+   "name": "Skin",
+   "kind": "class",
+   "message": "This object has been deprecated and superseded by `BodyColors`."
+  },
+  {
+   "name": "Snap",
+   "kind": "class",
+   "message": ""
+  },
+  {
+   "name": "Status",
+   "kind": "class",
+   "message": "Status is an unfinished object designed to store custom `Humanoid` statuses."
+  },
+  {
+   "name": "GearGenreSetting",
+   "kind": "enum",
+   "message": "This enum is deprecated as it is used by deprecated properties that are no longer functional."
+  },
+  {
+   "name": "GearType",
+   "kind": "enum",
+   "message": "This enum is deprecated because it's used by deprecated properties."
+  },
+  {
+   "name": "Genre",
+   "kind": "enum",
+   "message": ""
+  },
+  {
+   "name": "SaveFilter",
+   "kind": "enum",
+   "message": "This deprecated enum is used by `DataModel.SavePlace` which has also been deprecated."
+  },
+  {
+   "name": "Status",
+   "kind": "enum",
+   "message": "This enum is deprecated as it was only used by deprecated methods and events."
+  }
+ ],
+ "class_context_only": [
+  "Flag",
+  "Hat",
+  "Hint",
+  "Hole",
+  "Message",
+  "Plane",
+  "Skin",
+  "Status"
+ ],
+ "members": [
+  {
+   "full": "AccessoryDescription.Puffiness",
+   "name": "Puffiness",
+   "kind": "property",
+   "owner": "AccessoryDescription",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "AdGui.OnAdEvent",
+   "name": "OnAdEvent",
+   "kind": "callback",
+   "owner": "AdGui",
+   "message": "This callback has been deprecated and will never be called.",
+   "lint": true
+  },
+  {
+   "full": "AdService:ShowVideoAd",
+   "name": "ShowVideoAd",
+   "kind": "method",
+   "owner": "AdService",
+   "message": "`ShowVideoAd` has been decommissioned and is no longer operational.",
+   "lint": true
+  },
+  {
+   "full": "AdService.VideoAdClosed",
+   "name": "VideoAdClosed",
+   "kind": "event",
+   "owner": "AdService",
+   "message": "`VideoAdClosed` has been decommissioned and is no longer operational.",
+   "lint": true
+  },
+  {
+   "full": "AlignOrientation.PrimaryAxisOnly",
+   "name": "PrimaryAxisOnly",
+   "kind": "property",
+   "owner": "AlignOrientation",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "AnalyticsService.ApiKey",
+   "name": "ApiKey",
+   "kind": "property",
+   "owner": "AnalyticsService",
+   "message": "This property is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "AnalyticsService:FireCustomEvent",
+   "name": "FireCustomEvent",
+   "kind": "method",
+   "owner": "AnalyticsService",
+   "message": "This deprecated function is a variant of `Class.AnalyticsService:LogCustomEvent()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "AnalyticsService:FireEvent",
+   "name": "FireEvent",
+   "kind": "method",
+   "owner": "AnalyticsService",
+   "message": "This function has been deprecated in favor of more descriptive methods, including `Class.AnalyticsService:LogCustomEvent()`, `Class.AnalyticsService:LogEconomyEvent()`, and `Class.AnalyticsService:LogProgressionEvent()`.",
+   "lint": true
+  },
+  {
+   "full": "AnalyticsService:FireInGameEconomyEvent",
+   "name": "FireInGameEconomyEvent",
+   "kind": "method",
+   "owner": "AnalyticsService",
+   "message": "This deprecated function is a variant of `Class.AnalyticsService:LogEconomyEvent()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "AnalyticsService:FireLogEvent",
+   "name": "FireLogEvent",
+   "kind": "method",
+   "owner": "AnalyticsService",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "AnalyticsService:FirePlayerProgressionEvent",
+   "name": "FirePlayerProgressionEvent",
+   "kind": "method",
+   "owner": "AnalyticsService",
+   "message": "This deprecated function is a variant of `Class.AnalyticsService:LogProgressionEvent()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "AnimationClipProvider:GetAnimationClip",
+   "name": "GetAnimationClip",
+   "kind": "method",
+   "owner": "AnimationClipProvider",
+   "message": "This function is deprecated and can lead to the game freezing until the animation is loaded.",
+   "lint": true
+  },
+  {
+   "full": "AnimationClipProvider:GetAnimationClipById",
+   "name": "GetAnimationClipById",
+   "kind": "method",
+   "owner": "AnimationClipProvider",
+   "message": "This function is deprecated and can lead to the game freezing until the animation is loaded.",
+   "lint": true
+  },
+  {
+   "full": "AnimationClipProvider:GetAnimations",
+   "name": "GetAnimations",
+   "kind": "method",
+   "owner": "AnimationClipProvider",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AnimationController.AnimationPlayed",
+   "name": "AnimationPlayed",
+   "kind": "event",
+   "owner": "AnimationController",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "AnimationController:GetPlayingAnimationTracks",
+   "name": "GetPlayingAnimationTracks",
+   "kind": "method",
+   "owner": "AnimationController",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "AnimationController:LoadAnimation",
+   "name": "LoadAnimation",
+   "kind": "method",
+   "owner": "AnimationController",
+   "message": "This function is deprecated in favor of using `Class.Animator:LoadAnimation()` directly (the `Animator` may be created while editing or at runtime).",
+   "lint": false
+  },
+  {
+   "full": "AnimationTrack.KeyframeReached",
+   "name": "KeyframeReached",
+   "kind": "event",
+   "owner": "AnimationTrack",
+   "message": "This event has been superseded by the `Class.AnimationTrack:GetMarkerReachedSignal()` method.",
+   "lint": true
+  },
+  {
+   "full": "AssetService:CreatePlaceInPlayerInventoryAsync",
+   "name": "CreatePlaceInPlayerInventoryAsync",
+   "kind": "method",
+   "owner": "AssetService",
+   "message": "This method has been removed and is no longer functional.",
+   "lint": true
+  },
+  {
+   "full": "AssetService:GetAssetIdsForPackage",
+   "name": "GetAssetIdsForPackage",
+   "kind": "method",
+   "owner": "AssetService",
+   "message": "Use `Class.AssetService:GetAssetIdsForPackageAsync()|GetAssetIdsForPackageAsync()` instead.",
+   "lint": true
+  },
+  {
+   "full": "AssetService:GetCreatorAssetID",
+   "name": "GetCreatorAssetID",
+   "kind": "method",
+   "owner": "AssetService",
+   "message": "This item is deprecated and no longer functions correctly.",
+   "lint": true
+  },
+  {
+   "full": "AssetService:SearchAudio",
+   "name": "SearchAudio",
+   "kind": "method",
+   "owner": "AssetService",
+   "message": "Use `Class.AssetService:SearchAudioAsync()|SearchAudioAsync()` instead.",
+   "lint": true
+  },
+  {
+   "full": "Attachment:GetAxis",
+   "name": "GetAxis",
+   "kind": "method",
+   "owner": "Attachment",
+   "message": "This method is deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "Attachment:GetSecondaryAxis",
+   "name": "GetSecondaryAxis",
+   "kind": "method",
+   "owner": "Attachment",
+   "message": "This method is deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "Attachment.Rotation",
+   "name": "Rotation",
+   "kind": "property",
+   "owner": "Attachment",
+   "message": "This property is deprecated and should not be used in new work.",
+   "lint": false
+  },
+  {
+   "full": "Attachment:SetAxis",
+   "name": "SetAxis",
+   "kind": "method",
+   "owner": "Attachment",
+   "message": "This method is deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "Attachment:SetSecondaryAxis",
+   "name": "SetSecondaryAxis",
+   "kind": "method",
+   "owner": "Attachment",
+   "message": "This method is deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "Attachment.WorldRotation",
+   "name": "WorldRotation",
+   "kind": "property",
+   "owner": "Attachment",
+   "message": "This item has been superseded by `WorldOrientation` which should be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "AudioEmitter.SimulationFidelity",
+   "name": "SimulationFidelity",
+   "kind": "property",
+   "owner": "AudioEmitter",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AudioListener.SimulationFidelity",
+   "name": "SimulationFidelity",
+   "kind": "property",
+   "owner": "AudioListener",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "AudioPlayer.AssetId",
+   "name": "AssetId",
+   "kind": "property",
+   "owner": "AudioPlayer",
+   "message": "This property is deprecated; use `Asset` instead.",
+   "lint": false
+  },
+  {
+   "full": "AudioSearchParams.AudioSubtype",
+   "name": "AudioSubtype",
+   "kind": "property",
+   "owner": "AudioSearchParams",
+   "message": "Use `AudioSubType` instead.",
+   "lint": true
+  },
+  {
+   "full": "AvatarCreationService.AvatarModerationCompleted",
+   "name": "AvatarModerationCompleted",
+   "kind": "event",
+   "owner": "AvatarCreationService",
+   "message": "This event is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:CheckApplyDefaultClothing",
+   "name": "CheckApplyDefaultClothing",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:ConformToAvatarRules",
+   "name": "ConformToAvatarRules",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:GetAvatarRules",
+   "name": "GetAvatarRules",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:GetBatchItemDetails",
+   "name": "GetBatchItemDetails",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:GetFavorite",
+   "name": "GetFavorite",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:GetInventory",
+   "name": "GetInventory",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:GetItemDetails",
+   "name": "GetItemDetails",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:GetOutfitDetails",
+   "name": "GetOutfitDetails",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:GetOutfits",
+   "name": "GetOutfits",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:GetRecommendedAssets",
+   "name": "GetRecommendedAssets",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:GetRecommendedBundles",
+   "name": "GetRecommendedBundles",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "AvatarEditorService:SearchCatalog",
+   "name": "SearchCatalog",
+   "kind": "method",
+   "owner": "AvatarEditorService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BadgeService:AwardBadge",
+   "name": "AwardBadge",
+   "kind": "method",
+   "owner": "BadgeService",
+   "message": "Use `Class.BadgeService:AwardBadgeAsync()|AwardBadgeAsync()` instead.",
+   "lint": true
+  },
+  {
+   "full": "BadgeService:IsDisabled",
+   "name": "IsDisabled",
+   "kind": "method",
+   "owner": "BadgeService",
+   "message": "This function is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "BadgeService:IsLegal",
+   "name": "IsLegal",
+   "kind": "method",
+   "owner": "BadgeService",
+   "message": "This function is deprecated and will always return true.",
+   "lint": true
+  },
+  {
+   "full": "BadgeService:UserHasBadge",
+   "name": "UserHasBadge",
+   "kind": "method",
+   "owner": "BadgeService",
+   "message": "This method has been superseded by `Class.BadgeService:UserHasBadgeAsync()` which should be used for new work instead.",
+   "lint": true
+  },
+  {
+   "full": "BasePart.BackParamA",
+   "name": "BackParamA",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.BackParamB",
+   "name": "BackParamB",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.BackSurfaceInput",
+   "name": "BackSurfaceInput",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.BottomParamA",
+   "name": "BottomParamA",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.BottomParamB",
+   "name": "BottomParamB",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.BottomSurfaceInput",
+   "name": "BottomSurfaceInput",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart:BreakJoints",
+   "name": "BreakJoints",
+   "kind": "method",
+   "owner": "BasePart",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "BasePart.CollisionGroupId",
+   "name": "CollisionGroupId",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.Elasticity",
+   "name": "Elasticity",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "This is only one of multiple physics-related properties.",
+   "lint": false
+  },
+  {
+   "full": "BasePart.Friction",
+   "name": "Friction",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "This is only one of multiple physics-related properties.",
+   "lint": false
+  },
+  {
+   "full": "BasePart.FrontParamA",
+   "name": "FrontParamA",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.FrontParamB",
+   "name": "FrontParamB",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.FrontSurfaceInput",
+   "name": "FrontSurfaceInput",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart:GetRenderCFrame",
+   "name": "GetRenderCFrame",
+   "kind": "method",
+   "owner": "BasePart",
+   "message": "This item is been deprecated since interpolation is now applied to the `CFrame` directly.",
+   "lint": false
+  },
+  {
+   "full": "BasePart:GetRootPart",
+   "name": "GetRootPart",
+   "kind": "method",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.LeftParamA",
+   "name": "LeftParamA",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.LeftParamB",
+   "name": "LeftParamB",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.LeftSurfaceInput",
+   "name": "LeftSurfaceInput",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.LocalSimulationTouched",
+   "name": "LocalSimulationTouched",
+   "kind": "event",
+   "owner": "BasePart",
+   "message": "This event is deprecated in favor of `BasePart.Touched`.",
+   "lint": true
+  },
+  {
+   "full": "BasePart:MakeJoints",
+   "name": "MakeJoints",
+   "kind": "method",
+   "owner": "BasePart",
+   "message": "SurfaceType based joining is deprecated, do not use MakeJoints for new projects.",
+   "lint": true
+  },
+  {
+   "full": "BasePart.OutfitChanged",
+   "name": "OutfitChanged",
+   "kind": "event",
+   "owner": "BasePart",
+   "message": "This event is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "BasePart.RightParamA",
+   "name": "RightParamA",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.RightParamB",
+   "name": "RightParamB",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.RightSurfaceInput",
+   "name": "RightSurfaceInput",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.RotVelocity",
+   "name": "RotVelocity",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "BasePart.SpecificGravity",
+   "name": "SpecificGravity",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "This item is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "BasePart.StoppedTouching",
+   "name": "StoppedTouching",
+   "kind": "event",
+   "owner": "BasePart",
+   "message": "This event is deprecated in favor of `BasePart.TouchEnded`, which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "BasePart.TopParamA",
+   "name": "TopParamA",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.TopParamB",
+   "name": "TopParamB",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.TopSurfaceInput",
+   "name": "TopSurfaceInput",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BasePart.Velocity",
+   "name": "Velocity",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "This property is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "BasePart:breakJoints",
+   "name": "breakJoints",
+   "kind": "method",
+   "owner": "BasePart",
+   "message": "This deprecated function is a variant of `Class.BasePart:BreakJoints()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "BasePart.brickColor",
+   "name": "brickColor",
+   "kind": "property",
+   "owner": "BasePart",
+   "message": "This deprecated property is an old Camel Case variant of the Pascal Case `BasePart.BrickColor`, which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "BasePart:getMass",
+   "name": "getMass",
+   "kind": "method",
+   "owner": "BasePart",
+   "message": "This Camel Case property has been deprecated in favor of its Pascal Case variant, `Class.BasePart:GetMass()`.",
+   "lint": true
+  },
+  {
+   "full": "BasePart:makeJoints",
+   "name": "makeJoints",
+   "kind": "method",
+   "owner": "BasePart",
+   "message": "This deprecated function is a variant of `Class.BasePart:MakeJoints()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "BasePart:resize",
+   "name": "resize",
+   "kind": "method",
+   "owner": "BasePart",
+   "message": "This deprecated function is a variant of `Class.BasePart:Resize()` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BaseScript.LinkedSource",
+   "name": "LinkedSource",
+   "kind": "property",
+   "owner": "BaseScript",
+   "message": "This property is now replaced by packages which has greater functionality.",
+   "lint": true
+  },
+  {
+   "full": "BillboardGui.DistanceLowerLimit",
+   "name": "DistanceLowerLimit",
+   "kind": "property",
+   "owner": "BillboardGui",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BillboardGui.DistanceUpperLimit",
+   "name": "DistanceUpperLimit",
+   "kind": "property",
+   "owner": "BillboardGui",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BodyAngularVelocity.AngularVelocity",
+   "name": "AngularVelocity",
+   "kind": "property",
+   "owner": "BodyAngularVelocity",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyAngularVelocity.MaxTorque",
+   "name": "MaxTorque",
+   "kind": "property",
+   "owner": "BodyAngularVelocity",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyAngularVelocity.P",
+   "name": "P",
+   "kind": "property",
+   "owner": "BodyAngularVelocity",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyAngularVelocity.angularvelocity",
+   "name": "angularvelocity",
+   "kind": "property",
+   "owner": "BodyAngularVelocity",
+   "message": "This deprecated property is a variant of `BodyAngularVelocity.AngularVelocity` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BodyAngularVelocity.maxTorque",
+   "name": "maxTorque",
+   "kind": "property",
+   "owner": "BodyAngularVelocity",
+   "message": "This deprecated property is a variant of `BodyAngularVelocity.MaxTorque` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BodyForce.Force",
+   "name": "Force",
+   "kind": "property",
+   "owner": "BodyForce",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyForce.force",
+   "name": "force",
+   "kind": "property",
+   "owner": "BodyForce",
+   "message": "This deprecated property is a variant of `BodyForce.Force` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BodyGyro.CFrame",
+   "name": "CFrame",
+   "kind": "property",
+   "owner": "BodyGyro",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyGyro.D",
+   "name": "D",
+   "kind": "property",
+   "owner": "BodyGyro",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyGyro.MaxTorque",
+   "name": "MaxTorque",
+   "kind": "property",
+   "owner": "BodyGyro",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyGyro.P",
+   "name": "P",
+   "kind": "property",
+   "owner": "BodyGyro",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyGyro.cframe",
+   "name": "cframe",
+   "kind": "property",
+   "owner": "BodyGyro",
+   "message": "This property is a deprecated variant of `BodyGyro.CFrame` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BodyGyro.maxTorque",
+   "name": "maxTorque",
+   "kind": "property",
+   "owner": "BodyGyro",
+   "message": "This property is a deprecated variant of `BodyGyro.MaxTorque` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BodyPosition.D",
+   "name": "D",
+   "kind": "property",
+   "owner": "BodyPosition",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyPosition:GetLastForce",
+   "name": "GetLastForce",
+   "kind": "method",
+   "owner": "BodyPosition",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BodyPosition.MaxForce",
+   "name": "MaxForce",
+   "kind": "property",
+   "owner": "BodyPosition",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyPosition.P",
+   "name": "P",
+   "kind": "property",
+   "owner": "BodyPosition",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyPosition.Position",
+   "name": "Position",
+   "kind": "property",
+   "owner": "BodyPosition",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyPosition.ReachedTarget",
+   "name": "ReachedTarget",
+   "kind": "event",
+   "owner": "BodyPosition",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BodyPosition:lastForce",
+   "name": "lastForce",
+   "kind": "method",
+   "owner": "BodyPosition",
+   "message": "This property has been superseded by `Class.BodyPosition:GetLastForce()` which should be used in new work instead,",
+   "lint": true
+  },
+  {
+   "full": "BodyPosition.maxForce",
+   "name": "maxForce",
+   "kind": "property",
+   "owner": "BodyPosition",
+   "message": "This property is a deprecated variant of `BodyPosition.MaxForce` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BodyPosition.position",
+   "name": "position",
+   "kind": "property",
+   "owner": "BodyPosition",
+   "message": "This is a deprecated variant of `BodyPosition.Position` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BodyThrust.Force",
+   "name": "Force",
+   "kind": "property",
+   "owner": "BodyThrust",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyThrust.Location",
+   "name": "Location",
+   "kind": "property",
+   "owner": "BodyThrust",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "BodyThrust.force",
+   "name": "force",
+   "kind": "property",
+   "owner": "BodyThrust",
+   "message": "This property is a deprecated variant of `Force` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BodyThrust.location",
+   "name": "location",
+   "kind": "property",
+   "owner": "BodyThrust",
+   "message": "This property is a deprecated variant of `BodyThrust.Location` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BodyVelocity:GetLastForce",
+   "name": "GetLastForce",
+   "kind": "method",
+   "owner": "BodyVelocity",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyVelocity.MaxForce",
+   "name": "MaxForce",
+   "kind": "property",
+   "owner": "BodyVelocity",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyVelocity.P",
+   "name": "P",
+   "kind": "property",
+   "owner": "BodyVelocity",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyVelocity.Velocity",
+   "name": "Velocity",
+   "kind": "property",
+   "owner": "BodyVelocity",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyVelocity:lastForce",
+   "name": "lastForce",
+   "kind": "method",
+   "owner": "BodyVelocity",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "BodyVelocity.maxForce",
+   "name": "maxForce",
+   "kind": "property",
+   "owner": "BodyVelocity",
+   "message": "This property is a deprecated variant of `BodyVelocity.MaxForce` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BodyVelocity.velocity",
+   "name": "velocity",
+   "kind": "property",
+   "owner": "BodyVelocity",
+   "message": "This property is a deprecated variant of `BodyVelocity.Velocity` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BoolValue.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "BoolValue",
+   "message": "This event is a deprecated variant of `BoolValue.Changed` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "BrickColorValue.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "BrickColorValue",
+   "message": "This event is a deprecated variant of `BrickColorValue.Changed` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "CFrameValue.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "CFrameValue",
+   "message": "This event is a deprecated variant of `CFrameValue.Changed` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "Camera.CoordinateFrame",
+   "name": "CoordinateFrame",
+   "kind": "property",
+   "owner": "Camera",
+   "message": "This item has been superseded by `Camera.CFrame` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "Camera:GetLargestCutoffDistance",
+   "name": "GetLargestCutoffDistance",
+   "kind": "method",
+   "owner": "Camera",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Camera:GetPanSpeed",
+   "name": "GetPanSpeed",
+   "kind": "method",
+   "owner": "Camera",
+   "message": "This method has been deprecated and no longer works.",
+   "lint": true
+  },
+  {
+   "full": "Camera:GetRoll",
+   "name": "GetRoll",
+   "kind": "method",
+   "owner": "Camera",
+   "message": "This method has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Camera:GetTiltSpeed",
+   "name": "GetTiltSpeed",
+   "kind": "method",
+   "owner": "Camera",
+   "message": "This method has been deprecated and no longer works.",
+   "lint": true
+  },
+  {
+   "full": "Camera:Interpolate",
+   "name": "Interpolate",
+   "kind": "method",
+   "owner": "Camera",
+   "message": "This method has been deprecated.",
+   "lint": false
+  },
+  {
+   "full": "Camera.InterpolationFinished",
+   "name": "InterpolationFinished",
+   "kind": "event",
+   "owner": "Camera",
+   "message": "This event has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Camera:PanUnits",
+   "name": "PanUnits",
+   "kind": "method",
+   "owner": "Camera",
+   "message": "This method was used for legacy camera controls and has since been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Camera:SetCameraPanMode",
+   "name": "SetCameraPanMode",
+   "kind": "method",
+   "owner": "Camera",
+   "message": "This method has been deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "Camera:SetRoll",
+   "name": "SetRoll",
+   "kind": "method",
+   "owner": "Camera",
+   "message": "This method has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Camera:TiltUnits",
+   "name": "TiltUnits",
+   "kind": "method",
+   "owner": "Camera",
+   "message": "This method was used for legacy camera controls and has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Camera.focus",
+   "name": "focus",
+   "kind": "property",
+   "owner": "Camera",
+   "message": "This property is a deprecated variant of `Focus` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "CaptureService.CaptureSaved",
+   "name": "CaptureSaved",
+   "kind": "event",
+   "owner": "CaptureService",
+   "message": "This event has been superseded by the `UserCaptureSaved` event.",
+   "lint": true
+  },
+  {
+   "full": "Chat:FilterStringForPlayerAsync",
+   "name": "FilterStringForPlayerAsync",
+   "kind": "method",
+   "owner": "Chat",
+   "message": "This item has been superseded by `Class.Chat:FilterStringAsync()` and `Class.Chat:FilterStringForBroadcast()` which should be used in all new work",
+   "lint": true
+  },
+  {
+   "full": "ClickDetector.mouseClick",
+   "name": "mouseClick",
+   "kind": "event",
+   "owner": "ClickDetector",
+   "message": "This deprecated event is a variant of `ClickDetector.MouseClick`, which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "CollectionService:GetCollection",
+   "name": "GetCollection",
+   "kind": "method",
+   "owner": "CollectionService",
+   "message": "This item has been superseded by a `CollectionService` tagging method.",
+   "lint": true
+  },
+  {
+   "full": "CollectionService.ItemAdded",
+   "name": "ItemAdded",
+   "kind": "event",
+   "owner": "CollectionService",
+   "message": "This item has been superseded by a `CollectionService` tagging method.",
+   "lint": true
+  },
+  {
+   "full": "CollectionService.ItemRemoved",
+   "name": "ItemRemoved",
+   "kind": "event",
+   "owner": "CollectionService",
+   "message": "This item has been superseded by a `CollectionService` tagging method.",
+   "lint": true
+  },
+  {
+   "full": "Color3.toHSV",
+   "name": "toHSV",
+   "kind": "function",
+   "owner": "Color3",
+   "message": "This function is functionally equivalent to `Datatype.Color3:ToHSV()`.",
+   "lint": true
+  },
+  {
+   "full": "Color3Value.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "Color3Value",
+   "message": "This deprecated event is a variant of `Color3Value.Changed` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "Constraint:GetDebugAppliedForce",
+   "name": "GetDebugAppliedForce",
+   "kind": "method",
+   "owner": "Constraint",
+   "message": "This method should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "Constraint:GetDebugAppliedTorque",
+   "name": "GetDebugAppliedTorque",
+   "kind": "method",
+   "owner": "Constraint",
+   "message": "This method should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "ContentProvider:Preload",
+   "name": "Preload",
+   "kind": "method",
+   "owner": "ContentProvider",
+   "message": "This item has been superseded by `Class.ContentProvider:PreloadAsync()` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "ContextActionService:BindActionToInputTypes",
+   "name": "BindActionToInputTypes",
+   "kind": "method",
+   "owner": "ContextActionService",
+   "message": "This item has been superseded by `Class.ContextActionService:BindAction()` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "Controller:bindButton",
+   "name": "bindButton",
+   "kind": "method",
+   "owner": "Controller",
+   "message": "This function is a deprecated variant of `Class.Controller:BindButton()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Controller:getButton",
+   "name": "getButton",
+   "kind": "method",
+   "owner": "Controller",
+   "message": "This function is a deprecated variant of `Class.Controller:GetButton()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "CustomEvent:GetAttachedReceivers",
+   "name": "GetAttachedReceivers",
+   "kind": "method",
+   "owner": "CustomEvent",
+   "message": "CustomEvents have been superseded by `BindableEvents` and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "CustomEvent.ReceiverConnected",
+   "name": "ReceiverConnected",
+   "kind": "event",
+   "owner": "CustomEvent",
+   "message": "`CustomEvents` have been superseded by `BindableEvents` and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "CustomEvent.ReceiverDisconnected",
+   "name": "ReceiverDisconnected",
+   "kind": "event",
+   "owner": "CustomEvent",
+   "message": "`CustomEvents` have been superseded by `BindableEvents` and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "CustomEvent:SetValue",
+   "name": "SetValue",
+   "kind": "method",
+   "owner": "CustomEvent",
+   "message": "`CustomEvents` have been superseded by `BindableEvents` and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "CustomEventReceiver.EventConnected",
+   "name": "EventConnected",
+   "kind": "event",
+   "owner": "CustomEventReceiver",
+   "message": "`CustomEvents` have been superseded by `BindableEvents` and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "CustomEventReceiver.EventDisconnected",
+   "name": "EventDisconnected",
+   "kind": "event",
+   "owner": "CustomEventReceiver",
+   "message": "`CustomEvents` have been superseded by `BindableEvents` and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "CustomEventReceiver:GetCurrentValue",
+   "name": "GetCurrentValue",
+   "kind": "method",
+   "owner": "CustomEventReceiver",
+   "message": "`CustomEvents` have been superseded by `BindableEvents` and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "CustomEventReceiver.Source",
+   "name": "Source",
+   "kind": "property",
+   "owner": "CustomEventReceiver",
+   "message": "`CustomEvents` have been superseded by `BindableEvents` and should not be used in new work.",
+   "lint": false
+  },
+  {
+   "full": "CustomEventReceiver.SourceValueChanged",
+   "name": "SourceValueChanged",
+   "kind": "event",
+   "owner": "CustomEventReceiver",
+   "message": "`CustomEvents` have been superseded by `BindableEvents` and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "CylindricalConstraint.SoftlockAngularServoUponReachingTarget",
+   "name": "SoftlockAngularServoUponReachingTarget",
+   "kind": "property",
+   "owner": "CylindricalConstraint",
+   "message": "This property should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "DataModel.AllowedGearTypeChanged",
+   "name": "AllowedGearTypeChanged",
+   "kind": "event",
+   "owner": "DataModel",
+   "message": "This item is deprecated .",
+   "lint": true
+  },
+  {
+   "full": "DataModel.GearGenreSetting",
+   "name": "GearGenreSetting",
+   "kind": "property",
+   "owner": "DataModel",
+   "message": "This property is deprecated and is no longer functional.",
+   "lint": true
+  },
+  {
+   "full": "DataModel.Genre",
+   "name": "Genre",
+   "kind": "property",
+   "owner": "DataModel",
+   "message": "This property is deprecated and is no longer functional.",
+   "lint": true
+  },
+  {
+   "full": "DataModel:GetMessage",
+   "name": "GetMessage",
+   "kind": "method",
+   "owner": "DataModel",
+   "message": "This item is deprecated since the system was phased out a very long time ago, and recently the APIs for setting this message were removed.",
+   "lint": true
+  },
+  {
+   "full": "DataModel:GetObjects",
+   "name": "GetObjects",
+   "kind": "method",
+   "owner": "DataModel",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "DataModel:GetRemoteBuildMode",
+   "name": "GetRemoteBuildMode",
+   "kind": "method",
+   "owner": "DataModel",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "DataModel:IsGearTypeAllowed",
+   "name": "IsGearTypeAllowed",
+   "kind": "method",
+   "owner": "DataModel",
+   "message": "This property is deprecated and is no longer functional.",
+   "lint": true
+  },
+  {
+   "full": "DataModel.ItemChanged",
+   "name": "ItemChanged",
+   "kind": "event",
+   "owner": "DataModel",
+   "message": "This function has been superseded by `Object.Changed`, which should be used in new work instead.",
+   "lint": true
+  },
+  {
+   "full": "DataModel.OnClose",
+   "name": "OnClose",
+   "kind": "callback",
+   "owner": "DataModel",
+   "message": "This function is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "DataModel:SavePlace",
+   "name": "SavePlace",
+   "kind": "method",
+   "owner": "DataModel",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "DataModel.VIPServerId",
+   "name": "VIPServerId",
+   "kind": "property",
+   "owner": "DataModel",
+   "message": "This property has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "DataModel.VIPServerOwnerId",
+   "name": "VIPServerOwnerId",
+   "kind": "property",
+   "owner": "DataModel",
+   "message": "This property has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "DataModel.lighting",
+   "name": "lighting",
+   "kind": "property",
+   "owner": "DataModel",
+   "message": "This item has been superseded by `Class.ServiceProvider:GetService()|game:GetService(\"Lighting\")`, which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "DataModel.workspace",
+   "name": "workspace",
+   "kind": "property",
+   "owner": "DataModel",
+   "message": "This deprecated property is a variant of `DataModel.Workspace` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "DataStore:RemoveVersionAsync",
+   "name": "RemoveVersionAsync",
+   "kind": "method",
+   "owner": "DataStore",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Debris.MaxItems",
+   "name": "MaxItems",
+   "kind": "property",
+   "owner": "Debris",
+   "message": "This property is deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "Debris:addItem",
+   "name": "addItem",
+   "kind": "method",
+   "owner": "Debris",
+   "message": "This function is a deprecated variant of `Class.Debris:AddItem()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Decal.Shiny",
+   "name": "Shiny",
+   "kind": "property",
+   "owner": "Decal",
+   "message": "This non-functional property is deprecated and should not be used in new work.",
+   "lint": false
+  },
+  {
+   "full": "Decal.Specular",
+   "name": "Specular",
+   "kind": "property",
+   "owner": "Decal",
+   "message": "This property no longer functions correctly and is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "Decal.Texture",
+   "name": "Texture",
+   "kind": "property",
+   "owner": "Decal",
+   "message": "This property has been deprecated.",
+   "lint": false
+  },
+  {
+   "full": "Decal.TextureContent",
+   "name": "TextureContent",
+   "kind": "property",
+   "owner": "Decal",
+   "message": "This property has been deprecated.",
+   "lint": false
+  },
+  {
+   "full": "DoubleConstrainedValue.Changed",
+   "name": "Changed",
+   "kind": "event",
+   "owner": "DoubleConstrainedValue",
+   "message": "The `DoubleConstrainedValue` object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values.",
+   "lint": false
+  },
+  {
+   "full": "DoubleConstrainedValue.ConstrainedValue",
+   "name": "ConstrainedValue",
+   "kind": "property",
+   "owner": "DoubleConstrainedValue",
+   "message": "The `DoubleConstrainedValue` object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values.",
+   "lint": true
+  },
+  {
+   "full": "DoubleConstrainedValue.MaxValue",
+   "name": "MaxValue",
+   "kind": "property",
+   "owner": "DoubleConstrainedValue",
+   "message": "The `DoubleConstrainedValue` object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values.",
+   "lint": true
+  },
+  {
+   "full": "DoubleConstrainedValue.MinValue",
+   "name": "MinValue",
+   "kind": "property",
+   "owner": "DoubleConstrainedValue",
+   "message": "The `DoubleConstrainedValue` object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values.",
+   "lint": true
+  },
+  {
+   "full": "DoubleConstrainedValue.Value",
+   "name": "Value",
+   "kind": "property",
+   "owner": "DoubleConstrainedValue",
+   "message": "The `DoubleConstrainedValue` object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values.",
+   "lint": false
+  },
+  {
+   "full": "DoubleConstrainedValue.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "DoubleConstrainedValue",
+   "message": "This event is a deprecated variant of `DoubleConstrainedValue.Changed` which has also been deprecated.",
+   "lint": false
+  },
+  {
+   "full": "EditableMesh:GetFacesWithAttribute",
+   "name": "GetFacesWithAttribute",
+   "kind": "method",
+   "owner": "EditableMesh",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "EditableMesh:GetVerticesWithAttribute",
+   "name": "GetVerticesWithAttribute",
+   "kind": "method",
+   "owner": "EditableMesh",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Fire.size",
+   "name": "size",
+   "kind": "property",
+   "owner": "Fire",
+   "message": "This property is a deprecated variant of `Fire.Size` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "Flag.TeamColor",
+   "name": "TeamColor",
+   "kind": "property",
+   "owner": "Flag",
+   "message": "This property was a part of the now deprecated `Flag` service.",
+   "lint": false
+  },
+  {
+   "full": "FlagStand.FlagCaptured",
+   "name": "FlagCaptured",
+   "kind": "event",
+   "owner": "FlagStand",
+   "message": "This event was a part of the now deprecated `Flag` service.",
+   "lint": true
+  },
+  {
+   "full": "FlagStand.TeamColor",
+   "name": "TeamColor",
+   "kind": "property",
+   "owner": "FlagStand",
+   "message": "This property was a part of the now deprecated `Flag` service.",
+   "lint": false
+  },
+  {
+   "full": "FloorWire.CycleOffset",
+   "name": "CycleOffset",
+   "kind": "property",
+   "owner": "FloorWire",
+   "message": "The FloorWire object has been deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "FloorWire.From",
+   "name": "From",
+   "kind": "property",
+   "owner": "FloorWire",
+   "message": "The FloorWire object has been deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "FloorWire.StudsBetweenTextures",
+   "name": "StudsBetweenTextures",
+   "kind": "property",
+   "owner": "FloorWire",
+   "message": "The FloorWire object has been deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "FloorWire.Texture",
+   "name": "Texture",
+   "kind": "property",
+   "owner": "FloorWire",
+   "message": "The FloorWire object has been deprecated and should not be used in new work.",
+   "lint": false
+  },
+  {
+   "full": "FloorWire.TextureSize",
+   "name": "TextureSize",
+   "kind": "property",
+   "owner": "FloorWire",
+   "message": "The FloorWire object has been deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "FloorWire.To",
+   "name": "To",
+   "kind": "property",
+   "owner": "FloorWire",
+   "message": "The FloorWire object has been deprecated and should not be used in new work.",
+   "lint": false
+  },
+  {
+   "full": "FloorWire.Velocity",
+   "name": "Velocity",
+   "kind": "property",
+   "owner": "FloorWire",
+   "message": "The FloorWire object has been deprecated and should not be used in new work.",
+   "lint": false
+  },
+  {
+   "full": "FloorWire.WireRadius",
+   "name": "WireRadius",
+   "kind": "property",
+   "owner": "FloorWire",
+   "message": "The FloorWire object has been deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "FormFactorPart.FormFactor",
+   "name": "FormFactor",
+   "kind": "property",
+   "owner": "FormFactorPart",
+   "message": "This property has been deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "FormFactorPart.formFactor",
+   "name": "formFactor",
+   "kind": "property",
+   "owner": "FormFactorPart",
+   "message": "This property has been deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "FunctionalTest.Description",
+   "name": "Description",
+   "kind": "property",
+   "owner": "FunctionalTest",
+   "message": "FunctionalTest has been deprecated, developers are advised to use `TestService` instead.",
+   "lint": true
+  },
+  {
+   "full": "FunctionalTest:Error",
+   "name": "Error",
+   "kind": "method",
+   "owner": "FunctionalTest",
+   "message": "FunctionalTest has been deprecated, developers are advised to use `TestService` instead.",
+   "lint": false
+  },
+  {
+   "full": "FunctionalTest:Failed",
+   "name": "Failed",
+   "kind": "method",
+   "owner": "FunctionalTest",
+   "message": "FunctionalTest has been deprecated, developers are advised to use `TestService` instead.",
+   "lint": false
+  },
+  {
+   "full": "FunctionalTest:Pass",
+   "name": "Pass",
+   "kind": "method",
+   "owner": "FunctionalTest",
+   "message": "FunctionalTest has been deprecated, developers are advised to use `TestService` instead.",
+   "lint": true
+  },
+  {
+   "full": "FunctionalTest:Passed",
+   "name": "Passed",
+   "kind": "method",
+   "owner": "FunctionalTest",
+   "message": "FunctionalTest has been deprecated, developers are advised to use `TestService` instead.",
+   "lint": false
+  },
+  {
+   "full": "FunctionalTest:Warn",
+   "name": "Warn",
+   "kind": "method",
+   "owner": "FunctionalTest",
+   "message": "FunctionalTest has been deprecated, developers are advised to use `TestService` instead.",
+   "lint": false
+  },
+  {
+   "full": "GamePassService:PlayerHasPass",
+   "name": "PlayerHasPass",
+   "kind": "method",
+   "owner": "GamePassService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "GameSettings.VideoCaptureEnabled",
+   "name": "VideoCaptureEnabled",
+   "kind": "property",
+   "owner": "GameSettings",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "GenerationService:GenerateMeshAsync",
+   "name": "GenerateMeshAsync",
+   "kind": "method",
+   "owner": "GenerationService",
+   "message": "This method is scheduled for future deprecation.",
+   "lint": true
+  },
+  {
+   "full": "GlobalDataStore:OnUpdate",
+   "name": "OnUpdate",
+   "kind": "method",
+   "owner": "GlobalDataStore",
+   "message": "This function has been deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "Glue.F0",
+   "name": "F0",
+   "kind": "property",
+   "owner": "Glue",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "Glue.F1",
+   "name": "F1",
+   "kind": "property",
+   "owner": "Glue",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "Glue.F2",
+   "name": "F2",
+   "kind": "property",
+   "owner": "Glue",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "Glue.F3",
+   "name": "F3",
+   "kind": "property",
+   "owner": "Glue",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "GuiBase2d.Localize",
+   "name": "Localize",
+   "kind": "property",
+   "owner": "GuiBase2d",
+   "message": "This item is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "GuiBase3d.Color",
+   "name": "Color",
+   "kind": "property",
+   "owner": "GuiBase3d",
+   "message": "This property has been deprecated in favor of `GuiBase3d.Color3`, which allows for greater color customization and should be used in new work instead.",
+   "lint": false
+  },
+  {
+   "full": "GuiObject.BackgroundColor",
+   "name": "BackgroundColor",
+   "kind": "property",
+   "owner": "GuiObject",
+   "message": "This property is deprecated in favor of the `Color3` property `GuiObject.BackgroundColor3`, which should be used in new work instead.",
+   "lint": true
+  },
+  {
+   "full": "GuiObject.BorderColor",
+   "name": "BorderColor",
+   "kind": "property",
+   "owner": "GuiObject",
+   "message": "This property is deprecated in favor of the `Color3` property BorderColor3, which should be used in new work instead.",
+   "lint": true
+  },
+  {
+   "full": "GuiObject.DragBegin",
+   "name": "DragBegin",
+   "kind": "event",
+   "owner": "GuiObject",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "GuiObject.DragStopped",
+   "name": "DragStopped",
+   "kind": "event",
+   "owner": "GuiObject",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "GuiObject.Draggable",
+   "name": "Draggable",
+   "kind": "property",
+   "owner": "GuiObject",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "GuiObject.Transparency",
+   "name": "Transparency",
+   "kind": "property",
+   "owner": "GuiObject",
+   "message": "This property is deprecated and indexing it will return `BackgroundTransparency`.",
+   "lint": false
+  },
+  {
+   "full": "GuiObject:TweenPosition",
+   "name": "TweenPosition",
+   "kind": "method",
+   "owner": "GuiObject",
+   "message": "This function is deprecated in favor of using `TweenService`, which allows for better customization using an object-oriented and event-based approach.",
+   "lint": true
+  },
+  {
+   "full": "GuiObject:TweenSize",
+   "name": "TweenSize",
+   "kind": "method",
+   "owner": "GuiObject",
+   "message": "This function is deprecated in favor of using `TweenService`, which allows for better customization using an object-oriented and event-based approach.",
+   "lint": true
+  },
+  {
+   "full": "GuiObject:TweenSizeAndPosition",
+   "name": "TweenSizeAndPosition",
+   "kind": "method",
+   "owner": "GuiObject",
+   "message": "This function is deprecated in favor of using `TweenService`, which allows for better customization using an object-oriented and event-based approach.",
+   "lint": true
+  },
+  {
+   "full": "GuiService:AddSelectionParent",
+   "name": "AddSelectionParent",
+   "kind": "method",
+   "owner": "GuiService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "GuiService:AddSelectionTuple",
+   "name": "AddSelectionTuple",
+   "kind": "method",
+   "owner": "GuiService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "GuiService.IsModalDialog",
+   "name": "IsModalDialog",
+   "kind": "property",
+   "owner": "GuiService",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "GuiService:IsTenFootInterface",
+   "name": "IsTenFootInterface",
+   "kind": "method",
+   "owner": "GuiService",
+   "message": "This method has been superseded by the `ViewportDisplaySize` property which represents the internally‑categorized rendering size of the viewport.",
+   "lint": true
+  },
+  {
+   "full": "GuiService.IsWindows",
+   "name": "IsWindows",
+   "kind": "property",
+   "owner": "GuiService",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "GuiService:RemoveSelectionGroup",
+   "name": "RemoveSelectionGroup",
+   "kind": "method",
+   "owner": "GuiService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "HingeConstraint.SoftlockServoUponReachingTarget",
+   "name": "SoftlockServoUponReachingTarget",
+   "kind": "property",
+   "owner": "HingeConstraint",
+   "message": "This property should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "HopperBin.Active",
+   "name": "Active",
+   "kind": "property",
+   "owner": "HopperBin",
+   "message": "The `HopperBin` object has been superseded by the `Tool` object which should be used for all new work.",
+   "lint": false
+  },
+  {
+   "full": "HopperBin.BinType",
+   "name": "BinType",
+   "kind": "property",
+   "owner": "HopperBin",
+   "message": "The `HopperBin` object has been superseded by the `Tool` object which should be used for all new work.",
+   "lint": true
+  },
+  {
+   "full": "HopperBin.Deselected",
+   "name": "Deselected",
+   "kind": "event",
+   "owner": "HopperBin",
+   "message": "The `HopperBin` object has been superseded by the `Tool` object which should be used for all new work.",
+   "lint": true
+  },
+  {
+   "full": "HopperBin.Selected",
+   "name": "Selected",
+   "kind": "event",
+   "owner": "HopperBin",
+   "message": "The `HopperBin` object has been superseded by the `Tool` object which should be used for all new work.",
+   "lint": false
+  },
+  {
+   "full": "Humanoid:AddCustomStatus",
+   "name": "AddCustomStatus",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid:AddStatus",
+   "name": "AddStatus",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid.AnimationPlayed",
+   "name": "AnimationPlayed",
+   "kind": "event",
+   "owner": "Humanoid",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "Humanoid:ApplyDescription",
+   "name": "ApplyDescription",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This method has been superseded by `Class.Humanoid:ApplyDescriptionAsync()|ApplyDescriptionAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid:ApplyDescriptionReset",
+   "name": "ApplyDescriptionReset",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This method has been superseded by `Class.Humanoid:ApplyDescriptionResetAsync()|ApplyDescriptionResetAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid.CollisionType",
+   "name": "CollisionType",
+   "kind": "property",
+   "owner": "Humanoid",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "Humanoid.CustomStatusAdded",
+   "name": "CustomStatusAdded",
+   "kind": "event",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid.CustomStatusRemoved",
+   "name": "CustomStatusRemoved",
+   "kind": "event",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid:GetPlayingAnimationTracks",
+   "name": "GetPlayingAnimationTracks",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "Humanoid:GetStatuses",
+   "name": "GetStatuses",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid:HasCustomStatus",
+   "name": "HasCustomStatus",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid:HasStatus",
+   "name": "HasStatus",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid.LeftLeg",
+   "name": "LeftLeg",
+   "kind": "property",
+   "owner": "Humanoid",
+   "message": "This instance only works with the old R6 rig.",
+   "lint": false
+  },
+  {
+   "full": "Humanoid:LoadAnimation",
+   "name": "LoadAnimation",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This function is deprecated in favor of using `Class.Animator:LoadAnimation()` directly (the `Animator` may be created while editing or at runtime).",
+   "lint": false
+  },
+  {
+   "full": "Humanoid:PlayEmote",
+   "name": "PlayEmote",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This method has been superseded by `Class.Humanoid:PlayEmoteAsync()|PlayEmoteAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid:RemoveCustomStatus",
+   "name": "RemoveCustomStatus",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid:RemoveStatus",
+   "name": "RemoveStatus",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid.RightLeg",
+   "name": "RightLeg",
+   "kind": "property",
+   "owner": "Humanoid",
+   "message": "This instance only works with the old R6 rig.",
+   "lint": false
+  },
+  {
+   "full": "Humanoid.StatusAdded",
+   "name": "StatusAdded",
+   "kind": "event",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid.StatusRemoved",
+   "name": "StatusRemoved",
+   "kind": "event",
+   "owner": "Humanoid",
+   "message": "This item is deprecated, as it was a part of the unfinished RbxStatus library which would have allowed you to add conditions to a Humanoid.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid.Torso",
+   "name": "Torso",
+   "kind": "property",
+   "owner": "Humanoid",
+   "message": "This instance only works with the old R6 rig.",
+   "lint": false
+  },
+  {
+   "full": "Humanoid:loadAnimation",
+   "name": "loadAnimation",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This deprecated method is a variant of `Class.Humanoid:LoadAnimation()`.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid.maxHealth",
+   "name": "maxHealth",
+   "kind": "property",
+   "owner": "Humanoid",
+   "message": "This deprecated property is a variant of `Humanoid.MaxHealth` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Humanoid:takeDamage",
+   "name": "takeDamage",
+   "kind": "method",
+   "owner": "Humanoid",
+   "message": "This deprecated method is a variant of `Class.Humanoid:TakeDamage()`, which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "InputAction:Fire",
+   "name": "Fire",
+   "kind": "method",
+   "owner": "InputAction",
+   "message": "Use `Class.InputBinding:Fire()` with a `Scriptable` binding instead.",
+   "lint": false
+  },
+  {
+   "full": "InsertService.AllowInsertFreeModels",
+   "name": "AllowInsertFreeModels",
+   "kind": "property",
+   "owner": "InsertService",
+   "message": "This item was never released.",
+   "lint": true
+  },
+  {
+   "full": "InsertService:ApproveAssetId",
+   "name": "ApproveAssetId",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "InsertService:ApproveAssetVersionId",
+   "name": "ApproveAssetVersionId",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "InsertService:GetBaseCategories",
+   "name": "GetBaseCategories",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "InsertService:GetBaseSets",
+   "name": "GetBaseSets",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "Sets have been removed from Roblox.",
+   "lint": true
+  },
+  {
+   "full": "InsertService:GetCollection",
+   "name": "GetCollection",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "Sets have been removed from Roblox.",
+   "lint": false
+  },
+  {
+   "full": "InsertService:GetFreeDecals",
+   "name": "GetFreeDecals",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "Use `Class.InsertService:GetFreeDecalsAsync()|GetFreeDecalsAsync()` instead.",
+   "lint": true
+  },
+  {
+   "full": "InsertService:GetFreeModels",
+   "name": "GetFreeModels",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "Use `Class.InsertService:GetFreeModelsAsync()|GetFreeModelsAsync()` instead.",
+   "lint": true
+  },
+  {
+   "full": "InsertService:GetUserCategories",
+   "name": "GetUserCategories",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "InsertService:GetUserSets",
+   "name": "GetUserSets",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "Sets have been removed from Roblox.",
+   "lint": true
+  },
+  {
+   "full": "InsertService:Insert",
+   "name": "Insert",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "This function has been superseded by `Class.InsertService:LoadAsset()` which should be used in all new work.",
+   "lint": false
+  },
+  {
+   "full": "InsertService:loadAsset",
+   "name": "loadAsset",
+   "kind": "method",
+   "owner": "InsertService",
+   "message": "This function is a deprecated variant of `Class.InsertService:LoadAsset()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Instance:Remove",
+   "name": "Remove",
+   "kind": "method",
+   "owner": "Instance",
+   "message": "This item is deprecated in favor of `Class.Instance:Destroy()` and `Class.Instance:ClearAllChildren()`.",
+   "lint": false
+  },
+  {
+   "full": "Instance.RobloxLocked",
+   "name": "RobloxLocked",
+   "kind": "property",
+   "owner": "Instance",
+   "message": "This property is deprecated and does not do anything.",
+   "lint": true
+  },
+  {
+   "full": "Instance.archivable",
+   "name": "archivable",
+   "kind": "property",
+   "owner": "Instance",
+   "message": "This deprecated property is a variant of `Instance.Archivable` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Instance.childAdded",
+   "name": "childAdded",
+   "kind": "event",
+   "owner": "Instance",
+   "message": "This deprecated event is a variant of `Instance.ChildAdded` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Instance:children",
+   "name": "children",
+   "kind": "method",
+   "owner": "Instance",
+   "message": "This item has been superseded by `Class.Instance:GetChildren()` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "Instance:clone",
+   "name": "clone",
+   "kind": "method",
+   "owner": "Instance",
+   "message": "This deprecated function is a variant of `Class.Instance:Clone()` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "Instance:destroy",
+   "name": "destroy",
+   "kind": "method",
+   "owner": "Instance",
+   "message": "This deprecated function is a variant of `Class.Instance:Destroy()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Instance:findFirstChild",
+   "name": "findFirstChild",
+   "kind": "method",
+   "owner": "Instance",
+   "message": "This deprecated function is a variant of `Class.Instance:FindFirstChild()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Instance:getChildren",
+   "name": "getChildren",
+   "kind": "method",
+   "owner": "Instance",
+   "message": "This deprecated function is a variant of `Class.Instance:GetChildren()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Instance:isDescendantOf",
+   "name": "isDescendantOf",
+   "kind": "method",
+   "owner": "Instance",
+   "message": "This deprecated function is a variant of `Class.Instance:IsDescendantOf()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Instance:remove",
+   "name": "remove",
+   "kind": "method",
+   "owner": "Instance",
+   "message": "This deprecated function is a variant of `Class.Instance:Remove()` which has also been deprecated.",
+   "lint": false
+  },
+  {
+   "full": "IntConstrainedValue.Changed",
+   "name": "Changed",
+   "kind": "event",
+   "owner": "IntConstrainedValue",
+   "message": "The IntConstrainedValue object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values.",
+   "lint": false
+  },
+  {
+   "full": "IntConstrainedValue.ConstrainedValue",
+   "name": "ConstrainedValue",
+   "kind": "property",
+   "owner": "IntConstrainedValue",
+   "message": "The IntConstrainedValue object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values.",
+   "lint": false
+  },
+  {
+   "full": "IntConstrainedValue.MaxValue",
+   "name": "MaxValue",
+   "kind": "property",
+   "owner": "IntConstrainedValue",
+   "message": "The IntConstrainedValue object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values.",
+   "lint": false
+  },
+  {
+   "full": "IntConstrainedValue.MinValue",
+   "name": "MinValue",
+   "kind": "property",
+   "owner": "IntConstrainedValue",
+   "message": "The IntConstrainedValue object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values.",
+   "lint": false
+  },
+  {
+   "full": "IntConstrainedValue.Value",
+   "name": "Value",
+   "kind": "property",
+   "owner": "IntConstrainedValue",
+   "message": "The IntConstrainedValue object has been deprecated as developers can now use the `Library.math.clamp()` function to constrain values.",
+   "lint": false
+  },
+  {
+   "full": "IntConstrainedValue.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "IntConstrainedValue",
+   "message": "This deprecated event is a variant of `IntConstrainedValue.Changed` which has also been deprecated.",
+   "lint": false
+  },
+  {
+   "full": "IntValue.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "IntValue",
+   "message": "This deprecated event is a variant of `IntValue.Changed` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "JointInstance.part1",
+   "name": "part1",
+   "kind": "property",
+   "owner": "JointInstance",
+   "message": "This deprecated property is a variant of `Part1` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "JointsService:ClearJoinAfterMoveJoints",
+   "name": "ClearJoinAfterMoveJoints",
+   "kind": "method",
+   "owner": "JointsService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "JointsService:CreateJoinAfterMoveJoints",
+   "name": "CreateJoinAfterMoveJoints",
+   "kind": "method",
+   "owner": "JointsService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "JointsService:SetJoinAfterMoveInstance",
+   "name": "SetJoinAfterMoveInstance",
+   "kind": "method",
+   "owner": "JointsService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "JointsService:SetJoinAfterMoveTarget",
+   "name": "SetJoinAfterMoveTarget",
+   "kind": "method",
+   "owner": "JointsService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "JointsService:ShowPermissibleJoints",
+   "name": "ShowPermissibleJoints",
+   "kind": "method",
+   "owner": "JointsService",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "KeyframeSequenceProvider:GetAnimations",
+   "name": "GetAnimations",
+   "kind": "method",
+   "owner": "KeyframeSequenceProvider",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "KeyframeSequenceProvider:GetKeyframeSequence",
+   "name": "GetKeyframeSequence",
+   "kind": "method",
+   "owner": "KeyframeSequenceProvider",
+   "message": "This function is deprecated and can lead to the game freezing until the animation is loaded.",
+   "lint": true
+  },
+  {
+   "full": "KeyframeSequenceProvider:GetKeyframeSequenceById",
+   "name": "GetKeyframeSequenceById",
+   "kind": "method",
+   "owner": "KeyframeSequenceProvider",
+   "message": "This function is deprecated and can lead to the game freezing until the animation is loaded.",
+   "lint": true
+  },
+  {
+   "full": "LayerCollector:GetLayoutNodeTree",
+   "name": "GetLayoutNodeTree",
+   "kind": "method",
+   "owner": "LayerCollector",
+   "message": "This method should not be used for new work.",
+   "lint": true
+  },
+  {
+   "full": "Lighting:GetMoonPhase",
+   "name": "GetMoonPhase",
+   "kind": "method",
+   "owner": "Lighting",
+   "message": "There is currently no way to change the moon's phase, and thus this method should not be used.",
+   "lint": true
+  },
+  {
+   "full": "Lighting.Outlines",
+   "name": "Outlines",
+   "kind": "property",
+   "owner": "Lighting",
+   "message": "This item is no longer supported as the outlines feature was removed from the Roblox platform.",
+   "lint": true
+  },
+  {
+   "full": "Lighting.ShadowColor",
+   "name": "ShadowColor",
+   "kind": "property",
+   "owner": "Lighting",
+   "message": "This item is deprecated and has no current functionality.",
+   "lint": true
+  },
+  {
+   "full": "Lighting.Technology",
+   "name": "Technology",
+   "kind": "property",
+   "owner": "Lighting",
+   "message": "This property has been superseded by `LightingStyle` which determines the artistic intent behind lighting, and `PrioritizeLightingQuality` which indicates whether you prefer lighting/shading quality or view distance to s",
+   "lint": true
+  },
+  {
+   "full": "Lighting:getMinutesAfterMidnight",
+   "name": "getMinutesAfterMidnight",
+   "kind": "method",
+   "owner": "Lighting",
+   "message": "This method is a deprecated variant of `Class.Lighting:GetMinutesAfterMidnight()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Lighting:setMinutesAfterMidnight",
+   "name": "setMinutesAfterMidnight",
+   "kind": "method",
+   "owner": "Lighting",
+   "message": "This method is a deprecated variant of `Class.Lighting:SetMinutesAfterMidnight()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "LocalizationService:GetTranslatorForPlayer",
+   "name": "GetTranslatorForPlayer",
+   "kind": "method",
+   "owner": "LocalizationService",
+   "message": "This function has been deprecated by `Class.LocalizationService:GetTranslatorForPlayerAsync()`, which functions similarly except that it yields until the cloud table has loaded.",
+   "lint": true
+  },
+  {
+   "full": "LocalizationTable.DevelopmentLanguage",
+   "name": "DevelopmentLanguage",
+   "kind": "property",
+   "owner": "LocalizationTable",
+   "message": "This item has been superseded by `LocalizationTable.SourceLocaleId` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "LocalizationTable:GetContents",
+   "name": "GetContents",
+   "kind": "method",
+   "owner": "LocalizationTable",
+   "message": "This item has been superseded by `Class.LocalizationTable:GetEntries()` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "LocalizationTable:GetString",
+   "name": "GetString",
+   "kind": "method",
+   "owner": "LocalizationTable",
+   "message": "This item has been superseded by `Class.LocalizationTable:GetTranslator()` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "LocalizationTable:RemoveKey",
+   "name": "RemoveKey",
+   "kind": "method",
+   "owner": "LocalizationTable",
+   "message": "This item has been superseded by `Class.LocalizationTable:RemoveEntry()` which should be used in all new work",
+   "lint": true
+  },
+  {
+   "full": "LocalizationTable.Root",
+   "name": "Root",
+   "kind": "property",
+   "owner": "LocalizationTable",
+   "message": "This item is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "LocalizationTable:SetContents",
+   "name": "SetContents",
+   "kind": "method",
+   "owner": "LocalizationTable",
+   "message": "This item has been superseded by `Class.LocalizationTable:SetEntries()` which should be used in all new work",
+   "lint": true
+  },
+  {
+   "full": "LocalizationTable:SetEntry",
+   "name": "SetEntry",
+   "kind": "method",
+   "owner": "LocalizationTable",
+   "message": "This item has been superseded by `Class.LocalizationTable:SetEntries()` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "collectgarbage",
+   "name": "collectgarbage",
+   "kind": "global",
+   "owner": "Luau globals",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "getfenv",
+   "name": "getfenv",
+   "kind": "global",
+   "owner": "Luau globals",
+   "message": "This function allows uncontrolled change of the global/function environment and disables script optimizations.",
+   "lint": true
+  },
+  {
+   "full": "setfenv",
+   "name": "setfenv",
+   "kind": "global",
+   "owner": "Luau globals",
+   "message": "This function allows uncontrolled change of the global/function environment and disables script optimizations.",
+   "lint": true
+  },
+  {
+   "full": "MarketplaceService:GetProductInfo",
+   "name": "GetProductInfo",
+   "kind": "method",
+   "owner": "MarketplaceService",
+   "message": "This method has been superseded by `GetProductInfoAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "MarketplaceService:PlayerOwnsAsset",
+   "name": "PlayerOwnsAsset",
+   "kind": "method",
+   "owner": "MarketplaceService",
+   "message": "This method has been superseded by `Class.MarketplaceService:PlayerOwnsAssetAsync()|PlayerOwnsAssetAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "MarketplaceService:PlayerOwnsBundle",
+   "name": "PlayerOwnsBundle",
+   "kind": "method",
+   "owner": "MarketplaceService",
+   "message": "This method has been superseded by `Class.MarketplaceService:PlayerOwnsBundleAsync()|PlayerOwnsBundleAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "MarketplaceService:PromptPremiumPurchase",
+   "name": "PromptPremiumPurchase",
+   "kind": "method",
+   "owner": "MarketplaceService",
+   "message": "This method has been superseded by `Class.MarketplaceService:PromptRobloxSubscriptionPurchase()|PromptRobloxSubscriptionPurchase()`.",
+   "lint": true
+  },
+  {
+   "full": "MeshPart.HasJointOffset",
+   "name": "HasJointOffset",
+   "kind": "property",
+   "owner": "MeshPart",
+   "message": "This property is deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "MeshPart.JointOffset",
+   "name": "JointOffset",
+   "kind": "property",
+   "owner": "MeshPart",
+   "message": "This property is deprecated and should not be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "Message.Text",
+   "name": "Text",
+   "kind": "property",
+   "owner": "Message",
+   "message": "`Messages` and `Hints` have been deprecated; `TextLabels` should be used instead in new work.",
+   "lint": false
+  },
+  {
+   "full": "Model:BreakJoints",
+   "name": "BreakJoints",
+   "kind": "method",
+   "owner": "Model",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "Model:GetModelCFrame",
+   "name": "GetModelCFrame",
+   "kind": "method",
+   "owner": "Model",
+   "message": "This function has been deprecated as it did not provide reliable results.",
+   "lint": true
+  },
+  {
+   "full": "Model:GetModelSize",
+   "name": "GetModelSize",
+   "kind": "method",
+   "owner": "Model",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Model:GetPrimaryPartCFrame",
+   "name": "GetPrimaryPartCFrame",
+   "kind": "method",
+   "owner": "Model",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "Model:MakeJoints",
+   "name": "MakeJoints",
+   "kind": "method",
+   "owner": "Model",
+   "message": "This joint type has been deprecated.",
+   "lint": false
+  },
+  {
+   "full": "Model:ResetOrientationToIdentity",
+   "name": "ResetOrientationToIdentity",
+   "kind": "method",
+   "owner": "Model",
+   "message": "This function has been deprecated; it remains to prevent legacy scripts from throwing errors, but it does nothing when called.",
+   "lint": true
+  },
+  {
+   "full": "Model:SetIdentityOrientation",
+   "name": "SetIdentityOrientation",
+   "kind": "method",
+   "owner": "Model",
+   "message": "This function has been deprecated; it remains to prevent legacy scripts from throwing errors, but it does nothing when called.",
+   "lint": true
+  },
+  {
+   "full": "Model:SetPrimaryPartCFrame",
+   "name": "SetPrimaryPartCFrame",
+   "kind": "method",
+   "owner": "Model",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "Model:breakJoints",
+   "name": "breakJoints",
+   "kind": "method",
+   "owner": "Model",
+   "message": "This deprecated function is a variant of `Class.Model:BreakJoints()` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "Model:makeJoints",
+   "name": "makeJoints",
+   "kind": "method",
+   "owner": "Model",
+   "message": "This deprecated function is a variant of `Class.Model:MakeJoints()` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "Model:move",
+   "name": "move",
+   "kind": "method",
+   "owner": "Model",
+   "message": "This item has been superseded by `Class.Model:MoveTo()` which should be used in all new work",
+   "lint": false
+  },
+  {
+   "full": "Model:moveTo",
+   "name": "moveTo",
+   "kind": "method",
+   "owner": "Model",
+   "message": "This deprecated function is a variant of `Class.Model:MoveTo()` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "ModuleScript.LinkedSource",
+   "name": "LinkedSource",
+   "kind": "property",
+   "owner": "ModuleScript",
+   "message": "This property is now replaced by packages which has greater functionality.",
+   "lint": false
+  },
+  {
+   "full": "Mouse.KeyDown",
+   "name": "KeyDown",
+   "kind": "event",
+   "owner": "Mouse",
+   "message": "Mouse events have been superseded by `UserInputService` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "Mouse.KeyUp",
+   "name": "KeyUp",
+   "kind": "event",
+   "owner": "Mouse",
+   "message": "Mouse events have been superseded by `UserInputService` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "Mouse.hit",
+   "name": "hit",
+   "kind": "property",
+   "owner": "Mouse",
+   "message": "This property is a deprecated variant of `Mouse.Hit` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "Mouse.keyDown",
+   "name": "keyDown",
+   "kind": "event",
+   "owner": "Mouse",
+   "message": "This event is a deprecated variant of `Mouse.KeyDown` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Mouse.target",
+   "name": "target",
+   "kind": "property",
+   "owner": "Mouse",
+   "message": "This property is a deprecated variant of `Mouse.Target` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "NumberValue.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "NumberValue",
+   "message": "This event is a deprecated variant of `NumberValue.Changed` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "Object.className",
+   "name": "className",
+   "kind": "property",
+   "owner": "Object",
+   "message": "This deprecated property is a variant of `Object.ClassName` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Object:isA",
+   "name": "isA",
+   "kind": "method",
+   "owner": "Object",
+   "message": "This deprecated function is a variant of `Class.Object:IsA()` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "ObjectValue.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "ObjectValue",
+   "message": "This event is a deprecated variant of `ObjectValue.Changed` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "OpenCloudApiV1:CreateModel",
+   "name": "CreateModel",
+   "kind": "method",
+   "owner": "OpenCloudApiV1",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "OpenCloudApiV1:CreateUserNotificationAsync",
+   "name": "CreateUserNotificationAsync",
+   "kind": "method",
+   "owner": "OpenCloudApiV1",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "OpenCloudService:GetApiV1",
+   "name": "GetApiV1",
+   "kind": "method",
+   "owner": "OpenCloudService",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "OpenCloudService:InvokeAsync",
+   "name": "InvokeAsync",
+   "kind": "method",
+   "owner": "OpenCloudService",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "ParticleEmitter.VelocitySpread",
+   "name": "VelocitySpread",
+   "kind": "property",
+   "owner": "ParticleEmitter",
+   "message": "This property has been superseded by `ParticleEmitter.SpreadAngle` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "Path:CheckOcclusionAsync",
+   "name": "CheckOcclusionAsync",
+   "kind": "method",
+   "owner": "Path",
+   "message": "This function has been superseded by the `Blocked` event which you can connect to a `Path` object and should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Path:GetPointCoordinates",
+   "name": "GetPointCoordinates",
+   "kind": "method",
+   "owner": "Path",
+   "message": "This item has been superseded by `Class.Path:GetWaypoints()|GetWaypoints()` which should be used in all new work instead.",
+   "lint": true
+  },
+  {
+   "full": "PathfindingService:ComputeRawPathAsync",
+   "name": "ComputeRawPathAsync",
+   "kind": "method",
+   "owner": "PathfindingService",
+   "message": "This item has been superseded by `Class.PathfindingService:FindPathAsync()` which should be used in all new work instead.",
+   "lint": true
+  },
+  {
+   "full": "PathfindingService:ComputeSmoothPathAsync",
+   "name": "ComputeSmoothPathAsync",
+   "kind": "method",
+   "owner": "PathfindingService",
+   "message": "This item has been superseded by `Class.PathfindingService:FindPathAsync()` which should be used in all new work instead.",
+   "lint": true
+  },
+  {
+   "full": "PathfindingService.EmptyCutoff",
+   "name": "EmptyCutoff",
+   "kind": "property",
+   "owner": "PathfindingService",
+   "message": "This property is deprecated, since the legacy pathfinding system using it has since been removed.",
+   "lint": true
+  },
+  {
+   "full": "PathfindingService:FindPathAsync",
+   "name": "FindPathAsync",
+   "kind": "method",
+   "owner": "PathfindingService",
+   "message": "This function has been superseded by the sequential method of calling `Class.PathfindingService:CreatePath()` followed by `Class.Path:ComputeAsync()|Path`.",
+   "lint": true
+  },
+  {
+   "full": "PhysicsService:CollisionGroupContainsPart",
+   "name": "CollisionGroupContainsPart",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "PhysicsService:CollisionGroupSetCollidable",
+   "name": "CollisionGroupSetCollidable",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:CollisionGroupSetCollidable()` which should be used for all new work.",
+   "lint": false
+  },
+  {
+   "full": "PhysicsService:CollisionGroupsAreCollidable",
+   "name": "CollisionGroupsAreCollidable",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:CollisionGroupsAreCollidable()` which should be used for all new work.",
+   "lint": false
+  },
+  {
+   "full": "PhysicsService:CreateCollisionGroup",
+   "name": "CreateCollisionGroup",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:RegisterCollisionGroup()|RegisterCollisionGroup()` which should be used for all new work.",
+   "lint": true
+  },
+  {
+   "full": "PhysicsService:GetCollisionGroupId",
+   "name": "GetCollisionGroupId",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "PhysicsService:GetCollisionGroupName",
+   "name": "GetCollisionGroupName",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "PhysicsService:GetCollisionGroups",
+   "name": "GetCollisionGroups",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:GetRegisteredCollisionGroups()|GetRegisteredCollisionGroups()` which should be used for all new work.",
+   "lint": true
+  },
+  {
+   "full": "PhysicsService:GetMaxCollisionGroups",
+   "name": "GetMaxCollisionGroups",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:GetMaxCollisionGroups()` which should be used for all new work.",
+   "lint": false
+  },
+  {
+   "full": "PhysicsService:GetRegisteredCollisionGroups",
+   "name": "GetRegisteredCollisionGroups",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:GetRegisteredCollisionGroups()` which should be used for all new work.",
+   "lint": false
+  },
+  {
+   "full": "PhysicsService:IsCollisionGroupRegistered",
+   "name": "IsCollisionGroupRegistered",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:IsCollisionGroupRegistered()` which should be used for all new work.",
+   "lint": false
+  },
+  {
+   "full": "PhysicsService:RegisterCollisionGroup",
+   "name": "RegisterCollisionGroup",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:RegisterCollisionGroup()` which should be used for all new work.",
+   "lint": false
+  },
+  {
+   "full": "PhysicsService:RemoveCollisionGroup",
+   "name": "RemoveCollisionGroup",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:UnregisterCollisionGroup()|UnregisterCollisionGroup()` which should be used for all new work.",
+   "lint": true
+  },
+  {
+   "full": "PhysicsService:RenameCollisionGroup",
+   "name": "RenameCollisionGroup",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:RenameCollisionGroup()` which should be used for all new work.",
+   "lint": false
+  },
+  {
+   "full": "PhysicsService:SetPartCollisionGroup",
+   "name": "SetPartCollisionGroup",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "PhysicsService:UnregisterCollisionGroup",
+   "name": "UnregisterCollisionGroup",
+   "kind": "method",
+   "owner": "PhysicsService",
+   "message": "This method has been superseded by `Class.WorldRoot:UnregisterCollisionGroup()` which should be used for all new work.",
+   "lint": false
+  },
+  {
+   "full": "Player.CharacterAppearance",
+   "name": "CharacterAppearance",
+   "kind": "property",
+   "owner": "Player",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Player.DataComplexity",
+   "name": "DataComplexity",
+   "kind": "property",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player.DataReady",
+   "name": "DataReady",
+   "kind": "property",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player:GetFriendsOnline",
+   "name": "GetFriendsOnline",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method has been superseded by `Class.Player:GetFriendsOnlineAsync()|GetFriendsOnlineAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Player:GetRankInGroup",
+   "name": "GetRankInGroup",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method has been superseded by `Class.Player:GetRankInGroupAsync()|GetRankInGroupAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Player:GetRankInGroupAsync",
+   "name": "GetRankInGroupAsync",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method returns only the rank value of the member's highest public role.",
+   "lint": true
+  },
+  {
+   "full": "Player:GetRoleInGroup",
+   "name": "GetRoleInGroup",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method has been superseded by `GetRoleInGroup()`.",
+   "lint": true
+  },
+  {
+   "full": "Player:GetRoleInGroupAsync",
+   "name": "GetRoleInGroupAsync",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method returns only the member's highest public role.",
+   "lint": true
+  },
+  {
+   "full": "Player:IsBestFriendsWith",
+   "name": "IsBestFriendsWith",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This function is obsolete because the \"best friends\" feature was removed.",
+   "lint": true
+  },
+  {
+   "full": "Player:IsFriendsWith",
+   "name": "IsFriendsWith",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method has been superseded by the `Class.Player:IsFriendsWithAsync()` method which should be used for new work.",
+   "lint": true
+  },
+  {
+   "full": "Player:IsInGroup",
+   "name": "IsInGroup",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method has been superseded by `IsInGroupAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Player:LoadBoolean",
+   "name": "LoadBoolean",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player:LoadCharacter",
+   "name": "LoadCharacter",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method has been superseded by `Class.Player:LoadCharacterAsync()|LoadCharacterAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Player:LoadCharacterAppearance",
+   "name": "LoadCharacterAppearance",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "Player:LoadCharacterWithHumanoidDescription",
+   "name": "LoadCharacterWithHumanoidDescription",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method has been superseded by `Class.Player:LoadCharacterWithHumanoidDescriptionAsync()|LoadCharacterWithHumanoidDescriptionAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Player:LoadInstance",
+   "name": "LoadInstance",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player:LoadNumber",
+   "name": "LoadNumber",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player:LoadString",
+   "name": "LoadString",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player.MembershipType",
+   "name": "MembershipType",
+   "kind": "property",
+   "owner": "Player",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Player:SaveBoolean",
+   "name": "SaveBoolean",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player:SaveInstance",
+   "name": "SaveInstance",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player:SaveNumber",
+   "name": "SaveNumber",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player:SaveString",
+   "name": "SaveString",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player:WaitForDataReady",
+   "name": "WaitForDataReady",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This item is deprecated, as it may have been used for a now obsolete data persistence method.",
+   "lint": true
+  },
+  {
+   "full": "Player:isFriendsWith",
+   "name": "isFriendsWith",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This method has been superseded by the `Class.Player:IsFriendsWithAsync()` method which should be used for new work.",
+   "lint": true
+  },
+  {
+   "full": "Player:loadBoolean",
+   "name": "loadBoolean",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This deprecated function is a variant of `Class.Player:LoadBoolean()` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Player:loadInstance",
+   "name": "loadInstance",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This deprecated function is a variant of `Class.Player:LoadInstance()` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Player:loadNumber",
+   "name": "loadNumber",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This deprecated function is a variant of `Class.Player:LoadNumber()` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Player:loadString",
+   "name": "loadString",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This function is a deprecated variant of `Class.Player:LoadString()` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Player:saveBoolean",
+   "name": "saveBoolean",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This function is a deprecated variant of `Class.Player:SaveBoolean()` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Player:saveInstance",
+   "name": "saveInstance",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This function is a deprecated variant of `Class.Player:SaveInstance()` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Player:saveNumber",
+   "name": "saveNumber",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This function is a deprecated variant of `Class.Player:SaveNumber()` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Player:saveString",
+   "name": "saveString",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This function is a deprecated variant of `Class.Player:SaveString()` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Player.userId",
+   "name": "userId",
+   "kind": "property",
+   "owner": "Player",
+   "message": "This property is a deprecated variant of `Player.UserId` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Player:waitForDataReady",
+   "name": "waitForDataReady",
+   "kind": "method",
+   "owner": "Player",
+   "message": "This function is a deprecated variant of `Class.Player:WaitForDataReady()` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "PlayerGui:GetTopbarTransparency",
+   "name": "GetTopbarTransparency",
+   "kind": "method",
+   "owner": "PlayerGui",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "PlayerGui:SetTopbarTransparency",
+   "name": "SetTopbarTransparency",
+   "kind": "method",
+   "owner": "PlayerGui",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "PlayerGui.TopbarTransparencyChangedSignal",
+   "name": "TopbarTransparencyChangedSignal",
+   "kind": "event",
+   "owner": "PlayerGui",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "Players:CreateHumanoidModelFromDescription",
+   "name": "CreateHumanoidModelFromDescription",
+   "kind": "method",
+   "owner": "Players",
+   "message": "This method has been superseded by `Class.Players:CreateHumanoidModelFromDescriptionAsync()|CreateHumanoidModelFromDescriptionAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Players:CreateHumanoidModelFromUserId",
+   "name": "CreateHumanoidModelFromUserId",
+   "kind": "method",
+   "owner": "Players",
+   "message": "This method has been superseded by `Class.Players:CreateHumanoidModelFromUserIdAsync()|CreateHumanoidModelFromUserIdAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Players:GetCharacterAppearanceAsync",
+   "name": "GetCharacterAppearanceAsync",
+   "kind": "method",
+   "owner": "Players",
+   "message": "This method is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Players:GetHumanoidDescriptionFromOutfitId",
+   "name": "GetHumanoidDescriptionFromOutfitId",
+   "kind": "method",
+   "owner": "Players",
+   "message": "This method has been superseded by `Class.Players:GetHumanoidDescriptionFromOutfitIdAsync()|GetHumanoidDescriptionFromOutfitIdAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Players:GetHumanoidDescriptionFromUserId",
+   "name": "GetHumanoidDescriptionFromUserId",
+   "kind": "method",
+   "owner": "Players",
+   "message": "This method has been superseded by `GetHumanoidDescriptionFromUserIdAsync()`.",
+   "lint": true
+  },
+  {
+   "full": "Players.NumPlayers",
+   "name": "NumPlayers",
+   "kind": "property",
+   "owner": "Players",
+   "message": "This item is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Players:getPlayers",
+   "name": "getPlayers",
+   "kind": "method",
+   "owner": "Players",
+   "message": "This function is a deprecated variant of `Class.Players:GetPlayers()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Players.localPlayer",
+   "name": "localPlayer",
+   "kind": "property",
+   "owner": "Players",
+   "message": "This property is a deprecated variant of `Players.LocalPlayer` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Players.numPlayers",
+   "name": "numPlayers",
+   "kind": "property",
+   "owner": "Players",
+   "message": "This property is a deprecated variant of `Players.NumPlayers` which has also been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Players:playerFromCharacter",
+   "name": "playerFromCharacter",
+   "kind": "method",
+   "owner": "Players",
+   "message": "This function is a deprecated variant of `Class.Players:GetPlayerFromCharacter()` which should be used in new work.",
+   "lint": true
+  },
+  {
+   "full": "Players:players",
+   "name": "players",
+   "kind": "method",
+   "owner": "Players",
+   "message": "This item has been superseded by `Class.Players:GetPlayers()` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "PointsService:AwardPoints",
+   "name": "AwardPoints",
+   "kind": "method",
+   "owner": "PointsService",
+   "message": "This function was once part of the `PointService` class used to control an ancient achievement system since removed and deprecated.",
+   "lint": true
+  },
+  {
+   "full": "PointsService:GetAwardablePoints",
+   "name": "GetAwardablePoints",
+   "kind": "method",
+   "owner": "PointsService",
+   "message": "This function was once part of the `PointService` class used to control an ancient achievement system since removed and deprecated.",
+   "lint": true
+  },
+  {
+   "full": "PointsService:GetGamePointBalance",
+   "name": "GetGamePointBalance",
+   "kind": "method",
+   "owner": "PointsService",
+   "message": "This function was once part of the `PointService` class used to control an ancient achievement system since removed and deprecated.",
+   "lint": true
+  },
+  {
+   "full": "PointsService:GetPointBalance",
+   "name": "GetPointBalance",
+   "kind": "method",
+   "owner": "PointsService",
+   "message": "This function was once part of the `PointService` class used to control an ancient achievement system since removed and deprecated.",
+   "lint": true
+  },
+  {
+   "full": "PointsService.PointsAwarded",
+   "name": "PointsAwarded",
+   "kind": "event",
+   "owner": "PointsService",
+   "message": "This function was once part of the `PointService` class used to control an ancient achievement system since removed and deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Pose.MaskWeight",
+   "name": "MaskWeight",
+   "kind": "property",
+   "owner": "Pose",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "PoseBase.Weight",
+   "name": "Weight",
+   "kind": "property",
+   "owner": "PoseBase",
+   "message": "This property is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "RayValue.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "RayValue",
+   "message": "This event is a deprecated variant of `RayValue.Changed` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "DebuggerManager",
+   "name": "DebuggerManager",
+   "kind": "global",
+   "owner": "Roblox globals",
+   "message": "The `DebuggerManager` is obsolete and serves little to no use case for developers.",
+   "lint": true
+  },
+  {
+   "full": "delay",
+   "name": "delay",
+   "kind": "global",
+   "owner": "Roblox globals",
+   "message": "This method has been superseded by `Library.task.delay()` and should not be used for future work.",
+   "lint": false
+  },
+  {
+   "full": "elapsedTime",
+   "name": "elapsedTime",
+   "kind": "global",
+   "owner": "Roblox globals",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "printidentity",
+   "name": "printidentity",
+   "kind": "global",
+   "owner": "Roblox globals",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "spawn",
+   "name": "spawn",
+   "kind": "global",
+   "owner": "Roblox globals",
+   "message": "This method has been superseded by `Library.task.spawn()` and should not be used for future work.",
+   "lint": false
+  },
+  {
+   "full": "stats",
+   "name": "stats",
+   "kind": "global",
+   "owner": "Roblox globals",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "version",
+   "name": "version",
+   "kind": "global",
+   "owner": "Roblox globals",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "wait",
+   "name": "wait",
+   "kind": "global",
+   "owner": "Roblox globals",
+   "message": "This method has been superseded by `Library.task.wait()` and should not be used for future work.",
+   "lint": false
+  },
+  {
+   "full": "ypcall",
+   "name": "ypcall",
+   "kind": "global",
+   "owner": "Roblox globals",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "RocketPropulsion:Abort",
+   "name": "Abort",
+   "kind": "method",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "RocketPropulsion.CartoonFactor",
+   "name": "CartoonFactor",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "RocketPropulsion:Fire",
+   "name": "Fire",
+   "kind": "method",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "RocketPropulsion.MaxSpeed",
+   "name": "MaxSpeed",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "RocketPropulsion.MaxThrust",
+   "name": "MaxThrust",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "RocketPropulsion.MaxTorque",
+   "name": "MaxTorque",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "RocketPropulsion.ReachedTarget",
+   "name": "ReachedTarget",
+   "kind": "event",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "RocketPropulsion.Target",
+   "name": "Target",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "RocketPropulsion.TargetOffset",
+   "name": "TargetOffset",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "RocketPropulsion.TargetRadius",
+   "name": "TargetRadius",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "RocketPropulsion.ThrustD",
+   "name": "ThrustD",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "RocketPropulsion.ThrustP",
+   "name": "ThrustP",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "RocketPropulsion.TurnD",
+   "name": "TurnD",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "RocketPropulsion.TurnP",
+   "name": "TurnP",
+   "kind": "property",
+   "owner": "RocketPropulsion",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "RocketPropulsion:fire",
+   "name": "fire",
+   "kind": "method",
+   "owner": "RocketPropulsion",
+   "message": "This function is a deprecated variant of `Class.RocketPropulsion:Fire()` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "RunService:Reset",
+   "name": "Reset",
+   "kind": "method",
+   "owner": "RunService",
+   "message": "This item is deprecated and should not be used in new work.",
+   "lint": false
+  },
+  {
+   "full": "ScreenshotHud.ExperienceNameOverlayEnabled",
+   "name": "ExperienceNameOverlayEnabled",
+   "kind": "property",
+   "owner": "ScreenshotHud",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "ScreenshotHud.OverlayFont",
+   "name": "OverlayFont",
+   "kind": "property",
+   "owner": "ScreenshotHud",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "ScreenshotHud.UsernameOverlayEnabled",
+   "name": "UsernameOverlayEnabled",
+   "kind": "property",
+   "owner": "ScreenshotHud",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "SensorBase:Sense",
+   "name": "Sense",
+   "kind": "method",
+   "owner": "SensorBase",
+   "message": "This method should not be used in new work.",
+   "lint": false
+  },
+  {
+   "full": "ServiceProvider:getService",
+   "name": "getService",
+   "kind": "method",
+   "owner": "ServiceProvider",
+   "message": "This deprecated function is a variant of `Class.ServiceProvider:GetService()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "ServiceProvider:service",
+   "name": "service",
+   "kind": "method",
+   "owner": "ServiceProvider",
+   "message": "This item has been superseded by `Class.ServiceProvider:GetService()` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "SkateboardPlatform:ApplySpecificImpulse",
+   "name": "ApplySpecificImpulse",
+   "kind": "method",
+   "owner": "SkateboardPlatform",
+   "message": "The SkateboardPlatform object has been deprecated and is no longer supported by Roblox.",
+   "lint": true
+  },
+  {
+   "full": "SkateboardPlatform.Controller",
+   "name": "Controller",
+   "kind": "property",
+   "owner": "SkateboardPlatform",
+   "message": "The SkateboardPlatform object has been deprecated and is no longer supported by Roblox.",
+   "lint": true
+  },
+  {
+   "full": "SkateboardPlatform.ControllingHumanoid",
+   "name": "ControllingHumanoid",
+   "kind": "property",
+   "owner": "SkateboardPlatform",
+   "message": "The SkateboardPlatform object has been deprecated and is no longer supported by Roblox.",
+   "lint": true
+  },
+  {
+   "full": "SkateboardPlatform.Equipped",
+   "name": "Equipped",
+   "kind": "event",
+   "owner": "SkateboardPlatform",
+   "message": "The SkateboardPlatform object has been deprecated and is no longer supported by Roblox.",
+   "lint": false
+  },
+  {
+   "full": "SkateboardPlatform.MoveStateChanged",
+   "name": "MoveStateChanged",
+   "kind": "event",
+   "owner": "SkateboardPlatform",
+   "message": "The SkateboardPlatform object has been deprecated and is no longer supported by Roblox.",
+   "lint": true
+  },
+  {
+   "full": "SkateboardPlatform.Steer",
+   "name": "Steer",
+   "kind": "property",
+   "owner": "SkateboardPlatform",
+   "message": "The SkateboardPlatform object has been deprecated and is no longer supported by Roblox.",
+   "lint": false
+  },
+  {
+   "full": "SkateboardPlatform.StickyWheels",
+   "name": "StickyWheels",
+   "kind": "property",
+   "owner": "SkateboardPlatform",
+   "message": "The SkateboardPlatform object has been deprecated and is no longer supported by Roblox.",
+   "lint": true
+  },
+  {
+   "full": "SkateboardPlatform.Throttle",
+   "name": "Throttle",
+   "kind": "property",
+   "owner": "SkateboardPlatform",
+   "message": "The SkateboardPlatform object has been deprecated and is no longer supported by Roblox.",
+   "lint": false
+  },
+  {
+   "full": "SkateboardPlatform.Unequipped",
+   "name": "Unequipped",
+   "kind": "event",
+   "owner": "SkateboardPlatform",
+   "message": "The SkateboardPlatform object has been deprecated and is no longer supported by Roblox.",
+   "lint": false
+  },
+  {
+   "full": "SkateboardPlatform.equipped",
+   "name": "equipped",
+   "kind": "event",
+   "owner": "SkateboardPlatform",
+   "message": "This deprecated event is a variant of `SkateboardPlatform.Equipped` which has also been deprecated.",
+   "lint": false
+  },
+  {
+   "full": "SkateboardPlatform.unequipped",
+   "name": "unequipped",
+   "kind": "event",
+   "owner": "SkateboardPlatform",
+   "message": "This deprecated event is a variant of `SkateboardPlatform.Unequipped` which has also been deprecated.",
+   "lint": false
+  },
+  {
+   "full": "Skin.SkinColor",
+   "name": "SkinColor",
+   "kind": "property",
+   "owner": "Skin",
+   "message": "This object has been deprecated and superseded by `BodyColors`.",
+   "lint": true
+  },
+  {
+   "full": "SlidingBallConstraint.SoftlockServoUponReachingTarget",
+   "name": "SoftlockServoUponReachingTarget",
+   "kind": "property",
+   "owner": "SlidingBallConstraint",
+   "message": "This property should not be used in new work.",
+   "lint": false
+  },
+  {
+   "full": "SocialService:PromptLinkSharing",
+   "name": "PromptLinkSharing",
+   "kind": "method",
+   "owner": "SocialService",
+   "message": "Use `Class.SocialService:PromptLinkSharingAsync()|PromptLinkSharingAsync()` instead.",
+   "lint": true
+  },
+  {
+   "full": "Sound.EmitterSize",
+   "name": "EmitterSize",
+   "kind": "property",
+   "owner": "Sound",
+   "message": "This property has deprecated in favor of `Sound.RollOffMinDistance` and `Sound.RollOffMaxDistance` which should be used instead in new work.",
+   "lint": true
+  },
+  {
+   "full": "Sound.MaxDistance",
+   "name": "MaxDistance",
+   "kind": "property",
+   "owner": "Sound",
+   "message": "This property has deprecated in favor of `Sound.RollOffMinDistance` and `Sound.RollOffMaxDistance` which should be used instead in new work.",
+   "lint": false
+  },
+  {
+   "full": "Sound.MinDistance",
+   "name": "MinDistance",
+   "kind": "property",
+   "owner": "Sound",
+   "message": "MinDistance has been superseded by `Sound.EmitterSize`, whose name better describes this properties behavior.",
+   "lint": true
+  },
+  {
+   "full": "Sound.Pitch",
+   "name": "Pitch",
+   "kind": "property",
+   "owner": "Sound",
+   "message": "This property has been deprecated in favor of `Sound.PlaybackSpeed` whose name suits the behavior better.",
+   "lint": false
+  },
+  {
+   "full": "Sound.isPlaying",
+   "name": "isPlaying",
+   "kind": "property",
+   "owner": "Sound",
+   "message": "This deprecated property is a variant of `Sound.IsPlaying` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Sound:pause",
+   "name": "pause",
+   "kind": "method",
+   "owner": "Sound",
+   "message": "This deprecated function is a variant of `Class.Sound:Pause()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Sound:play",
+   "name": "play",
+   "kind": "method",
+   "owner": "Sound",
+   "message": "This deprecated function is a variant of `Class.Sound:Play()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Sound:stop",
+   "name": "stop",
+   "kind": "method",
+   "owner": "Sound",
+   "message": "This deprecated function is a variant of `Class.Sound:Stop()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "Sparkles.Color",
+   "name": "Color",
+   "kind": "property",
+   "owner": "Sparkles",
+   "message": "This property is deprecated in favor of `Sparkles.SparkleColor`, which does the exact same thing.",
+   "lint": false
+  },
+  {
+   "full": "StarterGui.ResetPlayerGuiOnSpawn",
+   "name": "ResetPlayerGuiOnSpawn",
+   "kind": "property",
+   "owner": "StarterGui",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "Stats.HeartbeatTimeMs",
+   "name": "HeartbeatTimeMs",
+   "kind": "property",
+   "owner": "Stats",
+   "message": "Use `Stats.HeartbeatTime` instead.",
+   "lint": true
+  },
+  {
+   "full": "Stats.PhysicsStepTimeMs",
+   "name": "PhysicsStepTimeMs",
+   "kind": "property",
+   "owner": "Stats",
+   "message": "Use `Stats.PhysicsStepTime` instead.",
+   "lint": true
+  },
+  {
+   "full": "StringValue.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "StringValue",
+   "message": "This deprecated event is a variant of `StringValue.Changed` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "Team.AutoColorCharacters",
+   "name": "AutoColorCharacters",
+   "kind": "property",
+   "owner": "Team",
+   "message": "This property is deprecated and no longer functions, it should not be used for new work.",
+   "lint": true
+  },
+  {
+   "full": "Team.Score",
+   "name": "Score",
+   "kind": "property",
+   "owner": "Team",
+   "message": "This property is deprecated and should not be used in new work.",
+   "lint": false
+  },
+  {
+   "full": "Teams:RebalanceTeams",
+   "name": "RebalanceTeams",
+   "kind": "method",
+   "owner": "Teams",
+   "message": "This function has been deprecated and no longer functions correctly.",
+   "lint": true
+  },
+  {
+   "full": "TeleportOptions.ReservedServerAccessCode",
+   "name": "ReservedServerAccessCode",
+   "kind": "property",
+   "owner": "TeleportOptions",
+   "message": "Use `TeleportOptions.ReservedServerId` with a developer-generated GUID and `Class.TeleportService:TeleportAsync()` instead.",
+   "lint": false
+  },
+  {
+   "full": "TeleportOptions.ShouldReserveServer",
+   "name": "ShouldReserveServer",
+   "kind": "property",
+   "owner": "TeleportOptions",
+   "message": "Use `TeleportOptions.ReservedServerId` with a developer-generated GUID and `Class.TeleportService:TeleportAsync()` instead.",
+   "lint": true
+  },
+  {
+   "full": "TeleportService.CustomizedTeleportUI",
+   "name": "CustomizedTeleportUI",
+   "kind": "property",
+   "owner": "TeleportService",
+   "message": "This item is deprecated since the default message it controls has been removed.",
+   "lint": true
+  },
+  {
+   "full": "TeleportService:ReserveServer",
+   "name": "ReserveServer",
+   "kind": "method",
+   "owner": "TeleportService",
+   "message": "Use `Class.TeleportService:TeleportAsync()|TeleportAsync()` with `TeleportOptions.ReservedServerId` instead.",
+   "lint": true
+  },
+  {
+   "full": "TeleportService:ReserveServerAsync",
+   "name": "ReserveServerAsync",
+   "kind": "method",
+   "owner": "TeleportService",
+   "message": "Use `Class.TeleportService:TeleportAsync()|TeleportAsync()` with `TeleportOptions.ReservedServerId` instead.",
+   "lint": true
+  },
+  {
+   "full": "TeleportService:Teleport",
+   "name": "Teleport",
+   "kind": "method",
+   "owner": "TeleportService",
+   "message": "Use `Class.TeleportService:TeleportAsync()|TeleportAsync()` for server-side teleports.",
+   "lint": true
+  },
+  {
+   "full": "TeleportService:TeleportPartyAsync",
+   "name": "TeleportPartyAsync",
+   "kind": "method",
+   "owner": "TeleportService",
+   "message": "Use `Class.TeleportService:TeleportAsync()|TeleportAsync()` instead.",
+   "lint": true
+  },
+  {
+   "full": "TeleportService:TeleportToPlaceInstance",
+   "name": "TeleportToPlaceInstance",
+   "kind": "method",
+   "owner": "TeleportService",
+   "message": "Use `Class.TeleportService:TeleportAsync()|TeleportAsync()` instead.",
+   "lint": true
+  },
+  {
+   "full": "TeleportService:TeleportToPrivateServer",
+   "name": "TeleportToPrivateServer",
+   "kind": "method",
+   "owner": "TeleportService",
+   "message": "Use `Class.TeleportService:TeleportAsync()|TeleportAsync()` with `TeleportOptions.ReservedServerId` instead.",
+   "lint": true
+  },
+  {
+   "full": "TeleportService:TeleportToSpawnByName",
+   "name": "TeleportToSpawnByName",
+   "kind": "method",
+   "owner": "TeleportService",
+   "message": "Use `Class.TeleportService:TeleportAsync()|TeleportAsync()` instead.",
+   "lint": true
+  },
+  {
+   "full": "Terrain:AutowedgeCell",
+   "name": "AutowedgeCell",
+   "kind": "method",
+   "owner": "Terrain",
+   "message": "This item is a deprecated function of a legacy `Terrain` engine that has been removed.",
+   "lint": true
+  },
+  {
+   "full": "Terrain:AutowedgeCells",
+   "name": "AutowedgeCells",
+   "kind": "method",
+   "owner": "Terrain",
+   "message": "This item is a deprecated function of a legacy `Terrain` engine that has been removed.",
+   "lint": true
+  },
+  {
+   "full": "Terrain:ConvertToSmooth",
+   "name": "ConvertToSmooth",
+   "kind": "method",
+   "owner": "Terrain",
+   "message": "Since all places now automatically use the new terrain engine, this method is obsolete.",
+   "lint": true
+  },
+  {
+   "full": "Terrain:GetCell",
+   "name": "GetCell",
+   "kind": "method",
+   "owner": "Terrain",
+   "message": "This item is a deprecated function of a legacy `Terrain` engine that has been removed.",
+   "lint": true
+  },
+  {
+   "full": "Terrain:GetWaterCell",
+   "name": "GetWaterCell",
+   "kind": "method",
+   "owner": "Terrain",
+   "message": "This item is a deprecated function of a legacy `Terrain` engine that has been removed.",
+   "lint": true
+  },
+  {
+   "full": "Terrain.IsSmooth",
+   "name": "IsSmooth",
+   "kind": "property",
+   "owner": "Terrain",
+   "message": "The legacy terrain engine has been removed, so this property will always be `true`.",
+   "lint": true
+  },
+  {
+   "full": "Terrain:SetCell",
+   "name": "SetCell",
+   "kind": "method",
+   "owner": "Terrain",
+   "message": "This item is a deprecated function of a legacy `Terrain` engine that has been removed.",
+   "lint": true
+  },
+  {
+   "full": "Terrain:SetCells",
+   "name": "SetCells",
+   "kind": "method",
+   "owner": "Terrain",
+   "message": "This item is a deprecated function of a legacy `Terrain` engine that has been removed.",
+   "lint": true
+  },
+  {
+   "full": "Terrain:SetWaterCell",
+   "name": "SetWaterCell",
+   "kind": "method",
+   "owner": "Terrain",
+   "message": "This item is a deprecated function of a legacy `Terrain` engine that has been removed.",
+   "lint": true
+  },
+  {
+   "full": "TerrainRegion:ConvertToSmooth",
+   "name": "ConvertToSmooth",
+   "kind": "method",
+   "owner": "TerrainRegion",
+   "message": "This item is a deprecated function of a legacy `Terrain` engine that has been removed.",
+   "lint": false
+  },
+  {
+   "full": "TerrainRegion.IsSmooth",
+   "name": "IsSmooth",
+   "kind": "property",
+   "owner": "TerrainRegion",
+   "message": "This item is a deprecated function of a legacy `Terrain` engine that has been removed.",
+   "lint": false
+  },
+  {
+   "full": "TextBox.FontSize",
+   "name": "FontSize",
+   "kind": "property",
+   "owner": "TextBox",
+   "message": "This item has been superseded by `TextBox.TextSize` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "TextBox.TextColor",
+   "name": "TextColor",
+   "kind": "property",
+   "owner": "TextBox",
+   "message": "This item has been superseded by `TextBox.TextColor3` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "TextBox.TextWrap",
+   "name": "TextWrap",
+   "kind": "property",
+   "owner": "TextBox",
+   "message": "This item has been superseded by `TextBox.TextWrapped` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "TextButton.FontSize",
+   "name": "FontSize",
+   "kind": "property",
+   "owner": "TextButton",
+   "message": "This property is deprecated in favor of `TextSize` which is an integer and not an enum and thus offers far more options for sizes.",
+   "lint": false
+  },
+  {
+   "full": "TextButton.TextColor",
+   "name": "TextColor",
+   "kind": "property",
+   "owner": "TextButton",
+   "message": "This item has been superseded by `TextButton.TextColor3` which should be used in all new work.",
+   "lint": false
+  },
+  {
+   "full": "TextButton.TextWrap",
+   "name": "TextWrap",
+   "kind": "property",
+   "owner": "TextButton",
+   "message": "This item has been superseded by `TextButton.TextWrapped` which should be used in all new work.",
+   "lint": false
+  },
+  {
+   "full": "TextChatService.ChatVersion",
+   "name": "ChatVersion",
+   "kind": "property",
+   "owner": "TextChatService",
+   "message": "This property has been deprecated in newly created Studio experiences.",
+   "lint": true
+  },
+  {
+   "full": "TextFilterResult:GetChatForUserAsync",
+   "name": "GetChatForUserAsync",
+   "kind": "method",
+   "owner": "TextFilterResult",
+   "message": "This method is deprecated and returns an empty string.",
+   "lint": true
+  },
+  {
+   "full": "TextLabel.FontSize",
+   "name": "FontSize",
+   "kind": "property",
+   "owner": "TextLabel",
+   "message": "This property is deprecated in favor of `TextSize` which is an integer and not an enum and thus offers far more options for sizes.",
+   "lint": false
+  },
+  {
+   "full": "TextLabel.TextColor",
+   "name": "TextColor",
+   "kind": "property",
+   "owner": "TextLabel",
+   "message": "This item has been superseded by `TextLabel.TextColor3` which should be used in all new work.",
+   "lint": false
+  },
+  {
+   "full": "TextLabel.TextWrap",
+   "name": "TextWrap",
+   "kind": "property",
+   "owner": "TextLabel",
+   "message": "This property is simply an alias for `TextWrapped`.",
+   "lint": false
+  },
+  {
+   "full": "TextService:FilterAndTranslateStringAsync",
+   "name": "FilterAndTranslateStringAsync",
+   "kind": "method",
+   "owner": "TextService",
+   "message": "This method is no longer supported and should not be used.",
+   "lint": true
+  },
+  {
+   "full": "TorsionSpringConstraint.LimitEnabled",
+   "name": "LimitEnabled",
+   "kind": "property",
+   "owner": "TorsionSpringConstraint",
+   "message": "This property is deprecated.",
+   "lint": true
+  },
+  {
+   "full": "UIGridStyleLayout:ApplyLayout",
+   "name": "ApplyLayout",
+   "kind": "method",
+   "owner": "UIGridStyleLayout",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "UIGridStyleLayout:SetCustomSortFunction",
+   "name": "SetCustomSortFunction",
+   "kind": "method",
+   "owner": "UIGridStyleLayout",
+   "message": "This method is deprecated in favor of using other SortOrder means, such as by Name or LayoutOrder.",
+   "lint": true
+  },
+  {
+   "full": "UserGameSettings.ControlMode",
+   "name": "ControlMode",
+   "kind": "property",
+   "owner": "UserGameSettings",
+   "message": "This property has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "UserInputService:GetUserCFrame",
+   "name": "GetUserCFrame",
+   "kind": "method",
+   "owner": "UserInputService",
+   "message": "Use `Class.VRService:GetUserCFrame()` instead.",
+   "lint": false
+  },
+  {
+   "full": "UserInputService.ModalEnabled",
+   "name": "ModalEnabled",
+   "kind": "property",
+   "owner": "UserInputService",
+   "message": "This item has been superseded by `GuiService.TouchControlsEnabled` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "UserInputService.UserCFrameChanged",
+   "name": "UserCFrameChanged",
+   "kind": "event",
+   "owner": "UserInputService",
+   "message": "Use `VRService.UserCFrameChanged` instead.",
+   "lint": false
+  },
+  {
+   "full": "UserInputService.UserHeadCFrame",
+   "name": "UserHeadCFrame",
+   "kind": "property",
+   "owner": "UserInputService",
+   "message": "This item has been superseded by `Class.UserInputService:GetUserCFrame()` which should be used in all new work.",
+   "lint": true
+  },
+  {
+   "full": "UserInputService.VREnabled",
+   "name": "VREnabled",
+   "kind": "property",
+   "owner": "UserInputService",
+   "message": "This property has been superseded by `VRService.VREnabled` which should be used in all new work.",
+   "lint": false
+  },
+  {
+   "full": "Vector3Value.changed",
+   "name": "changed",
+   "kind": "event",
+   "owner": "Vector3Value",
+   "message": "This deprecated event is a variant of `Vector3Value.Changed` which should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "VehicleSeat.Steer",
+   "name": "Steer",
+   "kind": "property",
+   "owner": "VehicleSeat",
+   "message": "This property is no longer replicated and has been deprecated in favor of `SteerFloat` which is a float variant and should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "VehicleSeat.Throttle",
+   "name": "Throttle",
+   "kind": "property",
+   "owner": "VehicleSeat",
+   "message": "This property is not longer replicated and has been deprecated in favor of `ThrottleFloat` which is a float variant and should be used instead.",
+   "lint": false
+  },
+  {
+   "full": "Workspace:BreakJoints",
+   "name": "BreakJoints",
+   "kind": "method",
+   "owner": "Workspace",
+   "message": "This method is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "Workspace.FilteringEnabled",
+   "name": "FilteringEnabled",
+   "kind": "property",
+   "owner": "Workspace",
+   "message": "This property is discontinued.",
+   "lint": true
+  },
+  {
+   "full": "Workspace.InterpolationThrottling",
+   "name": "InterpolationThrottling",
+   "kind": "property",
+   "owner": "Workspace",
+   "message": "This property should not be used for new work.",
+   "lint": true
+  },
+  {
+   "full": "Workspace:MakeJoints",
+   "name": "MakeJoints",
+   "kind": "method",
+   "owner": "Workspace",
+   "message": "This method is deprecated.",
+   "lint": false
+  },
+  {
+   "full": "WorldRoot:FindPartOnRay",
+   "name": "FindPartOnRay",
+   "kind": "method",
+   "owner": "WorldRoot",
+   "message": "This function has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "WorldRoot:FindPartOnRayWithIgnoreList",
+   "name": "FindPartOnRayWithIgnoreList",
+   "kind": "method",
+   "owner": "WorldRoot",
+   "message": "This function has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "WorldRoot:FindPartOnRayWithWhitelist",
+   "name": "FindPartOnRayWithWhitelist",
+   "kind": "method",
+   "owner": "WorldRoot",
+   "message": "This function has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "WorldRoot:FindPartsInRegion3",
+   "name": "FindPartsInRegion3",
+   "kind": "method",
+   "owner": "WorldRoot",
+   "message": "This function has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "WorldRoot:FindPartsInRegion3WithIgnoreList",
+   "name": "FindPartsInRegion3WithIgnoreList",
+   "kind": "method",
+   "owner": "WorldRoot",
+   "message": "This function has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "WorldRoot:FindPartsInRegion3WithWhiteList",
+   "name": "FindPartsInRegion3WithWhiteList",
+   "kind": "method",
+   "owner": "WorldRoot",
+   "message": "This function has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "WorldRoot:IsRegion3Empty",
+   "name": "IsRegion3Empty",
+   "kind": "method",
+   "owner": "WorldRoot",
+   "message": "This function has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "WorldRoot:IsRegion3EmptyWithIgnoreList",
+   "name": "IsRegion3EmptyWithIgnoreList",
+   "kind": "method",
+   "owner": "WorldRoot",
+   "message": "This function has been deprecated.",
+   "lint": true
+  },
+  {
+   "full": "WorldRoot:findPartOnRay",
+   "name": "findPartOnRay",
+   "kind": "method",
+   "owner": "WorldRoot",
+   "message": "This deprecated function is a variant of `Class.WorldRoot:FindPartOnRay()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "WorldRoot:findPartsInRegion3",
+   "name": "findPartsInRegion3",
+   "kind": "method",
+   "owner": "WorldRoot",
+   "message": "This deprecated function is a variant of `Class.WorldRoot:FindPartsInRegion3()` which should be used instead.",
+   "lint": true
+  },
+  {
+   "full": "WrapLayer.Puffiness",
+   "name": "Puffiness",
+   "kind": "property",
+   "owner": "WrapLayer",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "WrapLayer.ShrinkFactor",
+   "name": "ShrinkFactor",
+   "kind": "property",
+   "owner": "WrapLayer",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "WrapTarget.Stiffness",
+   "name": "Stiffness",
+   "kind": "property",
+   "owner": "WrapTarget",
+   "message": "",
+   "lint": false
+  },
+  {
+   "full": "table.foreach",
+   "name": "foreach",
+   "kind": "function",
+   "owner": "table",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "table.foreachi",
+   "name": "foreachi",
+   "kind": "function",
+   "owner": "table",
+   "message": "",
+   "lint": true
+  },
+  {
+   "full": "table.getn",
+   "name": "getn",
+   "kind": "function",
+   "owner": "table",
+   "message": "",
+   "lint": true
+  }
+ ],
+ "globals": [
+  "DebuggerManager",
+  "collectgarbage",
+  "delay",
+  "elapsedTime",
+  "getfenv",
+  "printidentity",
+  "setfenv",
+  "spawn",
+  "stats",
+  "version",
+  "wait",
+  "ypcall"
+ ]
+}
