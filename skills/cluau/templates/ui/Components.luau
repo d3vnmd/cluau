@@ -30,8 +30,14 @@ export type ButtonSize = "sm" | "md" | "lg"
 
 local activeTweens: { [Instance]: { [string]: Tween } } = setmetatable({}, { __mode = "k" }) :: any
 
+-- Motion slots that are skipped (applied instantly) when the player enables Reduced Motion.
+local MOTION_SLOTS = { scale = true, move = true }
+
 function Components.tween(instance: Instance, info: TweenInfo, goal: { [string]: any }, key: string?): Tween
 	local slot = key or "default"
+	if MOTION_SLOTS[slot] and GuiService.ReducedMotionEnabled then
+		info = TweenInfo.new(0)
+	end
 	local perInstance = activeTweens[instance]
 	if perInstance == nil then
 		perInstance = {}
@@ -133,10 +139,24 @@ function Components.screen(name: string, displayOrder: number): ScreenGui
 	gui.Name = name
 	gui.ResetOnSpawn = false
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	gui.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets
+	-- CoreUISafeInsets keeps interactive UI clear of notches AND Roblox's core buttons.
+	gui.ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets
 	gui.DisplayOrder = displayOrder
 	gui.Parent = playerGui
 	return gui
+end
+
+--- Applies the player's Preferred Transparency setting (Roblox accessibility) to a background.
+--- `base` is the design transparency; the player's preference scales it (0 = fully opaque preference).
+function Components.bindPreferredTransparency(target: GuiObject, base: number)
+	local function apply()
+		target.BackgroundTransparency = base * GuiService.PreferredTransparency
+	end
+	apply()
+	local connection = GuiService:GetPropertyChangedSignal("PreferredTransparency"):Connect(apply)
+	target.Destroying:Connect(function()
+		connection:Disconnect()
+	end)
 end
 
 --- Adds a UIScale to `target` that follows the viewport height (design in 1080p reference pixels).

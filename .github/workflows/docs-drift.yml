@@ -1,0 +1,43 @@
+name: Roblox docs drift
+
+# Roblox deprecates APIs every few months. This job regenerates the deprecation database from the
+# official docs and fails if it changed, so maintainers know to run tools/sync_deprecations.py and release.
+on:
+  schedule:
+    - cron: "17 3 * * 1" # weekly, Monday 03:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: python -m pip install --disable-pip-version-check pyyaml
+
+      - name: Fetch Roblox/creator-docs
+        run: git clone --depth 1 https://github.com/Roblox/creator-docs "$RUNNER_TEMP/creator-docs"
+
+      - name: Regenerate deprecation data and feature feed
+        run: python tools/sync_deprecations.py "$RUNNER_TEMP/creator-docs"
+
+      - name: Fail if anything changed (ignoring the revision/date stamp)
+        run: |
+          if git diff --quiet -I 'source_revision|"generated"|@ `[0-9a-f]{40}' -- skills/cluau; then
+            echo "No drift."
+          else
+            git --no-pager diff --stat -- skills/cluau
+            echo "::error::Roblox docs changed. Run: python tools/sync_deprecations.py <creator-docs> and cut a release."
+            exit 1
+          fi
+
+      - name: API references still exist
+        run: python tools/verify_api_refs.py "$RUNNER_TEMP/creator-docs"

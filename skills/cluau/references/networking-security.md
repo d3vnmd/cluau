@@ -105,7 +105,18 @@ Rate limiting is a floor, not the logic. A weapon still needs a server-side cool
 - Server-held trade session: both offers stored server-side, both must confirm after the last change, re-validate inventories at execute time, execute atomically in one function, log the trade, save both profiles. Add a short confirm delay after any change to stop last-second swaps.
 
 ### Admin commands
-- Whitelist of UserIds or `player:GetRankInGroup(groupId) >= rank` (pcall, cache) checked **on the server** on every command. Use `TextChatCommand` for chat commands.
+- Whitelist of UserIds or group roles via `GroupService:GetRolesInGroupAsync(player.UserId, groupId)` (pcall, cache per session; identify roles by `Id`, not name) checked **on the server** on every command. Use `TextChatCommand` for chat commands.
+
+### Enforcement (bans, logging)
+- `Players:BanAsync({ UserIds = {id}, ApplyToUniverse = true, Duration = seconds or -1, DisplayReason = "...", PrivateReason = "evidence...", ExcludeAltAccounts = false })` — universe-wide and persistent, unlike `Kick`. `GetBanHistoryAsync` still reports `Ban = true` after expiry; check start time + duration.
+- Detect → log evidence → ban in delayed waves (so cheaters can't tell what tripped them). Honeypot remotes should only log. Alt detection is weak; don't rely on it.
+- Since 2025 Roblox itself acts against accounts using modified clients — your job is still server-side validation.
+
+### Interaction handlers
+- `ProximityPrompt.Triggered`, `ClickDetector.MouseClick` and `Touched` can be fired by executors without being near: every handler re-checks distance (`Guard.near`) and state on the server. Prefer spatial queries for authoritative triggers.
+
+### Binary networking
+- Libraries such as Zap/Blink/ByteNet encode to `buffer`. When decoding **client** buffers: check `buffer.len` before every read, cap any length prefix, reject NaN/inf after decoding, and add your own rate limits (some libraries have none).
 
 ## 6. Movement & physics sanity checks
 
@@ -118,7 +129,7 @@ Server loop at 2–5 Hz per player:
 
 Respond proportionally: rubber-band (set CFrame back), then flag, then kick after repeated high-confidence violations. Whitelist legitimate server-caused movement (teleports, launch pads) by setting a grace window.
 
-Never make physics-critical shared objects client-owned when exploitation matters: `part:SetNetworkOwner(nil)` for server-owned physics (balls in sports games, vehicles you control server-side), knowing it adds input latency for players.
+For competitive movement/physics games, **Server Authority** (`references/server-authority.md`) removes client-decided movement entirely. Otherwise, never make physics-critical shared objects client-owned when exploitation matters: `part:SetNetworkOwner(nil)` for server-owned physics (balls in sports games, vehicles you control server-side), knowing it adds input latency for players.
 
 ## 7. Text & user-generated content
 

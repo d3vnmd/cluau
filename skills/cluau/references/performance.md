@@ -59,6 +59,16 @@
 
 ## 5. Network
 
+**Hard numbers (2024–2026 sources):**
+- Physics replication starts throttling above ~40 KB/s per client (receive counter caps at 50 KB/s). Keep custom traffic ≤ 20–30 KB/s.
+- Each moving replicated assembly ≈ 0.4–0.9 KB/s → budget ~40–60 moving assemblies; Humanoids are "baseline heavy" (≈ 160 KB/s for 500 in one measurement).
+- RemoteEvent overhead ≈ 9 bytes per fire: 50 entities × 60 Hz ≈ 27 KB/s before payload. Batch per tick.
+- `UnreliableRemoteEvent`: payloads > 1000 bytes are dropped (older docs said 900 — stay well below).
+- Quantize: orientation as 3×uint8 (~1.4° precision) halved one game's traffic; RTS-style positions as int16.
+- > ~30 moving NPCs → keep enemies as plain server tables, replicate spawn/death/hit events, let clients build and move models (TD pattern, `genre-playbooks.md`).
+- Moving 1,000 assemblies: `BulkMoveTo` ~6 ms/frame (tuned to 2.5 ms); animating bone/Motor6D `Transform` ~1 ms.
+
+
 - Every `FireClient`/`FireAllClients` costs bandwidth for the payload and overhead. Batch: collect changes during a frame/interval and send one table.
 - Send deltas, not full snapshots, after the initial sync.
 - Replicated property changes also cost: changing `Position` on 500 server parts every frame floods the network. Move visual-only things on clients.
@@ -72,7 +82,7 @@
 - Disconnect connections (Trove), stop tweens (`tween:Cancel()`), destroy instances you create.
 - Watch `Instances` count over time — steady growth = leak.
 - Don't keep references to destroyed instances in long-lived tables (they can't be GC'd).
-- Sounds: `Sound:Destroy()` after one-shot playback (or pool); preload important ones with `ContentProvider:PreloadAsync` in the loading screen only.
+- Sounds: `sound:Destroy()` after one-shot playback (or pool); preload important ones with `ContentProvider:PreloadAsync` in the loading screen only.
 
 ## 7. Parallel Luau
 
@@ -82,6 +92,9 @@
 - Not a fix for bad algorithms or for engine-bound work.
 
 ## 8. Mobile budget (low-end phone baseline)
+
+- ~65% of a typical game's players are on Android; ~60% of those devices have 2–4 GB RAM; >50% of devices score 10k–20k Passmark. Test on real low-end phones (the emulator is inaccurate for memory).
+- Rendering: comfortable view ≈ 100 draw calls / 150k triangles; ceiling 1,000 draw calls / 1M triangles. Use Scene Analysis (Window → Performance Summary) to find triangle/memory hogs.
 
 - Memory: low-end phones and tablets can crash when client memory climbs into the low gigabytes; keep it as low as practical. Textures and meshes dominate — check the Developer Console Memory tab on a real device.
 - Keep active particles and lights modest; test with Studio's device emulator and on a real device.

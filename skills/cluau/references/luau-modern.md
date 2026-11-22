@@ -11,7 +11,8 @@ This is the coding standard Cluau follows. It targets current Roblox Luau (stric
 6. Concurrency (task library, yielding, coroutines)
 7. Error handling
 8. Naming & formatting
-9. Things that look clever but are wrong
+9. Lua vs Luau — what exists
+10. Things that look clever but are wrong
 
 ---
 
@@ -235,7 +236,22 @@ end
 - Remote names: verb-noun `RequestPurchase`, `EquipItem`; server→client `InventoryUpdated`.
 - File extensions in Rojo: `.server.luau` (Script), `.client.luau` (LocalScript), `.luau` (ModuleScript).
 
-## 9. Things that look clever but are wrong
+## 9. Lua vs Luau — what exists (don't "correct" valid code)
+
+| Present in Luau (safe to emit) | Absent in Luau (never emit) |
+|---|---|
+| `//`, `+=` and friends, `continue`, `if-then-else` expressions, string interpolation | `goto`, labels |
+| `math.pow`, `unpack` (= `table.unpack`), `table.maxn`, `string.pack/unpack`, `utf8`, `bit32` | Bitwise operators `& \| ~ << >>` (use `bit32`) |
+| `buffer`, `vector` (`vector.create`, `vector.lerp`, …) | 64-bit integer type / `integer.*` (RFC rejected 2026) |
+| `math.lerp`, `math.map`, `math.isnan/isinf/isfinite`, `math.clamp/round/sign/noise` | `__gc`, `<close>`, Lua 5.4 `<const>` attribute syntax |
+| `const` bindings (`const MAX = 10`, documented 2026) | `io`, `package`, `loadfile`, `dofile`, most of `os` (only `os.time/clock/date/difftime`) |
+| `require` by instance **and** by string (`"./Sibling"`, `"../X"`, `"@self/Child"`, `"@game/..."`) — string requires **don't wait** for the module | Experimental syntax: `class`, `if local` / `while local`, export-by-value (`export x = …`) |
+| Attributes: `@native` / `--!native`, `@checked`, `@[deprecated {use = "...", reason = "..."}]` | `setfenv`/`getfenv`/`loadstring` (exist but forbidden here) |
+| User-defined type functions, `read`/`write` property modifiers | |
+
+Type checking: the **New Type Solver** is the default for nonstrict/nocheck scripts (Nov 2025); strict places may still need `Workspace.UseNewLuauTypeSolver` enabled. Write code that type-checks cleanly under both.
+
+## 10. Things that look clever but are wrong
 
 | Pattern | Problem | Do instead |
 |---|---|---|

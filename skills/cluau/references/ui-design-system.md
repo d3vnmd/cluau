@@ -97,7 +97,10 @@ Max 3 levels: flat, raised (subtle shadow/darker bottom edge), overlay (modal wi
 - `UIAspectRatioConstraint` for icons, item cards, avatars.
 - `ScrollingFrame`: `AutomaticCanvasSize = Y`, `CanvasSize = UDim2.new()`, `ScrollBarThickness` 4–6, `ScrollingDirection = Y`, padding so content doesn't hide under the bar; `ScrollBarImageColor3` from tokens.
 - `ZIndexBehavior = Sibling` on ScreenGuis (default for new ones). Layer with `DisplayOrder` between ScreenGuis (HUD 0, menus 10, modals 20, toasts 30), not huge ZIndex numbers.
-- Safe areas: `ScreenGui.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets` for HUD; full-bleed backgrounds can use `None` with `IgnoreGuiInset = true`. Keep 56+ px clear at top for the Roblox top bar unless using `CoreUISafeInsets`.
+- Safe areas: interactive HUD uses `ScreenGui.ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets` (avoids notches **and** Roblox core buttons); `TopbarSafeInsets` only for a dedicated topbar-row ScreenGui (reported wrong on some consoles — test); full-bleed backgrounds use `None` + `IgnoreGuiInset = true`. Don't hard-code the old 36 px topbar height.
+- **UI Styling** (StyleSheet / StyleRule / StyleLink / StyleDerive, StyleQuery, Styling Transitions) can implement the token system natively and enables theme switching; Theme.luau tokens map 1:1 onto style rules.
+- Flex (`UIFlexItem`, `UIListLayout.Wraps`) costs layout time: keep < 1,000 items; AutomaticSize + UIFlexItem is unsupported with non-zero AnchorPoint, scale-sized items, scaled padding or TextScaled.
+- `CanvasGroup`: texture memory capped by graphics quality — renders blank over the cap, re-textures on resize, keeps memory while hidden, black on some phones. Use only for short fixed-size fades; destroy after.
 
 ## 5. Components & states
 
@@ -128,6 +131,7 @@ Core component set (implemented in `templates/ui/Components.luau`):
 ## 6. Input parity
 
 - Detect current input: `UserInputService:GetLastInputType()` + `LastInputTypeChanged`; map to `"KeyboardMouse" | "Touch" | "Gamepad"`. Swap prompts ("[E]" / tap icon / "Ⓧ" glyph image) and hide hover-only affordances on touch.
+- Input Action System: one `InputContext` per mode (gameplay, menu) in ReplicatedStorage; glyphs via `InputActionLabel` or `UserInputService:GetImageForKeyCode`; switch contexts when menus open so gameplay actions don't fire behind UI.
 - Touch: hit areas ≥ 44 px (reference) — enlarge invisible hit frame if the visual is smaller. Keep critical buttons out of the bottom-left (thumbstick) and bottom-right (jump) zones. Use `ContextActionService:BindAction(name, fn, true, ...)` for mobile action buttons, then `SetPosition`/`SetImage`.
 - Gamepad: on opening a screen set `GuiService.SelectedObject` to the primary button; `Selectable = true` on interactive elements, `false` on decorative; define `NextSelectionUp/Down/Left/Right` when layouts are irregular; `SelectionGroup = true` on containers; close with `ButtonB`.
 - Keyboard: Escape closes modals; number keys for hotbars; show keybinds in tooltips.
@@ -166,6 +170,11 @@ Core component set (implemented in `templates/ui/Components.luau`):
 - Backgrounds: subtle texture or flat; avoid busy images behind text.
 
 ## 11. Accessibility
+
+Wire Roblox's player settings into every component (see `Components.luau`): multiply panel transparency by `GuiService.PreferredTransparency`, replace motion when `GuiService.ReducedMotionEnabled`, respect `GuiService.PreferredTextSize`. Consoles: ~1.5× scale for 10-foot viewing.
+
+**Frameworks** (optional): React-Luau (maintained by Roblox), Fusion 0.3, Vide; state with Charm (+CharmSync). Roact/Rodux are legacy. Plain instances + components (this skill's templates) are fine for most games. Top simulator-style games use **image-based UI kits** (9-slice frames, one icon family) rather than code-drawn boxes — commission or create a kit that matches the art direction.
+
 
 - Contrast: text ≥ 4.5:1 (small) / ≥ 3:1 (large, ≥ 24 px bold).
 - Never rely on color alone (rarity also gets a label or shape).

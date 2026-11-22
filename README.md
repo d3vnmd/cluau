@@ -31,10 +31,18 @@ Modern strict Luau · Exploit-proof networking · Session-locked DataStores · F
 | Хэсэг | Агуулга |
 |---|---|
 | `SKILL.md` | Гол "prompt": ажиллах дараалал, заавал хийх өөрийгөө шалгах жагсаалт, архитектур, аюулгүй байдал, UI зарчим, өгөгдөл, монетизаци, гүйцэтгэл |
-| `references/` | 11 гүнзгий гарын авлага (modern Luau, deprecated API хүснэгт, архитектур, сүлжээ/аюулгүй байдал, DataStore, UI design system, гүйцэтгэл, монетизаци ба бодлого, тоглоомын дизайн, debug, монгол нэр томьёо) |
-| `templates/` | 13 бэлэн Luau модуль: bootstrap, `Net`, `Guard`, `RateLimiter`, `Trove`, `Config`, session-lock-той `DataService`, давхардалгүй `MonetizationService`, `ShopService`, `Theme`, `Components`, `UIController` |
-| `scripts/luau_lint.py` | Хуучирсан/аюултай код, UI-slop илрүүлдэг 49 дүрэмтэй linter (Python, суулгах зүйлгүй) |
+| `references/` | 19 гүнзгий гарын авлага: modern Luau, deprecated API (албан ёсны docs-оос автоматаар үүсгэсэн ~560 API), архитектур, **тоглоомын 14 төрлийн playbook**, Server Authority, аюулгүй байдал, DataStore, UI design system, гүйцэтгэлийн хатуу төсөв, монетизаци ба 2026 оны бодлого, **3D загвар/Blender/asset pipeline**, **polish, QA, launch**, sharp-edges (35 алдаа), toolchain, монгол нэр томьёо |
+| `templates/` | 15 бэлэн Luau модуль: bootstrap, `Net`, `Guard`, `RateLimiter`, `Trove`, `Config`, `BufferCodec`, session-lock-той `DataService`, давхардалгүй `MonetizationService`, `ShopService`, `ModerationService` (BanAsync), `Theme`, `Components`, `UIController` |
+| `scripts/luau_lint.py` | 50 гар дүрэм + **Roblox-ийн албан ёсны docs-оос үүсгэсэн 391 deprecated нэр** илрүүлдэг linter (Python, суулгах зүйлгүй). Зөв Luau-г (`math.pow`, `unpack`) буруу гэж тэмдэглэдэггүй |
 | `scripts/scaffold.py` | Rojo төсөл үүсгэгч (Selene, StyLua, Rokit, `.luaurc`) |
+
+### 1.1 хувилбарт юу шинэ вэ?
+
+- **Албан ёсны Roblox docs-оос шалгасан.** Skill-д дурдсан бүх `Class:Method` (380+) Roblox-ийн `creator-docs`-д байгаа эсэхийг `tools/verify_api_refs.py` шалгадаг — зохиомол (hallucinated) API байхгүй. CI долоо хоног бүр Roblox шинэ API deprecated болгосон эсэхийг шалгана.
+- **Том студи шиг сэтгэдэг:** тоглоомын төрлийг эхлээд тодорхойлж, түүнд тохирох архитектур (tower defense, simulator, shooter, farming, steal г.м. 14 төрөл), ownership map, гүйцэтгэлийн хатуу төсөв (KB/s, draw call, NPC тоо) ашиглана.
+- **2026 оны өөрчлөлтүүд:** Server Authority, PhysicsService → `workspace`, Teleport GUID, `…Async` нэрс, Input Action System, Roblox Plus, DataStore-ийн шинэ хязгаар, нас-д суурилсан бүртгэл.
+- **3D загвар ба чанар:** Blender экспорт тохиргоо, 20k триангл, PBR, instancing, SLIM LOD, free model шалгах, game feel, QA, launch checklist.
+- **Шударга байдал:** Claude юу шалгасан, юу шалгаагүйгээ үнэнээр хэлнэ; тоглож үзээгүй бол "тест хийсэн" гэж хэзээ ч хэлэхгүй.
 
 ### Суулгах
 
@@ -101,9 +109,17 @@ cluau/
 ├── .claude-plugin/            plugin.json + marketplace.json (Claude Code plugin)
 ├── skills/cluau/
 │   ├── SKILL.md               the core prompt (operating loop, rules, self-review gate)
-│   ├── references/            11 deep-dive guides, loaded on demand
+│   ├── references/            19 deep-dive guides, loaded on demand
 │   │   ├── luau-modern.md         strict types, task library, idioms, pitfalls
-│   │   ├── deprecated-apis.md     deprecated → modern tables (~80 entries)
+│   │   ├── deprecated-apis.md     hand-written migration guide + "NOT deprecated" table
+│   │   ├── deprecated-index.md    GENERATED from official docs: ~560 deprecated members
+│   │   ├── platform-features.md   GENERATED: Roblox's agent-facing "use this now" feed
+│   │   ├── genre-playbooks.md     14 genres: ownership, data, exploits, budgets, monetization
+│   │   ├── server-authority.md    AuthorityMode=Server, BindToSimulation, limits
+│   │   ├── assets-pipeline.md     Blender/FBX/glTF, meshes, PBR, LOD, rigs, lighting, free models
+│   │   ├── polish-qa-launch.md    game feel, audio, accessibility, device lab, launch checklist
+│   │   ├── sharp-edges.md         35 ID'd bugs that ship (review format)
+│   │   ├── toolchain-workflow.md  evidence levels, Rojo, CI, Studio MCP verification
 │   │   ├── architecture.md        containers, replication, services/controllers, streaming
 │   │   ├── networking-security.md threat model, validation, rate limits, anti-cheat
 │   │   ├── data-persistence.md    session locking, ProfileStore, budgets, failure modes
@@ -113,18 +129,22 @@ cluau/
 │   │   ├── game-design.md         loops per genre, progression math, economy, FTUE
 │   │   ├── debugging-testing.md   error → cause → fix table, test checklists
 │   │   └── mongolian-glossary.md  consistent Mongolian terminology
-│   ├── templates/             13 production Luau modules (all --!strict, lint-clean)
-│   │   ├── server/            Main.server, DataService, MonetizationService, ShopService
+│   ├── templates/             15 production Luau modules (all --!strict, lint-clean)
+│   │   ├── server/            Main.server, DataService, MonetizationService, ShopService, ModerationService
 │   │   ├── client/            Main.client, UIController
-│   │   ├── shared/            Net, Guard, RateLimiter, Trove, Config
+│   │   ├── shared/            Net, Guard, RateLimiter, Trove, Config, BufferCodec
 │   │   └── ui/                Theme (design tokens), Components (stateful primitives)
 │   ├── scripts/
-│   │   ├── luau_lint.py       49-rule deprecated/unsafe/UI-slop linter
+│   │   ├── luau_lint.py       50 hand rules + 391 deprecated names generated from official docs
+│   │   ├── data/              deprecated_apis.json (generated)
 │   │   └── scaffold.py        Rojo project generator
 │   └── assets/project/        default.project.json, selene.toml, stylua.toml, rokit.toml, .luaurc
 ├── tests/                     linter unit tests + bad-code fixture
-├── tools/build.py             validate + package release zips
-└── .github/workflows/         CI (tests, skill check, Luau syntax) and tag-driven releases
+├── tools/
+│   ├── build.py               validate + package release zips
+│   ├── sync_deprecations.py   regenerate deprecation data from Roblox/creator-docs
+│   └── verify_api_refs.py     every Class:Member in the skill must exist in the docs
+└── .github/workflows/         CI (tests, skill check, Luau syntax, docs verify), weekly docs drift, releases
 ```
 
 ### Install
@@ -148,6 +168,9 @@ The skill triggers on any Roblox work — Studio, Luau, remotes, DataStores, UI,
 - "Make the shop UI for my cozy farming game. It must work on phones and with a controller."
 - "Review this script for exploits and deprecated APIs." *(paste code)*
 - "Add a 2× coins game pass and a 500-coin developer product."
+- "Plan the architecture for a tower defense game that handles 1,000 enemies without lag."
+- "What Blender export settings and triangle budget should my weapon models use?"
+- "Give me a launch checklist for my obby."
 
 ### Tools
 
@@ -178,9 +201,22 @@ git tag v1.0.0 && git push origin v1.0.0
 
 The **Release** workflow tests, packages and publishes the GitHub Release with install notes. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+### Staying current with Roblox
+
+Roblox deprecates whole services on a cadence of months. Cluau tracks the official docs source:
+
+```bash
+git clone --depth 1 https://github.com/Roblox/creator-docs ../creator-docs
+python3 tools/sync_deprecations.py ../creator-docs   # regenerate deprecation data + feature feed
+python3 tools/verify_api_refs.py ../creator-docs     # every API the skill mentions must exist
+```
+
+The weekly **Roblox docs drift** workflow fails when the docs change, so a new release can follow.
+Generated reference content derives from Roblox's creator-docs, licensed CC BY 4.0.
+
 ### Honest limits
 
-Claude cannot run Roblox Studio. Cluau's code is checked against its rules, the bundled linter and a Luau syntax compile in CI — always play-test in Studio (**Start Server** with 2+ players) before publishing. Roblox APIs evolve; if something changed, open an issue or PR to update `deprecated-apis.md` and the linter.
+Without a Studio connection, Claude cannot run your game. Cluau's code is checked against its rules, the linter, the official-docs verifier and a Luau syntax compile in CI. With Roblox Studio's MCP server connected, Cluau can play-test and read Output itself; otherwise always play-test (**Server & Clients** with 2+ players, plus a real low-end phone) before publishing.
 
 ### License
 

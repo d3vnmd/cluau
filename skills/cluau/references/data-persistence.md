@@ -23,7 +23,9 @@
 | Ranking | OrderedDataStore (numbers only) |
 | Ephemeral cross-server (queues, live counts) | MemoryStoreService |
 
-Never recommend DataStore2 or ProfileService for new projects; mention ProfileStore instead. Never write player progress with plain `SetAsync` in a loop.
+Never recommend DataStore2 (officially legacy) or ProfileService ("no longer supported") for new projects; mention **ProfileStore v1.0.3** instead (autosave every 300 s, steals a stale session after ~40 s, `MessageAsync` + `MessageHandler` replace GlobalUpdates, `ProfileStore.Mock` for tests; its developer-product guide waits until the PurchaseId appears in `profile.LastSavedData` before returning `PurchaseGranted`).
+
+**Key pattern:** new games use `User_{UserId}` and pass `{player.UserId}` as `UpdateAsync`'s userIds so Roblox's automated right-to-be-forgotten templates can delete data. Existing games keep their current keys — changing a live key pattern orphans every save. Never write player progress with plain `SetAsync` in a loop.
 
 ### ProfileStore usage sketch
 
@@ -137,8 +139,11 @@ In Studio `game.JobId` is an empty string — that still works because it's cons
 
 ## 5. Budgets, limits, retries
 
-- Per-key write cooldown: ~6 s between writes to the same key. Batch changes in memory.
-- Budgets scale with player count; check `DataStoreService:GetRequestBudgetForRequestType(Enum.DataStoreRequestType.UpdateAsync)` before non-critical writes.
+- **July 2026 limits** (game servers and Open Cloud now share per-experience budgets): per minute, StandardRead 300 + CCU×40, StandardWrite 300 + CCU×20, StandardList 300 + CCU×2, StandardRemove 300 + CCU×40. **`UpdateAsync` consumes both a read and a write.** Per-server defaults are lower (e.g. Standard read/write 60 + players×40). Old "60 + numPlayers×10" formulas are obsolete — read `DataStoreService:GetRequestBudgetForRequestType(Enum.DataStoreRequestType.StandardWrite)` before non-critical writes.
+- Per-key throughput: 25 MB/min read, 4 MB/min write. Batch changes in memory; never save per change.
+- Storage cap: **500 MB + 1 MB × lifetime users** (compressed latest version of each key; overage is billed, not blocked).
+- `GetAsync` caches for 4 s: verification reads after a failed/unknown write use `DataStoreGetOptions` with `UseCache = false`. A failed write has an *unknown* outcome — re-read before retrying or refunding.
+- Versions: created on the first write per key per UTC hour, kept 30 days after being overwritten. Take an Open Cloud snapshot before any update that changes data logic.
 - Value size: 4 MB max per key. Keep player data well under 100 KB.
 - Key name ≤ 50 chars; DataStore name ≤ 50 chars.
 - Errors to retry: throttling and 5xx-like internal errors. Don't retry forever; don't retry inside a tight loop without `task.wait`.

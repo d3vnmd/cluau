@@ -81,11 +81,14 @@ Help the user make it **original**: combine mechanics in a fresh theme, give the
 
 ## 7. Social
 
-- Friends join → small bonus (server-validated via `player:IsFriendsWith`, pcall).
+- Friends join → small bonus (server-validated via `player:IsFriendsWithAsync(otherUserId)`, pcall).
 - Co-op objectives, party queues, trading, showing off (leaderboards, cosmetics, plots).
 - Invite prompts via `SocialService:PromptGameInvite(player)` only on explicit button press.
 
 ## 8. Live ops
+
+- Benchmarks (GameAnalytics 2025): median D1 10.3%, D7 1.6%, D30 0.5%; top 1% D1 22.2%. Gains came from **return frequency** — daily reasons to come back — more than session length.
+- Fixed weekly update slot + a short live event before it; deterministic global restocks from `os.time()`; ConfigService for live values; see `genre-playbooks.md` and `polish-qa-launch.md` for genre-specific live-ops.
 
 - Codes system: server-validated codes in config or DataStore, expiry dates on server time, one redemption per player recorded in data.
 - Events: toggle via DataStore/MemoryStore config read on server start + MessagingService live switch.

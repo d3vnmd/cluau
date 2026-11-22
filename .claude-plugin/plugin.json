@@ -1,7 +1,7 @@
 {
   "name": "cluau",
-  "version": "1.0.0",
-  "description": "Roblox Studio game engineering for Claude: modern strict Luau, secure server-authoritative networking, session-locked DataStores, policy-compliant monetization and hand-crafted (non-AI-slop) UI. Speaks Mongolian and English.",
+  "version": "1.1.0",
+  "description": "Roblox Studio game engineering for Claude, verified against Roblox's 2026 docs: modern strict Luau (deprecations synced from official docs), exploit-proof networking, Server Authority, session-locked DataStores, policy-compliant monetization, genre playbooks, performance budgets, hand-crafted UI, 3D asset pipeline, polish and launch. Speaks Mongolian and English.",
   "author": {
     "name": "d3vnmd",
     "url": "https://github.com/d3vnmd"
@@ -9,5 +9,18 @@
   "homepage": "https://github.com/d3vnmd/cluau",
   "repository": "https://github.com/d3vnmd/cluau",
   "license": "MIT",
-  "keywords": ["roblox", "roblox-studio", "luau", "game-development", "ui", "datastore", "skill", "mongolian"]
+  "keywords": [
+    "anti-cheat",
+    "blender",
+    "datastore",
+    "game-design",
+    "game-development",
+    "luau",
+    "mongolian",
+    "roblox",
+    "roblox-studio",
+    "server-authority",
+    "skill",
+    "ui"
+  ]
 }

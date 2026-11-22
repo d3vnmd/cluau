@@ -68,6 +68,17 @@ Use these consistently when answering in Mongolian. Keep Studio-visible names in
 | Explorer / Properties | `Explorer` / `Properties` цонх | |
 | publish | нийтлэх (Publish to Roblox) | |
 | Game Settings | `Game Settings` (тоглоомын тохиргоо) | |
+| model / mesh | загвар / меш (`MeshPart`) | |
+| triangle count | триангл (гурвалжин)-ын тоо | Нэг меш ≤ 20,000 |
+| texture | бүтэц (texture) | |
+| draw call | draw call (зурах дуудлага) | |
+| rig / animation | араг яс (rig) / анимэйшн | |
+| lighting | гэрэлтүүлэг | |
+| polish / game feel | өнгөлгөө / тоглох мэдрэмж | |
+| playtest | туршиж тоглох | |
+| launch | нийтэд гаргах (launch) | |
+| ownership map | эзэмшлийн зураглал | Аль төлөвийг хэн өөрчилдөг |
+| genre | тоглоомын төрөл | |
 
 ## Түгээмэл өгүүлбэрүүд
 

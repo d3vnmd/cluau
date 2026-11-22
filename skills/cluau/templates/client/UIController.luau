@@ -55,7 +55,7 @@ local function buildCurrencyPill(parent: Instance)
 	pill.Size = UDim2.new(0, 0, 0, 44)
 	pill.AutomaticSize = Enum.AutomaticSize.X
 	pill.BackgroundColor3 = Theme.Color.Surface
-	pill.BackgroundTransparency = 0.06
+	Components.bindPreferredTransparency(pill, 0.06)
 	Components.corner(pill, Theme.Radius.Pill)
 	Components.stroke(pill, Theme.Color.Border, Theme.Stroke.Thin)
 	local pad = Instance.new("UIPadding")

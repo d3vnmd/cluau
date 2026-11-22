@@ -10,3 +10,7 @@ This repo ships a Claude skill (`skills/cluau/`) plus a Claude Code plugin manif
 - Version lives in `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`; releases need a matching
   `## [x.y.z]` section in `CHANGELOG.md` and a `vx.y.z` tag (see CONTRIBUTING.md).
 - When adding a deprecated-API mapping, also add a linter rule + a `-- expect` line in `tests/fixtures/bad.luau`.
+- Valid Luau that must never be flagged goes in `tests/fixtures/good.luau`.
+- Deprecation data is generated: `python3 tools/sync_deprecations.py <creator-docs clone>`; never hand-edit
+  `scripts/data/deprecated_apis.json`, `references/deprecated-index.md` or `references/platform-features.md`.
+- Before release, `python3 tools/verify_api_refs.py <creator-docs clone>` must report 0 missing APIs.

@@ -32,7 +32,7 @@
 | `ServerStorage` | no | no | no | Server-only assets, maps, NPC templates |
 | `ReplicatedStorage` | yes | no (modules only via require) | no | Shared modules, remotes, assets both sides need |
 | `ReplicatedFirst` | yes (first) | no | yes | Loading screen only |
-| `StarterPlayer.StarterPlayerScripts` | copied to each `Player.PlayerScripts` | no | yes | Client bootstrap & controllers (persist across respawn) |
+| `StarterPlayer.StarterPlayerScripts` | copied to each player's `PlayerScripts` folder | no | yes | Client bootstrap & controllers (persist across respawn) |
 | `StarterPlayer.StarterCharacterScripts` | copied into each character | yes | yes | Per-character scripts (reset on respawn) |
 | `StarterGui` | copied to `PlayerGui` | no | yes | ScreenGuis (`ResetOnSpawn = false` for most HUDs!) |
 | `StarterPack` | copied to Backpack | – | yes (inside Tools) | Default tools |
@@ -105,7 +105,7 @@ for _, service in loaded do
 end
 ```
 
-- Don't adopt Knit/AeroGameFramework for new projects; the author of Knit no longer recommends it for new work. Plain modules + explicit order are enough.
+- Don't adopt Knit/AeroGameFramework for new projects: Knit was archived in July 2024 and is unmaintained. Plain modules + explicit order are enough (this is also the shape of Roblox's own Plant reference project).
 - Services may require each other **inside `Start`** or after Init to avoid cycles.
 - Each Service exposes a small, typed API; other services never reach into its private tables.
 
@@ -157,4 +157,4 @@ Memory leak smells: tables keyed by `Player` never cleared on leave; connections
 
 - Lobby place + game places under one Experience; share code via Packages (Studio) or Rojo multi-project.
 - `TeleportService:TeleportAsync` with `TeleportOptions:SetTeleportData` (teleport data is **client-visible and spoofable** — validate on arrival or pass via MemoryStore keyed by reserved server access code).
-- Matchmaking: `MemoryStoreService` queue/sorted map + `ReserveServer`.
+- Matchmaking: `MemoryStoreService` queue/sorted map + `TeleportAsync` with `TeleportOptions.ReservedServerId = HttpService:GenerateGUID(false)` (the old `ReserveServer` APIs are deprecated); store the GUID in MemoryStore so late joiners can follow.

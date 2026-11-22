@@ -7,7 +7,7 @@ Cluau builds monetization that is **correct** (never loses or duplicates purchas
 2. Developer products — ProcessReceipt
 3. Game passes
 4. Paid random items (loot boxes)
-5. Subscriptions, Premium payouts, private servers
+5. Subscriptions, Roblox Plus, private servers
 6. Ads, rewarded video, external links
 7. Dark patterns to refuse
 8. Pricing guidance
@@ -36,6 +36,8 @@ Rules (all mandatory):
 5. Grant the product via a handler table keyed by `ProductId`. If the handler errors → `NotProcessedYet`.
 6. Record `PurchaseId` in the **same session-locked profile** as the grant, then save immediately (yielding inside `ProcessReceipt` is allowed). Return `PurchaseGranted` only when that save succeeded. If it failed, return `NotProcessedYet`: the grant and receipt id are still together in the live profile, and when Roblox retries, the idempotency check in step 4 returns `PurchaseGranted` without granting twice. If the session was lost entirely, both the grant and the record are gone, so the retry correctly grants again.
 7. Never grant from client calls like `PromptProductPurchaseFinished` — that event is informational only.
+8. **Roblox sells listed developer products outside your game** (home page, search, after Robux purchases) and **audits ProcessReceipt continuously** — products whose handling fails are removed from those surfaces. The callback also fires on join, has no timeout, and the same purchase can be processed on two servers at once (the session lock + recorded PurchaseId makes that safe). If no callback is set, receipts are auto-acknowledged and lost.
+9. Block purchase prompts while a player's data failed to load. Read prices with `GetProductInfoAsync` (hard-coded prices break price optimization, which needs ~60k transactions / 30 days).
 
 Template: `templates/server/MonetizationService.luau`.
 
@@ -74,15 +76,16 @@ local function rollWeighted(rng: Random, entries: { { id: string, weight: number
 end
 ```
 
-## 5. Subscriptions, Premium, private servers
+## 5. Subscriptions, Roblox Plus, private servers
 
-- Premium Payouts reward engagement from Premium members automatically; design for session quality, not artificial session length.
-- `player.MembershipType == Enum.MembershipType.Premium` can unlock small cosmetic perks; `MarketplaceService:PromptPremiumPurchase(player)` only from explicit UI.
-- Subscriptions: check status on join, handle lapsing gracefully.
+- **Roblox Plus** (launched 2026-04-30, $4.99/month) replaced new Premium sign-ups. Check `player.HasRobloxSubscription` (not the deprecated `MembershipType`) for small subscriber perks; prompt with `MarketplaceService:PromptRobloxSubscriptionPurchase(player)` only from explicit UI. Roblox funds the subscriber discount on your products (creator share rises to 78% / 88% at 10% / 20% discount) and pays up to 750 Robux per sign-up through your game.
+- Engagement-based payouts reward real session quality — never pad sessions artificially.
+- Experience subscriptions: Robux subscriptions ≥ 49 R$/month (70% share); local-currency tiers $2.99–$14.99. Check status on join (`GetUserSubscriptionStatusAsync`, pcall) and handle lapsing gracefully.
 
 ## 6. Ads, rewarded video, external links
 
-- Use Roblox's official ad products (rewarded video where available via the platform APIs, Immersive Ads) and follow their placement rules. Check `PolicyInfo` fields (`AreAdsAllowed`, `AllowedExternalLinkReferences`, `IsSubjectToChinaPolicies`, `IsPaidItemTradingAllowed`) before showing such features.
+- Use Roblox's official ad products and follow their placement rules. **Rewarded video ads must grant a developer product through ProcessReceipt** (never Robux as the reward). Check `PolicyInfo` fields (`AreAdsAllowed`, `IsSubjectToChinaPolicies`, `IsPaidItemTradingAllowed`) before showing such features; `AllowedExternalLinkReferences` is legacy and always empty.
+- `IsPaidItemTradingAllowed == false` → block trading of paid items for that player. Gate gifting/trading value with `MarketplaceService:GetUsersPriceLevelsAsync` (regional prices are 30–100% of the default).
 - Don't link off-platform except to allowed references.
 - No fake ad billboards impersonating brands.
 

@@ -13,6 +13,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Net"))
 
 local SERVICE_ORDER = {
+	"ModerationService",
 	"DataService",
 	"MonetizationService",
 	"ShopService",

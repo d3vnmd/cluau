@@ -101,6 +101,14 @@ def check() -> str:
         if f"## [{version}]" not in fh.read():
             errors.append(f"CHANGELOG.md has no '## [{version}]' section")
 
+    data_path = os.path.join(SKILL_DIR, "scripts", "data", "deprecated_apis.json")
+    if not os.path.isfile(data_path):
+        errors.append("scripts/data/deprecated_apis.json missing — run tools/sync_deprecations.py <creator-docs>")
+    else:
+        with open(data_path, encoding="utf-8") as fh:
+            if sum(1 for m in json.load(fh).get("members", []) if m.get("lint")) < 100:
+                errors.append("deprecated_apis.json has suspiciously few lintable members")
+
     # Lint the templates: they must be clean.
     sys.path.insert(0, os.path.join(SKILL_DIR, "scripts"))
     import luau_lint  # type: ignore

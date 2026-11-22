@@ -11,6 +11,18 @@ Thanks for helping keep Roblox code modern and Roblox UI human. / Хувь нэ�
 4. **No anti-slop regressions.** UI changes must pass the audit in `references/ui-design-system.md` §12.
 5. **Original games only.** Examples describe mechanics and genres, never clone a specific existing game.
 
+## Staying in sync with Roblox
+
+```bash
+git clone --depth 1 https://github.com/Roblox/creator-docs ../creator-docs
+python3 tools/sync_deprecations.py ../creator-docs   # regenerates data/deprecated_apis.json + generated references
+python3 tools/verify_api_refs.py ../creator-docs     # must print "0 not found"
+```
+
+Every API you mention in SKILL.md, references or templates must exist in the official docs. If a line must
+mention a removed API on purpose (e.g. an "Avoid" column), write the name without the `Class:`/`Enum.` prefix
+or add `verify-ignore` in a comment on that line.
+
 ## Workflow
 
 ```bash

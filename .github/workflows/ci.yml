@@ -62,3 +62,22 @@ jobs:
             fi
           done < <(find skills/cluau/templates -name '*.luau' -print0)
           exit $status
+
+  docs-verify:
+    name: API references exist in official Roblox docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: python -m pip install --disable-pip-version-check pyyaml
+
+      - name: Fetch Roblox/creator-docs (source of create.roblox.com)
+        run: git clone --depth 1 https://github.com/Roblox/creator-docs "$RUNNER_TEMP/creator-docs"
+
+      - name: Every Class:Member / Enum.X.Y in the skill must exist
+        run: python tools/verify_api_refs.py "$RUNNER_TEMP/creator-docs"

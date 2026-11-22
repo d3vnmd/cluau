@@ -33,6 +33,8 @@ FILE_MAP = {
     "server/DataService.luau": "src/server/Services/DataService.luau",
     "server/MonetizationService.luau": "src/server/Services/MonetizationService.luau",
     "server/ShopService.luau": "src/server/Services/ShopService.luau",
+    "server/ModerationService.luau": "src/server/Services/ModerationService.luau",
+    "shared/BufferCodec.luau": "src/shared/BufferCodec.luau",
     "client/Main.client.luau": "src/client/Main.client.luau",
     "client/UIController.luau": "src/client/Controllers/UIController.luau",
     "shared/Config.luau": "src/shared/Config.luau",

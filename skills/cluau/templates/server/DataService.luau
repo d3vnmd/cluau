@@ -1,6 +1,6 @@
 --!strict
 --[[
-	DataService — session-locked player data on top of DataStoreService.UpdateAsync.
+	DataService — session-locked player data on top of GlobalDataStore:UpdateAsync.
 	Location: ServerScriptService/Services/DataService (ModuleScript)
 
 	Guarantees:
@@ -134,6 +134,9 @@ local function migrate(data: { [string]: any })
 	data.Version = CURRENT_VERSION
 end
 
+-- Key pattern: EXISTING games must keep whatever pattern they already use (changing it orphans every save).
+-- NEW games: prefer `User_{UserId}` and pass `{ player.UserId }` as UpdateAsync's userIds metadata so Roblox's
+-- automated right-to-be-forgotten templates can find the key.
 local function keyFor(player: Player): string
 	return `Player_{player.UserId}`
 end
