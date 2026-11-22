@@ -32,13 +32,14 @@ Modern strict Luau · Exploit-proof networking · Session-locked DataStores · F
 |---|---|
 | `SKILL.md` | Гол "prompt": ажиллах дараалал, заавал хийх өөрийгөө шалгах жагсаалт, архитектур, аюулгүй байдал, UI зарчим, өгөгдөл, монетизаци, гүйцэтгэл |
 | `references/` | 19 гүнзгий гарын авлага: modern Luau, deprecated API (албан ёсны docs-оос автоматаар үүсгэсэн ~560 API), архитектур, **тоглоомын 14 төрлийн playbook**, Server Authority, аюулгүй байдал, DataStore, UI design system, гүйцэтгэлийн хатуу төсөв, монетизаци ба 2026 оны бодлого, **3D загвар/Blender/asset pipeline**, **polish, QA, launch**, sharp-edges (35 алдаа), toolchain, монгол нэр томьёо |
-| `templates/` | 21 бэлэн Luau модуль: bootstrap, `Net`, `Guard`, `RateLimiter`, `Trove`, `Config`, `BufferCodec`, session-lock-той `DataService`, давхардалгүй `MonetizationService`, `ShopService`, `ModerationService`, **`TradeLogic`/`TradeService` (dupe-гүй солилцоо)**, **`RoundService`**, **`LeaderboardService`**, **`InputController` (Input Action System)**, `Theme`, `Components`, `UIController` |
+| `templates/` | 21 бэлэн Luau модуль: bootstrap, `Net`, `Guard`, `RateLimiter`, `Trove`, `Config`, `BufferCodec`, session-lock-той `DataService`, давхардалгүй `MonetizationService`, `ShopService`, `ModerationService`, **`TradeLogic`/`TradeService` (dupe-гүй солилцоо)**, **`RoundService`**, **`LeaderboardService`**, **`InputController` (Input Action System)**, `MovementService`, `Theme`, `Components`, `UIController` |
 | `scripts/luau_lint.py` | 59 гар дүрэм (аюулгүй байдлын CL110–CL118 орсон) + **Roblox-ийн албан ёсны docs-оос үүсгэсэн 391 deprecated нэр**. Зөв Luau-г (`math.pow`, `unpack`) буруу гэж тэмдэглэдэггүй |
 | `scripts/scaffold.py` | Rojo төсөл үүсгэгч (Selene, StyLua, Rokit, `.luaurc`) |
 
 ### 1.2 хувилбарт юу шинэ вэ? — өөрийгөө шалгадаг болсон
 
-- **Тест:** цэвэр логиктой template-үүдэд (`RateLimiter`, `Guard`, `BufferCodec`, `Trove`, `TradeLogic`) Lune дээр Studio-гүйгээр ажилладаг 46 тест бий. Хамгаалалтыг санаатай устгахад тест унадаг эсэхийг (mutation) шалгасан.
+- **Тест:** цэвэр логиктой template-үүдэд (`RateLimiter`, `Guard`, `BufferCodec`, `Trove`, `TradeLogic`) Lune дээр Studio-гүйгээр ажилладаг 51 тест бий. Хамгаалалтыг санаатай устгахад тест унадаг эсэхийг (mutation) шалгасан.
+- **Бие даасан review-г өөр дээрээ туршсан:** reviewer agent энэ хувилбарын шинэ template-үүдээс 2 HIGH, 7 MEDIUM алдаа олсон (trade crash-ийн үеийн dupe, map stream болоогүй үед унах, `writer(0)` төгсгөлгүй давталт…) — бүгдийг зассан.
 - **Бие даасан review:** код бичсэний дараа зохиогчийн бодлыг мэдэхгүй шинэ `cluau-reviewer` agent кодыг "эвдэрсэн" гэж үзээд шалгана. Алдааны каталог 65 болж өргөжсөн (trade dupe, respawn race, streaming nil, teleport data trust…).
 - **Хамгийн эрсдэлтэй системүүдийн template:** Trade, Round, Leaderboard, Input Action System.
 - **Аюулгүй байдлын lint:** `SetAsync` player key-д, `PurchaseId`-гүй `ProcessReceipt`, хадгалахаас өмнө `PurchaseGranted`, зайн шалгалтгүй `Touched`/`ProximityPrompt`, шалгалтгүй remote гэх мэтийг автоматаар барина.
@@ -139,7 +140,7 @@ cluau/
 │   │   └── mongolian-glossary.md  consistent Mongolian terminology
 │   ├── templates/             21 production Luau modules (all --!strict, lint-clean; pure ones unit-tested)
 │   │   ├── server/            Main.server, DataService, MonetizationService, ShopService, ModerationService,
-│   │   │                      TradeLogic + TradeService, RoundService, LeaderboardService
+│   │   │                      TradeLogic + TradeService, RoundService, LeaderboardService, MovementService
 │   │   ├── client/            Main.client, UIController, InputController
 │   │   ├── shared/            Net, Guard, RateLimiter, Trove, Config, BufferCodec
 │   │   └── ui/                Theme (design tokens), Components (stateful primitives)
@@ -151,7 +152,7 @@ cluau/
 ├── agents/cluau-reviewer.md   independent adversarial reviewer (Claude Code plugin agent)
 ├── evals/cases.json           19 Mongolian/English behavioral evals
 ├── tests/
-│   ├── luau/                  Lune specs for pure templates (46 tests)
+│   ├── luau/                  Lune specs for pure templates (51 tests)
 │   ├── fixtures/              good/bad/security fixtures for the linter
 │   └── test_*.py              linter, eval-grader tests
 ├── tools/

@@ -39,6 +39,7 @@ export type PlayerData = {
 	Equipped: { [string]: string },
 	Settings: { Music: number, Sfx: number, ReducedMotion: boolean },
 	ProcessedReceipts: { [string]: number },
+	AppliedTrades: { [string]: number }, -- tradeId -> os.time(); lets TradeService reconcile half-saved trades
 	Stats: { JoinCount: number, PlaytimeSeconds: number },
 }
 
@@ -47,6 +48,10 @@ export type Profile = {
 	Key: string,
 	Dirty: boolean,
 	Saving: boolean,
+	SaveQueued: boolean,
+	QueuedRelease: boolean,
+	LastSaveOk: boolean,
+	LockRefreshedAt: number, -- os.time() of the last successful write (lock heartbeat)
 	Released: boolean,
 	JoinedAt: number,
 }
@@ -75,6 +80,7 @@ local TEMPLATE: PlayerData = {
 	Equipped = {},
 	Settings = { Music = 0.6, Sfx = 0.8, ReducedMotion = false },
 	ProcessedReceipts = {},
+	AppliedTrades = {},
 	Stats = { JoinCount = 0, PlaytimeSeconds = 0 },
 }
 
@@ -92,6 +98,7 @@ local MIGRATIONS: { [number]: (data: { [string]: any }) -> () } = {
 local store = DataStoreService:GetDataStore(Config.Data.StoreName)
 
 local profiles: { [Player]: Profile } = {}
+local loadSteps: { (player: Player, data: PlayerData) -> () } = {}
 local waiting: { [Player]: { thread } } = {}
 local pendingSaves = 0
 
@@ -137,8 +144,12 @@ end
 -- Key pattern: EXISTING games must keep whatever pattern they already use (changing it orphans every save).
 -- NEW games: prefer `User_{UserId}` and pass `{ player.UserId }` as UpdateAsync's userIds metadata so Roblox's
 -- automated right-to-be-forgotten templates can find the key.
+local function keyForUserId(userId: number): string
+	return `Player_{userId}`
+end
+
 local function keyFor(player: Player): string
-	return `Player_{player.UserId}`
+	return keyForUserId(player.UserId)
 end
 
 local function isOurs(record: any): boolean
@@ -245,9 +256,23 @@ local function trimReceipts(receipts: { [string]: number })
 end
 
 local function saveProfile(player: Player, profile: Profile, release: boolean): boolean
-	-- Serialize saves for the same profile (autosave vs. leave vs. shutdown).
-	while profile.Saving do
-		task.wait(0.1)
+	-- Coalesce: while a save is in flight, at most ONE follow-up save is queued; every other caller waits
+	-- for that queued save and shares its result. Spamming saves (e.g. rapid trades) can't burn the budget.
+	if profile.Saving then
+		profile.QueuedRelease = profile.QueuedRelease or release
+		if profile.SaveQueued then
+			while profile.SaveQueued or profile.Saving do
+				task.wait(0.1)
+			end
+			return profile.LastSaveOk
+		end
+		profile.SaveQueued = true
+		while profile.Saving do
+			task.wait(0.1)
+		end
+		profile.SaveQueued = false
+		release = release or profile.QueuedRelease
+		profile.QueuedRelease = false
 	end
 	if profile.Released then
 		return false
@@ -256,6 +281,7 @@ local function saveProfile(player: Player, profile: Profile, release: boolean): 
 	pendingSaves += 1
 
 	trimReceipts(profile.Data.ProcessedReceipts)
+	trimReceipts(profile.Data.AppliedTrades)
 	local snapshot = deepCopy(profile.Data) -- freeze what we're writing; later edits mark Dirty again
 	profile.Dirty = false
 
@@ -287,7 +313,10 @@ local function saveProfile(player: Player, profile: Profile, release: boolean): 
 
 	if not saved then
 		profile.Dirty = true
+	else
+		profile.LockRefreshedAt = os.time()
 	end
+	profile.LastSaveOk = saved
 	if lostLock then
 		profile.Released = true
 		if player.Parent == Players then
@@ -325,11 +354,24 @@ local function onPlayerAdded(player: Player)
 		Key = key,
 		Dirty = false,
 		Saving = false,
+		SaveQueued = false,
+		QueuedRelease = false,
+		LastSaveOk = true,
+		LockRefreshedAt = os.time(),
 		Released = false,
 		JoinedAt = os.clock(),
 	}
 	profile.Data.Stats.JoinCount += 1
 	profile.Dirty = true
+
+	-- Load steps (e.g. TradeService reconciliation) may yield; the profile isn't active yet, so nothing
+	-- else can read or mutate it meanwhile.
+	for _, step in loadSteps do
+		local ok, err = pcall(step, player, profile.Data)
+		if not ok then
+			warn(`[DataService] load step failed for {key}: {err}`)
+		end
+	end
 
 	if player.Parent ~= Players then
 		-- Left while loading: write back and release the lock immediately.
@@ -358,8 +400,12 @@ local function autosaveLoop()
 	while true do
 		task.wait(Config.Data.AutosaveSeconds)
 		local list = {}
+		local now = os.time()
 		for player, profile in profiles do
-			if profile.Dirty and not profile.Released then
+			-- Also save idle profiles before their lock looks abandoned (heartbeat), or a server hop after
+			-- a long idle period would let another server steal the lock and discard this server's last save.
+			local lockAging = now - profile.LockRefreshedAt > LOCK_EXPIRE_SECONDS / 2
+			if (profile.Dirty or lockAging) and not profile.Released then
 				table.insert(list, player)
 			end
 		end
@@ -463,6 +509,24 @@ function DataService.SaveNow(player: Player): boolean
 		return false
 	end
 	return saveProfile(player, profile, false)
+end
+
+--- Reads another player's LAST SAVED data without touching its session lock (fresh read, no 4 s cache).
+--- Read-only: never write the result back. Used e.g. to reconcile trades. Returns nil on failure.
+function DataService.ReadSavedAsync(userId: number): { [string]: any }?
+	local options = Instance.new("DataStoreGetOptions")
+	options.UseCache = false
+	local ok, record = pcall(store.GetAsync, store, keyForUserId(userId), options)
+	if ok and type(record) == "table" and type(record.Data) == "table" then
+		return record.Data
+	end
+	return nil
+end
+
+--- Registers a function run on every freshly loaded profile BEFORE it becomes active (may yield).
+--- Call during Init. Used for reconciliations/migrations that need other DataStores.
+function DataService.AddLoadStep(step: (player: Player, data: PlayerData) -> ())
+	table.insert(loadSteps, step)
 end
 
 function DataService.Init() end

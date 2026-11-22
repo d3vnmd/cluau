@@ -35,6 +35,7 @@ FILE_MAP = {
     "server/ShopService.luau": "src/server/Services/ShopService.luau",
     "server/ModerationService.luau": "src/server/Services/ModerationService.luau",
     "server/TradeLogic.luau": "src/server/Services/TradeLogic.luau",
+    "server/MovementService.luau": "src/server/Services/MovementService.luau",
     "server/TradeService.luau": "src/server/Services/TradeService.luau",
     "server/RoundService.luau": "src/server/Services/RoundService.luau",
     "server/LeaderboardService.luau": "src/server/Services/LeaderboardService.luau",

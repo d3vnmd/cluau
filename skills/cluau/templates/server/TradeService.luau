@@ -16,11 +16,17 @@
 	  • One session per player; a per-session `executing` flag stops double execution.
 	  • Leaving, data loss or policy restrictions cancel the trade.
 
-	Residual risk you must accept or mitigate: the two profiles are saved as separate DataStore keys.
-	Both are saved immediately after a trade; for high-value economies also append each trade to an
-	audit DataStore so support can roll back after a server crash.
+	Crash safety (two profiles = two DataStore keys that can't be written atomically):
+	  1. Before applying, the trade is written to a journal (TradeJournal_v1: "Trade_<id>" + a per-user index).
+	  2. The swap and an `AppliedTrades[id]` marker are written into BOTH profiles in one synchronous block.
+	  3. On every load, a profile missing the marker for a journaled trade reads the PARTNER's last saved data:
+	       partner has the marker  → the trade committed; apply this player's side now (no dupe, no loss)
+	       partner lacks it too    → neither side persisted; the trade never happened (consistent)
+	  A player can't load elsewhere while the old server still holds their session lock, so the partner's
+	  save (autosave/leave) lands before the reconciliation read.
 ]]
 
+local DataStoreService = game:GetService("DataStoreService")
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local PolicyService = game:GetService("PolicyService")
@@ -39,6 +45,11 @@ local MAX_COUNT_PER_ITEM = 999
 local QUIET_SECONDS = 3 -- offers must be unchanged this long before execution (stops last-second swaps)
 local INVITE_TTL_SECONDS = 30
 local SAVE_EQUIP_SLOT = "Cosmetic"
+local TRADE_COOLDOWN_SECONDS = 15 -- per player, after a completed trade (also caps DataStore writes)
+local USER_INDEX_LENGTH = 20
+
+-- Written synchronously before each trade (nothing buffered), so no BindToClose flush is needed.
+local journal = DataStoreService:GetDataStore("TradeJournal_v1") -- cluau-ignore CL117
 
 -- Server-side whitelist of tradeable items. Here: every shop item. Exclude untradeable ids explicitly.
 local TRADEABLE: { [string]: boolean } = {}
@@ -53,6 +64,7 @@ local sessionsByUser: { [number]: TradeLogic.Session } = {}
 local invites: { [number]: { [number]: number } } = {} -- targetUserId -> fromUserId -> expiresAt (os.clock)
 local executing: { [string]: boolean } = {}
 local tradingAllowed: { [Player]: boolean } = {}
+local lastTradeAt: { [number]: number } = {} -- userId -> os.clock() of last completed trade
 
 local TradeService = {}
 
@@ -104,7 +116,73 @@ local function close(session: TradeLogic.Session, message: string?, kind: ("succ
 end
 
 local function canTrade(player: Player): boolean
-	return tradingAllowed[player] == true and DataService.IsActive(player)
+	local last = lastTradeAt[player.UserId]
+	local coolingDown = last ~= nil and os.clock() - last < TRADE_COOLDOWN_SECONDS
+	return tradingAllowed[player] == true and DataService.IsActive(player) and not coolingDown
+end
+
+-- Phase 1: journal the trade BEFORE any inventory changes. Returns false if any write failed.
+local function writeJournal(session: TradeLogic.Session): boolean
+	local userA, userB = session.users[1], session.users[2]
+	local record = {
+		Users = { userA, userB },
+		Offers = { [tostring(userA)] = session.offers[userA], [tostring(userB)] = session.offers[userB] },
+		Time = os.time(),
+	}
+	local ok = pcall(function()
+		journal:UpdateAsync(`Trade_{session.id}`, function()
+			return record
+		end)
+	end)
+	if not ok then
+		return false
+	end
+	for _, userId in session.users do
+		local okIndex = pcall(function()
+			journal:UpdateAsync(`UserTrades_{userId}`, function(old: any)
+				local list = if type(old) == "table" then old else {}
+				table.insert(list, session.id)
+				while #list > USER_INDEX_LENGTH do
+					table.remove(list, 1)
+				end
+				return list
+			end)
+		end)
+		if not okIndex then
+			return false
+		end
+	end
+	return true
+end
+
+-- Load step: finish this player's side of any journaled trade that committed on the partner's side.
+local function reconcile(player: Player, data: DataService.PlayerData)
+	local ok, list = pcall(journal.GetAsync, journal, `UserTrades_{player.UserId}`)
+	if not ok or type(list) ~= "table" then
+		return
+	end
+	for _, tradeId in list :: { any } do
+		if typeof(tradeId) ~= "string" or data.AppliedTrades[tradeId] ~= nil then
+			continue
+		end
+		local okRecord, record = pcall(journal.GetAsync, journal, `Trade_{tradeId}`)
+		if not okRecord or type(record) ~= "table" or type(record.Users) ~= "table" then
+			continue
+		end
+		local partnerId = if record.Users[1] == player.UserId then record.Users[2] else record.Users[1]
+		local partnerData = DataService.ReadSavedAsync(partnerId)
+		local committed = partnerData ~= nil and type(partnerData.AppliedTrades) == "table" and partnerData.AppliedTrades[tradeId] ~= nil
+		if committed then
+			local give = record.Offers[tostring(player.UserId)] or {}
+			local receive = record.Offers[tostring(partnerId)] or {}
+			if TradeLogic.applyOneSide(data.Inventory, give, receive) then
+				data.AppliedTrades[tradeId] = os.time()
+				warn(`[Trade] reconciled half-saved trade {tradeId} for {player.UserId}`)
+			else
+				warn(`[Trade] CONFLICT reconciling {tradeId} for {player.UserId}: items missing — review manually`)
+			end
+		end
+	end
 end
 
 -- Executes only if the session is still current, unchanged since `expectedVersion`, and both are ready.
@@ -128,12 +206,31 @@ local function tryExecute(session: TradeLogic.Session, expectedVersion: number)
 		return
 	end
 
+	-- Phase 1 (yields): journal. Offers can't change meanwhile (`executing` blocks TradeSetOffer).
+	if not writeJournal(session) then
+		executing[session.id] = nil
+		close(session, "Trade couldn't be saved safely. Nothing was exchanged — try again.", "error")
+		return
+	end
+	-- Re-check everything after the yield: players may have left or lost their data session.
+	playerA, playerB = playerFor(userA), playerFor(userB)
+	if playerA == nil or playerB == nil or sessionsByUser[userA] ~= session or sessionsByUser[userB] ~= session
+		or not DataService.IsActive(playerA) or not DataService.IsActive(playerB) then
+		executing[session.id] = nil
+		close(session, "Trade cancelled.", "error")
+		return
+	end
+
 	-- ── synchronous section: NO yields from here until both inventories are updated ──
 	local swapped = false
 	DataService.Update(playerA, function(dataA)
 		DataService.Update(playerB, function(dataB)
 			swapped = TradeLogic.apply(dataA.Inventory, dataB.Inventory, session.offers[userA], session.offers[userB])
 			if swapped then
+				-- Phase 2: commit markers travel with each profile's own save.
+				local now = os.time()
+				dataA.AppliedTrades[session.id] = now
+				dataB.AppliedTrades[session.id] = now
 				-- Unequip anything that was traded away.
 				for _, data in { dataA, dataB } do
 					local equipped = data.Equipped[SAVE_EQUIP_SLOT]
@@ -151,6 +248,8 @@ local function tryExecute(session: TradeLogic.Session, expectedVersion: number)
 		close(session, "Trade failed: items changed. Nothing was exchanged.", "error")
 		return
 	end
+	lastTradeAt[userA] = os.clock()
+	lastTradeAt[userB] = os.clock()
 	close(session, "Trade complete!", "success")
 	print(`[Trade] {session.id} {userA}<->{userB} completed`)
 	task.spawn(DataService.SaveNow, playerA)
@@ -266,7 +365,9 @@ local function loadPolicy(player: Player)
 	end
 end
 
-function TradeService.Init() end
+function TradeService.Init()
+	DataService.AddLoadStep(reconcile)
+end
 
 function TradeService.Start()
 	Net.event("TradeRequest").OnServerEvent:Connect(onRequest)

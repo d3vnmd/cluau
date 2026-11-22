@@ -88,6 +88,34 @@ describe("TradeLogic.apply", function()
 	end)
 end)
 
+describe("TradeLogic.applyOneSide (half-saved trade reconciliation)", function()
+	it("applies only this player's side", function()
+		local inv = { Sword = 1 }
+		expect(TradeLogic.applyOneSide(inv, { Sword = 1 }, { Pet = 2 })).toBe(true)
+		expect(inv.Sword).toBeNil()
+		expect(inv.Pet).toBe(2)
+	end)
+
+	it("is all-or-nothing when the player no longer holds what they gave", function()
+		local inv = { Shield = 1 }
+		expect(TradeLogic.applyOneSide(inv, { Sword = 1 }, { Pet = 2 })).toBe(false)
+		expect(inv.Pet).toBeNil()
+		expect(inv.Shield).toBe(1)
+	end)
+
+	it("two independent one-side applications equal one full apply", function()
+		local a1, b1 = { Sword = 2 }, { Pet = 1 }
+		local a2, b2 = { Sword = 2 }, { Pet = 1 }
+		TradeLogic.apply(a1, b1, { Sword = 1 }, { Pet = 1 })
+		TradeLogic.applyOneSide(a2, { Sword = 1 }, { Pet = 1 })
+		TradeLogic.applyOneSide(b2, { Pet = 1 }, { Sword = 1 })
+		expect(a1.Sword).toBe(a2.Sword)
+		expect(a1.Pet).toBe(a2.Pet)
+		expect(b1.Sword).toBe(b2.Sword)
+		expect(b1.Pet).toBe(b2.Pet)
+	end)
+end)
+
 describe("TradeLogic sessions", function()
 	it("cannot open a session with yourself", function()
 		expect(TradeLogic.newSession("t", 1, 1, 0)).toBeNil()

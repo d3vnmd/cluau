@@ -361,10 +361,11 @@ Templates (copy, then adapt names). All are `--!strict` and lint-clean; the pure
 | `templates/shared/Config.luau` | Frozen shared config (prices, ids, tuning) | ModuleScript in `ReplicatedStorage/Shared` |
 | `templates/shared/BufferCodec.luau` | Compact binary batching + bounds-checked reader for untrusted buffers | ModuleScript in `ReplicatedStorage/Shared` |
 | `templates/server/ModerationService.luau` | Evidence log, strikes, delayed `BanAsync` waves, honeypot flagging | ModuleScript in `ServerScriptService/Services` |
-| `templates/server/TradeLogic.luau` + `TradeService.luau` | Dupe-proof trading: whitelisted bounded offers, version-tied ready, quiet period, atomic two-sided swap (logic unit-tested) | ModuleScripts in `ServerScriptService/Services` |
+| `templates/server/TradeLogic.luau` + `TradeService.luau` | Dupe-proof trading: whitelisted bounded offers, version-tied ready, quiet period, atomic two-sided swap, crash-safe journal + load-time reconciliation (logic unit-tested) | ModuleScripts in `ServerScriptService/Services` |
 | `templates/server/RoundService.luau` | Lobby → Intermission → Round → Results; `Phase`/`EndsAt` attributes; death/leave/respawn handling | ModuleScript in `ServerScriptService/Services` |
 | `templates/server/LeaderboardService.luau` | Live MemoryStore board + slow OrderedDataStore persistence, batched flushes | ModuleScript in `ServerScriptService/Services` |
 | `templates/client/InputController.luau` | Input Action System: Gameplay/Menu contexts, keyboard+gamepad+touch bindings, glyphs | ModuleScript in `StarterPlayerScripts/Controllers` |
+| `templates/server/MovementService.luau` | Server-owned WalkSpeed: sprint intents + status-effect multipliers, `MaxLegitSpeed` for anti-cheat | ModuleScript in `ServerScriptService/Services` |
 | `templates/ui/Theme.luau` | Design tokens | ModuleScript in `ReplicatedStorage/Shared/UI` |
 | `templates/ui/Components.luau` | Button/Panel/Label/Modal with states, gamepad, safe areas | ModuleScript in `ReplicatedStorage/Shared/UI` |
 | `templates/client/UIController.luau` | Example HUD + shop screen built from components | ModuleScript in `StarterPlayerScripts/Controllers` |

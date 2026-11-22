@@ -93,6 +93,22 @@ function TradeLogic.apply(inventoryA: Inventory, inventoryB: Inventory, offerA: 
 	return true
 end
 
+--- Applies ONE player's side of a journaled trade (used to reconcile a half-saved trade on load):
+--- removes what they gave, adds what they received. All-or-nothing; false if they no longer hold `give`.
+function TradeLogic.applyOneSide(inventory: Inventory, give: Offer, receive: Offer): boolean
+	if not TradeLogic.hasItems(inventory, give) then
+		return false
+	end
+	for itemId, count in give do
+		local remaining = (inventory[itemId] or 0) - count
+		inventory[itemId] = if remaining > 0 then remaining else nil
+	end
+	for itemId, count in receive do
+		inventory[itemId] = (inventory[itemId] or 0) + count
+	end
+	return true
+end
+
 function TradeLogic.newSession(id: string, userA: number, userB: number, now: number): Session?
 	if userA == userB then
 		return nil

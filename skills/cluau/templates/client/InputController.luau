@@ -23,9 +23,10 @@
 		local glyph = InputController.GlyphFor("Interact") -- image for the current device, or nil
 ]]
 
-local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
+
+local Net = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Net"))
 
 export type ContextName = "Gameplay" | "Menu"
 
@@ -36,17 +37,16 @@ type ActionSpec = {
 	keys: { Enum.KeyCode },
 }
 
--- Escape is reserved by Roblox's own menu; close UI with B / Backspace (plus an on-screen close button).
+-- Escape is reserved by Roblox's own menu, and Backspace would fire while typing in a TextBox.
+-- Close menus with gamepad B or the on-screen close button.
 local ACTIONS: { ActionSpec } = {
 	{ name = "Sprint", displayName = "Sprint", context = "Gameplay", keys = { Enum.KeyCode.LeftShift, Enum.KeyCode.ButtonL3 } },
 	{ name = "Interact", displayName = "Interact", context = "Gameplay", keys = { Enum.KeyCode.E, Enum.KeyCode.ButtonX } },
 	{ name = "ToggleMenu", displayName = "Menu", context = "Gameplay", keys = { Enum.KeyCode.M, Enum.KeyCode.ButtonY } },
-	{ name = "CloseMenu", displayName = "Close", context = "Menu", keys = { Enum.KeyCode.Backspace, Enum.KeyCode.ButtonB } },
+	{ name = "CloseMenu", displayName = "Close", context = "Menu", keys = { Enum.KeyCode.ButtonB } },
 }
 
 local CONTEXT_PRIORITY: { [ContextName]: number } = { Gameplay = 1000, Menu = 2000 }
-
-local SPRINT_MULTIPLIER = 1.6
 
 local InputController = {}
 
@@ -146,30 +146,14 @@ function InputController.Init()
 end
 
 function InputController.Start()
-	-- Example gameplay binding: local sprint. The client owns its character's movement, so the SERVER
-	-- must still sanity-check speed (networking-security.md §6). Under Server Authority, move this logic
-	-- into a RunService:BindToSimulation module instead (server-authority.md).
-	local player = Players.LocalPlayer
-	local baseSpeed: number? = nil
-	local function humanoid(): Humanoid?
-		local character = player.Character
-		return if character then character:FindFirstChildOfClass("Humanoid") else nil
-	end
+	-- Example gameplay binding: sprint is an INTENT. The server (MovementService) owns WalkSpeed so status
+	-- effects compose and anti-cheat sees the real limit. Never set WalkSpeed from the client.
+	local sprintRemote = Net.event("RequestSprint")
 	InputController.Pressed("Sprint"):Connect(function()
-		local h = humanoid()
-		if h then
-			baseSpeed = baseSpeed or h.WalkSpeed
-			h.WalkSpeed = (baseSpeed :: number) * SPRINT_MULTIPLIER
-		end
+		sprintRemote:FireServer(true)
 	end)
 	InputController.Released("Sprint"):Connect(function()
-		local h = humanoid()
-		if h and baseSpeed then
-			h.WalkSpeed = baseSpeed
-		end
-	end)
-	player.CharacterAdded:Connect(function()
-		baseSpeed = nil
+		sprintRemote:FireServer(false)
 	end)
 end
 

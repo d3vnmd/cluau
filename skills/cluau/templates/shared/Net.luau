@@ -31,6 +31,8 @@ local EVENTS = table.freeze({
 	"TradeSetReady", -- client → server: version: number
 	"TradeCancel", -- client → server: ()
 	"TradeUpdated", -- server → client: trade view snapshot or nil (closed)
+	-- MovementService
+	"RequestSprint", -- client → server: wants: boolean
 	-- LeaderboardService
 	"LeaderboardUpdated", -- server → client: { { userId, name, value } }
 })

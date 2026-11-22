@@ -17,6 +17,7 @@ local SERVICE_ORDER = {
 	"DataService",
 	"MonetizationService",
 	"ShopService",
+	"MovementService",
 	"TradeService",
 	"LeaderboardService",
 	"RoundService", -- needs ServerStorage.Maps (Models with a Spawns folder); remove if your game has no rounds

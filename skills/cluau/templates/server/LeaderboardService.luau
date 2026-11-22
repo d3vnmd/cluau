@@ -34,7 +34,9 @@ local SECONDS_PER_WEEK = 7 * 24 * 60 * 60
 
 export type Entry = { userId: number, name: string, value: number }
 
-local pending: { [number]: number } = {} -- userId -> wins not yet flushed
+-- Tracked separately so a failure in one store never re-adds (double counts) into the other.
+local pendingLive: { [number]: number } = {} -- userId -> wins not yet in the MemoryStore board
+local pendingAllTime: { [number]: number } = {} -- userId -> wins not yet in the OrderedDataStore
 local nameCache: { [number]: string } = {}
 local lastTop: { Entry } = {}
 
@@ -55,37 +57,69 @@ function LeaderboardService.AddWins(player: Player, amount: number)
 	if amount ~= amount or amount <= 0 or amount % 1 ~= 0 then
 		return
 	end
-	pending[player.UserId] = (pending[player.UserId] or 0) + amount
+	pendingLive[player.UserId] = (pendingLive[player.UserId] or 0) + amount
+	pendingAllTime[player.UserId] = (pendingAllTime[player.UserId] or 0) + amount
 end
 
-local function flushUser(userId: number, amount: number): boolean
-	local okLive, errLive = pcall(function()
+local function flushLive(userId: number, amount: number): boolean
+	local ok, err = pcall(function()
 		liveMap():UpdateAsync(tostring(userId), function(oldValue: any, _oldSortKey: any)
 			local value = (if typeof(oldValue) == "number" then oldValue else 0) + amount
 			return value, value -- value and sort key are both the score
 		end, LIVE_EXPIRATION)
 	end)
-	if not okLive then
-		warn(`[Leaderboard] live update failed for {userId}: {errLive}`)
+	if not ok then
+		warn(`[Leaderboard] live update failed for {userId}: {err}`)
 	end
-	local okAll, errAll = pcall(function()
-		allTime:IncrementAsync(tostring(userId), amount)
-	end)
-	if not okAll then
-		warn(`[Leaderboard] all-time update failed for {userId}: {errAll}`)
-	end
-	return okLive and okAll
+	return ok
 end
 
-local function flushAll()
-	local batch = pending
-	pending = {}
-	for userId, amount in batch do
-		if not flushUser(userId, amount) then
-			pending[userId] = (pending[userId] or 0) + amount -- retry next cycle
-		end
-		task.wait(0.1) -- spread requests across the interval
+local function flushAllTime(userId: number, amount: number): boolean
+	local ok, err = pcall(function()
+		allTime:IncrementAsync(tostring(userId), amount)
+	end)
+	if not ok then
+		warn(`[Leaderboard] all-time update failed for {userId}: {err}`)
 	end
+	return ok
+end
+
+-- Flushes one pending table. Entries are removed only AFTER a successful write (minus what was written),
+-- so a shutdown mid-flush or a failed write never loses or double-counts wins.
+local inFlight: { [any]: { [number]: boolean } } = {} -- per pending table: userIds currently being written
+
+local function flushTable(pendingTable: { [number]: number }, write: (number, number) -> boolean, onlyUserId: number?)
+	local busy = inFlight[pendingTable]
+	if busy == nil then
+		busy = {}
+		inFlight[pendingTable] = busy
+	end
+	local userIds = {}
+	for userId in pendingTable do
+		if onlyUserId == nil or userId == onlyUserId then
+			table.insert(userIds, userId)
+		end
+	end
+	for _, userId in userIds do
+		local amount = pendingTable[userId]
+		if amount and amount > 0 and not busy[userId] then
+			busy[userId] = true -- the periodic flush and a leave flush must never write the same amount twice
+			local ok = write(userId, amount)
+			busy[userId] = nil
+			if ok then
+				local remaining = (pendingTable[userId] or 0) - amount
+				pendingTable[userId] = if remaining > 0 then remaining else nil
+			end
+		end
+		if onlyUserId == nil then
+			task.wait(0.1) -- spread requests across the interval
+		end
+	end
+end
+
+local function flushAll(onlyUserId: number?)
+	flushTable(pendingLive, flushLive, onlyUserId)
+	flushTable(pendingAllTime, flushAllTime, onlyUserId)
 end
 
 local function resolveNames(userIds: { number })
@@ -143,7 +177,7 @@ function LeaderboardService.Start()
 	task.spawn(function()
 		while true do
 			task.wait(FLUSH_SECONDS)
-			flushAll()
+			flushAll(nil)
 		end
 	end)
 	task.spawn(function()
@@ -160,13 +194,21 @@ function LeaderboardService.Start()
 		sendSnapshot(player)
 	end
 	Players.PlayerRemoving:Connect(function(player)
-		local amount = pending[player.UserId]
-		if amount then
-			pending[player.UserId] = nil
-			task.spawn(flushUser, player.UserId, amount)
-		end
+		-- Flush this player now; anything that fails stays pending for the next cycle / shutdown.
+		task.spawn(flushAll, player.UserId)
 	end)
-	game:BindToClose(flushAll)
+	game:BindToClose(function()
+		flushAll()
+	end)
+
+	-- Wire round winners into the board when RoundService exists in the same folder.
+	local roundModule = script.Parent:FindFirstChild("RoundService")
+	if roundModule and roundModule:IsA("ModuleScript") then
+		local RoundService = require(roundModule) :: any
+		RoundService.WinnerDeclared.Event:Connect(function(winner: Player)
+			LeaderboardService.AddWins(winner, 1)
+		end)
+	end
 end
 
 return LeaderboardService

@@ -38,7 +38,7 @@ local function ensure(self: Writer, bytes: number)
 	if needed <= size then
 		return
 	end
-	local newSize = size
+	local newSize = math.max(size, 16) -- a 0-byte buffer would never grow (0 * 2 == 0)
 	while newSize < needed do
 		newSize *= 2
 	end
@@ -77,9 +77,15 @@ function Writer.f32(self: Writer, value: number)
 	self._pos += 4
 end
 
---- Length-prefixed (u8) string, truncated to `maxBytes` (≤ 255).
+--- Length-prefixed (u8) string, truncated to `maxBytes` (≤ 255) on a UTF-8 character boundary.
 function Writer.str(self: Writer, value: string, maxBytes: number)
 	local length = math.min(#value, maxBytes, 255)
+	if length < #value then
+		-- Back up to the start of a character so we never emit half a multi-byte code point.
+		while length > 0 and utf8.len(string.sub(value, 1, length)) == nil do
+			length -= 1
+		end
+	end
 	self:u8(length)
 	ensure(self, length)
 	buffer.writestring(self._buf, self._pos, value, length)

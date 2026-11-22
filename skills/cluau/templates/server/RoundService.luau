@@ -34,6 +34,7 @@ local ROUND_SECONDS = 180
 local RESULTS_SECONDS = 8
 local WIN_REWARD = 50
 local PARTICIPATION_REWARD = 10
+local STREAM_TIMEOUT_SECONDS = 5 -- max wait for clients to receive the map before teleporting
 
 export type Phase = "Lobby" | "Intermission" | "Round" | "Results"
 
@@ -42,17 +43,35 @@ local RoundService = {}
 local state: Folder
 local rng = Random.new()
 local roundId = 0
-local participants: { [Player]: boolean } = {}
+local participants: { [Player]: Model } = {} -- player -> the character registered at round start
+local roundConnections: { RBXScriptConnection } = {} -- module-level so the error path can clean them
 
 local function setPhase(phase: Phase, duration: number?)
 	state:SetAttribute("Phase", phase)
 	state:SetAttribute("EndsAt", if duration then workspace:GetServerTimeNow() + duration else 0)
 end
 
+local function disconnectRound()
+	for _, connection in roundConnections do
+		connection:Disconnect()
+	end
+	table.clear(roundConnections)
+end
+
+-- A participant stays in only while: still in the server, still on the registered character, and that
+-- character has a living Humanoid. (Covers leaving, respawning, and a deleted Humanoid that never fires Died.)
+local function stillIn(player: Player, character: Model): boolean
+	if player.Parent ~= Players or player.Character ~= character or character.Parent == nil then
+		return false
+	end
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	return humanoid ~= nil and humanoid.Health > 0
+end
+
 local function countParticipants(): number
 	local count = 0
-	for player in participants do
-		if player.Parent == Players then
+	for player, character in participants do
+		if stillIn(player, character) then
 			count += 1
 		else
 			participants[player] = nil
@@ -129,38 +148,67 @@ local function runRound()
 	state:SetAttribute("Winner", "")
 	table.clear(participants)
 
-	local connections: { RBXScriptConnection } = {}
 	local points = spawnPoints(map)
-	for index, player in eligiblePlayers() do
-		local character = player.Character :: Model
-		local humanoid = character:FindFirstChildOfClass("Humanoid") :: Humanoid
-		participants[player] = true
+	local roster = eligiblePlayers()
+
+	-- Streaming: make each client receive the area around its spawn BEFORE teleporting, or characters
+	-- (client-owned physics) fall through floors that haven't streamed in yet. In parallel, bounded.
+	local pendingStreams = #roster
+	for index, player in roster do
+		local point = if #points > 0 then points[(index - 1) % #points + 1] else nil
+		task.spawn(function()
+			if point and workspace.StreamingEnabled then
+				pcall(player.RequestStreamAroundAsync, player, point.Position, STREAM_TIMEOUT_SECONDS)
+			end
+			pendingStreams -= 1
+		end)
+	end
+	local streamDeadline = os.clock() + STREAM_TIMEOUT_SECONDS + 1
+	while pendingStreams > 0 and os.clock() < streamDeadline do
+		task.wait(0.1)
+	end
+
+	for index, player in roster do
+		local character = player.Character
+		local humanoid = if character then character:FindFirstChildOfClass("Humanoid") else nil
+		if character == nil or humanoid == nil or humanoid.Health <= 0 or player.Parent ~= Players then
+			continue -- left or died while streaming
+		end
+		participants[player] = character
 		if #points > 0 then
 			local point = points[(index - 1) % #points + 1]
 			character:PivotTo(point.CFrame + Vector3.new(0, 4, 0))
 		end
-		-- Death eliminates. Connection is per character and cleaned at round end.
-		table.insert(connections, humanoid.Died:Connect(function()
+		-- Death eliminates; respawning also eliminates (no "die and come back"). Cleaned at round end.
+		table.insert(roundConnections, humanoid.Died:Connect(function()
 			participants[player] = nil
 		end))
-		-- A respawned character is not a participant (prevents "die and come back" exploits).
-		table.insert(connections, player.CharacterAdded:Connect(function()
+		table.insert(roundConnections, player.CharacterAdded:Connect(function()
 			participants[player] = nil
 		end))
+	end
+
+	local starters: { [Player]: boolean } = {}
+	for player in participants do
+		starters[player] = true
+	end
+	local startedWith = countParticipants()
+	if startedWith < MIN_PLAYERS then
+		-- Someone left/died between intermission and start: abort, no rewards (prevents solo reward farming).
+		disconnectRound()
+		table.clear(participants)
+		map:Destroy()
+		return
 	end
 
 	setPhase("Round", ROUND_SECONDS)
-	local startedWith = countParticipants()
 	waitUnless(ROUND_SECONDS, function()
-		local alive = countParticipants()
-		return alive == 0 or (startedWith >= 2 and alive <= 1)
+		return countParticipants() <= 1
 	end)
+	countParticipants()
+	disconnectRound()
 
-	for _, connection in connections do
-		connection:Disconnect()
-	end
-
-	-- Results: last one standing wins; everyone who started gets participation.
+	-- Results: last one standing wins; everyone who STARTED (snapshot) gets participation.
 	local survivors = {}
 	for player in participants do
 		if player.Parent == Players then
@@ -169,8 +217,8 @@ local function runRound()
 	end
 	local winner = if #survivors == 1 then survivors[1] else nil
 	state:SetAttribute("Winner", if winner then winner.DisplayName else "")
-	for _, player in Players:GetPlayers() do
-		if participants[player] or player == winner then
+	for player in starters do
+		if player.Parent == Players then
 			DataService.AddCoins(player, if player == winner then WIN_REWARD else PARTICIPATION_REWARD)
 		end
 	end
@@ -210,6 +258,7 @@ local function loop()
 			local ok, err = xpcall(runRound, debug.traceback)
 			if not ok then
 				warn(`[RoundService] round crashed: {err}`)
+				disconnectRound()
 				local leftover = workspace:FindFirstChild("ActiveMap")
 				if leftover then
 					leftover:Destroy()
@@ -228,7 +277,7 @@ function RoundService.GetPhase(): Phase
 end
 
 function RoundService.IsParticipant(player: Player): boolean
-	return participants[player] == true
+	return participants[player] ~= nil
 end
 
 function RoundService.Init()

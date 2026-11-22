@@ -95,6 +95,23 @@ describe("BufferCodec", function()
 		expect(r:str(8)).toBe("abc")
 	end)
 
+	it("writer(0) grows instead of looping forever (regression)", function()
+		local w = BufferCodec.writer(0)
+		w:u32(123)
+		w:str("ok", 8)
+		local r = BufferCodec.reader(w:finish(), 64) :: BufferCodec.Reader
+		expect(r:u32()).toBe(123)
+		expect(r:str(8)).toBe("ok")
+	end)
+
+	it("truncation never splits a multi-byte UTF-8 character (regression)", function()
+		local w = BufferCodec.writer()
+		w:str("Сэлэм", 5) -- 2-byte chars: 5 bytes would split the 3rd char
+		local r = BufferCodec.reader(w:finish(), 64) :: BufferCodec.Reader
+		expect(r:str(16)).toBe("Сэ")
+		expect(r:done()).toBe(true)
+	end)
+
 	it("angle quantization stays within ~1.5°", function()
 		for _, angle in { 0, 1, 2.5, math.pi, 6 } do
 			local back = BufferCodec.unpackAngle(BufferCodec.packAngle(angle))

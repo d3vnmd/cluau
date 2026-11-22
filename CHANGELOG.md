@@ -12,7 +12,7 @@ Self-verification release: the skill now tests, lints and reviews its own output
 
 ### Added
 - **Luau unit tests (Lune)** — `tests/luau/` specs for `RateLimiter`, `Guard`, `BufferCodec`, `Trove` and
-  `TradeLogic` (46 tests: truncated buffers, NaN, oversized length prefixes, stale trade versions, self-trades,
+  `TradeLogic` (51 tests: truncated buffers, NaN, oversized length prefixes, stale trade versions, self-trades,
   all-or-nothing swaps…). Mutation-checked: removing a guard makes the suite fail. CI job installs Lune.
 - **Independent review mode** — `agents/cluau-reviewer.md` (Claude Code plugin agent) and
   `references/review-workflow.md` (verbatim reviewer prompt, when review is mandatory, checklists).
@@ -32,7 +32,24 @@ Self-verification release: the skill now tests, lints and reviews its own output
   "claude -p"` generates responses). Grader has its own tests.
 - "Last verified" stamps on every hand-written reference, enforced by `tools/build.py check`.
 
-### Fixed
+### Fixed (found by running the new independent reviewer on this release's own templates)
+- **TradeService:** crash between the two players' saves could dupe/lose items → two-phase trade journal
+  (`TradeJournal_v1`) + `AppliedTrades` markers + load-time reconciliation that applies a missing side only
+  when the partner's saved data proves the trade committed. Per-player trade cooldown.
+- **DataService:** save coalescing (one queued save per profile; trade/receipt spam can't drain the DataStore
+  budget); lock heartbeat for idle profiles (a stale lock could let another server discard the last save);
+  `AddLoadStep` and `ReadSavedAsync` hooks; `AppliedTrades` field.
+- **RoundService:** `RequestStreamAroundAsync` before teleporting (players fell through unstreamed maps);
+  abort with no rewards if fewer than `MIN_PLAYERS` actually start (solo reward farming); elimination also
+  when the Humanoid disappears or the character changes; round connections cleaned on error; participation
+  paid from the starting roster.
+- **LeaderboardService:** separate live/all-time pending tallies (a partial failure double-counted scores),
+  entries removed only after successful writes, in-flight guard against concurrent flushes, players already
+  in-game get the board, round winners wired in.
+- **InputController / new MovementService:** client no longer sets WalkSpeed (escaped server slows, false
+  anti-cheat flags); sprint is a server intent. Backspace no longer closes menus while typing.
+- **BufferCodec:** `writer(0)` looped forever; truncation could split UTF-8 characters.
+- **ModerationService:** ban wave iterates a snapshot.
 - `server-authority.md`: `PlayerScriptsUseInputActionSystem` is a Workspace property.
 - `RateLimiter` rejects NaN/negative costs and accepts an injectable clock.
 - `tools/verify_api_refs.py` now also checks `StarterPlayer.*` references.

@@ -90,8 +90,15 @@ local function waveLoop()
 	while true do
 		task.wait(30)
 		local now = os.time()
+		-- Snapshot first: enforce() yields (BanAsync) and Flag() may add entries meanwhile.
+		local due = {}
 		for userId, enforceAt in banQueue do
 			if now >= enforceAt then
+				table.insert(due, userId)
+			end
+		end
+		for _, userId in due do
+			if banQueue[userId] then
 				enforce(userId)
 			end
 		end
@@ -105,7 +112,11 @@ function ModerationService.Start()
 	-- Bans queued for players who already left are still enforced (BanAsync works by UserId).
 	-- Keep strikes for the server's lifetime so rejoining doesn't reset evidence.
 	game:BindToClose(function()
+		local due = {}
 		for userId in banQueue do
+			table.insert(due, userId)
+		end
+		for _, userId in due do
 			enforce(userId) -- enforce early rather than lose the evidence on shutdown
 		end
 	end)
