@@ -21,6 +21,7 @@ local EQUIP_SLOT = "Cosmetic"
 
 local purchaseLimiter = RateLimiter.new(3, 1)
 local equipLimiter = RateLimiter.new(5, 3)
+local catalogLimiter = RateLimiter.new(3, 0.5)
 
 local ShopService = {}
 
@@ -84,21 +85,24 @@ function ShopService.Start()
 	Net.event("RequestPurchase").OnServerEvent:Connect(onRequestPurchase)
 	Net.event("RequestEquip").OnServerEvent:Connect(onRequestEquip)
 
-	-- Read-only catalog for the UI. Fast, no yields, no client input used.
-	Net.func("GetShopCatalog").OnServerInvoke = function(_player: Player)
-		local list = {}
-		for _, item in Config.Shop.Items do
-			table.insert(list, {
-				id = item.id,
-				displayName = item.displayName,
-				description = item.description,
-				price = item.price,
-				rarity = item.rarity,
-				icon = item.icon,
-				layoutOrder = item.layoutOrder,
-			})
+	-- Read-only catalog for the UI: built once, rate-limited (RemoteFunctions are spammable too).
+	local catalog = {}
+	for _, item in Config.Shop.Items do
+		table.insert(catalog, {
+			id = item.id,
+			displayName = item.displayName,
+			description = item.description,
+			price = item.price,
+			rarity = item.rarity,
+			icon = item.icon,
+			layoutOrder = item.layoutOrder,
+		})
+	end
+	Net.func("GetShopCatalog").OnServerInvoke = function(player: Player)
+		if not catalogLimiter:check(player) then
+			return {} -- always return: a handler that errors or never returns hangs the client
 		end
-		return list
+		return catalog
 	end
 end
 

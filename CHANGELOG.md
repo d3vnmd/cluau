@@ -6,6 +6,35 @@ All notable changes to **cluau** are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-23
+
+Competitive gap release: what the best Roblox skills (roblox-suite, ro-engineer) and Anthropic's skill
+practices have that Cluau lacked — rebuilt around Cluau's strengths (tests, verified APIs, Mongolian, UI).
+
+### Added
+- **Router + 10 workflows** (`skills/cluau/workflows/`): new-game, implement-feature, debug-error,
+  migrate-legacy, security-audit, performance-audit, economy-audit, retention-audit, ui-screen, launch —
+  phases, tools per phase, explicit outputs. SKILL.md opens with an intent router.
+- **Three tools no other Roblox skill ships:**
+  - `scripts/migrate_legacy.py` — safe codemods for legacy Luau (23 rewrites; strings/comments untouched;
+    idempotent; leaves judgement calls as MANUAL items).
+  - `scripts/audit_project.py` — remote-handler inventory (validated / rate-limited / yields), client/server
+    placement errors, DataStore map, ProcessReceipt/BindToClose, lint summary. Found two real gaps in Cluau's own
+    templates (unthrottled catalog RemoteFunction, implicit trade-version validation) — fixed.
+  - `scripts/economy_sim.py` — exact event-based progression simulation with SLOW_START / GRIND_WALL / SPIKE /
+    TRIVIAL / UNREACHABLE flags and rebirths.
+- **Specialist references** (verified against creator-docs): `studio-mcp.md` (official tool map, verify loop,
+  safety rules, Open Cloud via MCP), `open-cloud.md` (keys, 60-day auto-expiry, CI place publishing, rate-limit
+  headers, support tooling vs session locks), `npc-ai.md`, `physics-vehicles.md`, `vfx.md`,
+  `audio-animation.md`, `retention-design.md` (ethical hooks, red lines).
+- **Templates:** `Restock` (deterministic cross-server shop rotations, Lune-tested), `LiveOpsService`
+  (ConfigService + restock + server-wide events), `NpcService` (one-loop patrol/chase/return AI), `AudioController`
+  (Audio API mixer), and design docs (`templates/docs/`: game design doc, system design, plan).
+- **Paired evals:** `run_evals.py compare <baseline> <skill>`; 7 new cases (26 total).
+
+### Changed
+- `tools/build.py` also verifies `workflows/` links. Lune suite: 57 specs.
+
 ## [1.2.0] - 2026-11-22
 
 Self-verification release: the skill now tests, lints and reviews its own output.
@@ -115,7 +144,8 @@ big-studio practice, with ideas adapted from excaldev/ro-engineer (MIT).
 - `tools/build.py` validation and packaging; CI and tag-driven GitHub Release workflows.
 - Bilingual (Mongolian / English) README, example prompts, contributing guide.
 
-[Unreleased]: https://github.com/d3vnmd/cluau/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/d3vnmd/cluau/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.3.0
 [1.2.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.2.0
 [1.1.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.1.0
 [1.0.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.0.0

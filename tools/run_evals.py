@@ -16,6 +16,12 @@ Checks per case:
   • kind=no-trigger: the skill must not hijack unrelated requests (assertions say so).
   • lang=mn: at least 30% of letters in the prose are Cyrillic.
 Exit code 1 if any case fails. Results also written to <run-dir>/report.json.
+
+Paired evaluation (does the skill actually help?):
+    python3 tools/run_evals.py run --cmd "<agent WITHOUT the skill>" --out evals/runs/baseline-<date>
+    python3 tools/run_evals.py run --cmd "claude -p"              --out evals/runs/skill-<date>
+    python3 tools/run_evals.py compare evals/runs/baseline-<date> evals/runs/skill-<date>
+Use the same agent, model and date for both; label any confounder. Publish failures, not just wins.
 """
 from __future__ import annotations
 
@@ -118,6 +124,27 @@ def run(cmd: str, out_dir: str, only: set[str] | None, timeout: int) -> int:
     return grade_dir(out_dir, only)
 
 
+def compare(baseline_dir: str, skill_dir: str) -> int:
+    """Side-by-side table of two graded runs; writes COMPARISON.md into the skill run directory."""
+    def load(run_dir: str) -> dict[str, str]:
+        with open(os.path.join(run_dir, "report.json"), encoding="utf-8") as fh:
+            return {r["id"]: r["status"] for r in json.load(fh)}
+    base, skill = load(baseline_dir), load(skill_dir)
+    ids = [c["id"] for c in load_cases()["cases"] if c["id"] in base or c["id"] in skill]
+    mark = {"pass": "✅", "fail": "❌", "missing": "—"}
+    lines = ["| Case | Baseline | With cluau |", "|---|---|---|"]
+    for case_id in ids:
+        lines.append(f"| `{case_id}` | {mark.get(base.get(case_id, 'missing'), '?')} | {mark.get(skill.get(case_id, 'missing'), '?')} |")
+    b_pass = sum(1 for v in base.values() if v == "pass")
+    s_pass = sum(1 for v in skill.values() if v == "pass")
+    lines += ["", f"Baseline {b_pass}/{len(base)} · With cluau {s_pass}/{len(skill)}"]
+    report = "\n".join(lines) + "\n"
+    with open(os.path.join(skill_dir, "COMPARISON.md"), "w", encoding="utf-8") as fh:
+        fh.write(report)
+    print(report)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="run_evals", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -129,7 +156,12 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--out", default=os.path.join(ROOT, "evals", "runs", _dt.datetime.now().strftime("%Y%m%d-%H%M%S")))
     r.add_argument("--only", default="")
     r.add_argument("--timeout", type=int, default=600)
+    c = sub.add_parser("compare", help="compare a baseline run with a skill run")
+    c.add_argument("baseline_dir")
+    c.add_argument("skill_dir")
     args = parser.parse_args(argv)
+    if args.command == "compare":
+        return compare(args.baseline_dir, args.skill_dir)
     only = {s for s in args.only.split(",") if s} or None
     if args.command == "grade":
         return grade_dir(args.run_dir, only)

@@ -1,6 +1,6 @@
 {
   "name": "cluau",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Roblox Studio game engineering for Claude, verified against Roblox's 2026 docs: modern strict Luau (deprecations synced from official docs), exploit-proof networking, Server Authority, session-locked DataStores, policy-compliant monetization, genre playbooks, performance budgets, hand-crafted UI, 3D asset pipeline, polish and launch. Speaks Mongolian and English.",
   "author": {
     "name": "d3vnmd",

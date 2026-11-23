@@ -79,7 +79,7 @@ def check() -> str:
         errors.append(f"SKILL.md is {body_lines} lines; keep it ≤ 500 and move detail into references/")
 
     # Every referenced bundled file must exist.
-    for ref in sorted(set(re.findall(r"`((?:references|templates|scripts|assets)/[^`\s*]+)`", skill_md))):
+    for ref in sorted(set(re.findall(r"`((?:references|templates|scripts|assets|workflows)/[^`\s*]+)`", skill_md))):
         if not os.path.exists(os.path.join(SKILL_DIR, ref)):
             errors.append(f"SKILL.md references missing file: {ref}")
 

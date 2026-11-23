@@ -1,83 +1,359 @@
 {
   "version": 1,
-  "about": "Behavioral evals for the cluau skill. Each case is a user prompt plus regex assertions on the response. kind=trigger expects Roblox-quality output (all Luau code blocks must lint with zero errors); kind=no-trigger expects the skill NOT to hijack unrelated requests. lang=mn requires a mostly-Cyrillic reply.",
-  "global_must_not_in_code": ["(?<![\\w.:])wait\\s*\\(", "(?<![\\w.:])spawn\\s*\\(", "(?<![\\w.:])delay\\s*\\(", "Body(Velocity|Gyro|Position|Force)\\b", "[Hh]umanoid\\s*:\\s*LoadAnimation", "FindPartOnRay", "SetPrimaryPartCFrame", "PhysicsService", "InvokeClient"],
+  "about": "Behavioral evals for the cluau skill. Each case is a user prompt plus regex assertions on the response. kind=trigger expects Roblox-quality output (all Luau code blocks must lint with zero errors); kind=no-trigger expects the skill NOT to hijack unrelated requests. lang=mn requires a mostly-Cyrillic reply. Paired protocol: run once WITHOUT the skill (baseline) and once WITH it, same agent/model, then `run_evals.py compare <baseline-dir> <skill-dir>`.",
+  "global_must_not_in_code": [
+    "(?<![\\w.:])wait\\s*\\(",
+    "(?<![\\w.:])spawn\\s*\\(",
+    "(?<![\\w.:])delay\\s*\\(",
+    "Body(Velocity|Gyro|Position|Force)\\b",
+    "[Hh]umanoid\\s*:\\s*LoadAnimation",
+    "FindPartOnRay",
+    "SetPrimaryPartCFrame",
+    "PhysicsService",
+    "InvokeClient"
+  ],
   "cases": [
-    {"id": "mn-obby-checkpoint", "kind": "trigger", "lang": "mn",
-     "prompt": "Обби тоглоомд checkpoint систем хийж өг. Үхэхэд сүүлийн checkpoint дээр төрдөг, ахицыг нь хадгалдаг байх.",
-     "must": ["ServerScriptService", "(UpdateAsync|ProfileStore|DataService|session)", "(CollectionService|AddTag|tag)"],
-     "must_not": ["SetAsync\\s*\\("]},
-    {"id": "en-shop-ui", "kind": "trigger", "lang": "en",
-     "prompt": "Make a shop UI for my cozy farming game. It has to look great on phones and work with a controller.",
-     "must": ["(CoreUISafeInsets|ScreenInsets)", "(UICorner|UIStroke)", "(SelectedObject|Selectable|gamepad)", "(art direction|palette|token)"],
-     "must_not": ["TextScaled\\s*=\\s*true", "[\\U0001F300-\\U0001FAFF]"]},
-    {"id": "mn-nil-humanoid", "kind": "trigger", "lang": "mn",
-     "prompt": "LocalScript дээр 'attempt to index nil with Humanoid' гэсэн алдаа гараад байна. Код: local h = game.Players.LocalPlayer.Character.Humanoid",
-     "must": ["(CharacterAdded|WaitForChild)"],
-     "must_not": []},
-    {"id": "en-gamepass-2x", "kind": "trigger", "lang": "en",
-     "prompt": "Add a 2x coins game pass to my simulator.",
-     "must": ["UserOwnsGamePassAsync", "(server|Server)", "PromptGamePassPurchaseFinished"],
-     "must_not": ["PlayerOwnsAsset\\s*\\("]},
-    {"id": "en-dev-product", "kind": "trigger", "lang": "en",
-     "prompt": "I want to sell 500 coins for Robux as a developer product. Write the server code.",
-     "must": ["ProcessReceipt", "PurchaseId", "NotProcessedYet"],
-     "must_not": ["PromptProductPurchaseFinished\\s*:\\s*Connect"]},
-    {"id": "en-trading", "kind": "trigger", "lang": "en",
-     "prompt": "Build a pet trading system between two players. Exploiters have duped items in my last game.",
-     "must": ["(atomic|atomically|same synchronous|no yield)", "(version|quiet|cooldown|confirm)", "(re-?validat|revalidat|check .* again)"],
-     "must_not": []},
-    {"id": "en-td-1000", "kind": "trigger", "lang": "en",
-     "prompt": "Plan the architecture for a tower defense game that must handle 1,000 enemies without lag.",
-     "must": ["(client|clients).{0,80}(render|interpolat)", "(spatial|grid|quadtree|octree)", "(batch|delta|buffer)"],
-     "must_not": []},
-    {"id": "mn-collision-groups", "kind": "trigger", "lang": "mn",
-     "prompt": "Тоглогчид бие биетэйгээ мөргөлддөггүй болгох collision group скрипт бичиж өг.",
-     "must": ["RegisterCollisionGroup", "CollisionGroupSetCollidable"],
-     "must_not": ["PhysicsService\\s*:"]},
-    {"id": "en-reserved-server", "kind": "trigger", "lang": "en",
-     "prompt": "Teleport a party of 4 players from my lobby into a private reserved server of my match place.",
-     "must": ["TeleportAsync", "ReservedServerId", "GenerateGUID"],
-     "must_not": ["ReserveServer(Async)?\\s*\\(", "ShouldReserveServer"]},
-    {"id": "en-admin-group", "kind": "trigger", "lang": "en",
-     "prompt": "Only players with rank 200+ in my group should be able to use admin commands.",
-     "must": ["GetRolesInGroupAsync", "(server|Server)"],
-     "must_not": ["GetRankInGroup", "GetRoleInGroup\\b"]},
-    {"id": "en-input-sprint", "kind": "trigger", "lang": "en",
-     "prompt": "Add sprinting that works on keyboard, gamepad and mobile.",
-     "must": ["(InputAction|InputContext|InputBinding)"],
-     "must_not": ["GetMouse\\s*\\("]},
-    {"id": "en-blender-export", "kind": "trigger", "lang": "en",
-     "prompt": "What Blender export settings and triangle budget should I use for my sword models?",
-     "must": ["(FBX|glTF)", "20,?000", "(Unit System|FBX Unit Scale|Apply Scalings)"],
-     "must_not": []},
-    {"id": "mn-launch-checklist", "kind": "trigger", "lang": "mn",
-     "prompt": "Обби тоглоомоо нийтлэхийн өмнө юу шалгах вэ? Checklist гаргаж өг.",
-     "must": ["(thumbnail|Thumbnail|зураг)", "(Content|questionnaire|рейтинг|Rating|rating)", "(утас|phone|Android|device)"],
-     "must_not": []},
-    {"id": "en-review-prompt", "kind": "trigger", "lang": "en",
-     "prompt": "Review this server code:\n```lua\nlocal prompt = workspace.Chest.ProximityPrompt\nprompt.Triggered:Connect(function(player, amount)\n  task.wait(1)\n  player.leaderstats.Coins.Value += amount\nend)\n```",
-     "must": ["(CRITICAL|HIGH|critical|high)", "(distance|Magnitude|range)", "(amount|client)"],
-     "must_not": []},
-    {"id": "en-mathpow-valid", "kind": "trigger", "lang": "en",
-     "prompt": "Is math.pow valid in Roblox Luau or do I have to rewrite it?",
-     "must": ["(valid|exists|works|supported)"],
-     "must_not": ["(does not|doesn't) exist"]},
-    {"id": "en-round-system", "kind": "trigger", "lang": "en",
-     "prompt": "Make a round system with intermission and a countdown everyone sees the same.",
-     "must": ["GetServerTimeNow", "(EndsAt|attribute|Attribute)"],
-     "must_not": ["FireAllClients\\([^)]*(timeLeft|seconds)"]},
-    {"id": "mn-ui-polish", "kind": "trigger", "lang": "mn",
-     "prompt": "Миний тоглоомын UI AI хийсэн юм шиг харагдаад байна. Яаж гоё, мэргэжлийн болгох вэ?",
-     "must": ["(token|өнгө|palette|Theme)", "(UIScale|hover|pressed|төлөв)"],
-     "must_not": ["[\\U0001F300-\\U0001FAFF]"]},
-    {"id": "no-python", "kind": "no-trigger", "lang": "en",
-     "prompt": "Write a Python function that reverses a string.",
-     "must": ["def "],
-     "must_not": ["Roblox", "Luau", "ServerScriptService"]},
-    {"id": "no-science", "kind": "no-trigger", "lang": "en",
-     "prompt": "Explain photosynthesis in two sentences.",
-     "must": ["(light|sunlight|chlorophyll)"],
-     "must_not": ["Roblox", "Luau"]}
+    {
+      "id": "mn-obby-checkpoint",
+      "kind": "trigger",
+      "lang": "mn",
+      "prompt": "Обби тоглоомд checkpoint систем хийж өг. Үхэхэд сүүлийн checkpoint дээр төрдөг, ахицыг нь хадгалдаг байх.",
+      "must": [
+        "ServerScriptService",
+        "(UpdateAsync|ProfileStore|DataService|session)",
+        "(CollectionService|AddTag|tag)"
+      ],
+      "must_not": [
+        "SetAsync\\s*\\("
+      ]
+    },
+    {
+      "id": "en-shop-ui",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Make a shop UI for my cozy farming game. It has to look great on phones and work with a controller.",
+      "must": [
+        "(CoreUISafeInsets|ScreenInsets)",
+        "(UICorner|UIStroke)",
+        "(SelectedObject|Selectable|gamepad)",
+        "(art direction|palette|token)"
+      ],
+      "must_not": [
+        "TextScaled\\s*=\\s*true",
+        "[\\U0001F300-\\U0001FAFF]"
+      ]
+    },
+    {
+      "id": "mn-nil-humanoid",
+      "kind": "trigger",
+      "lang": "mn",
+      "prompt": "LocalScript дээр 'attempt to index nil with Humanoid' гэсэн алдаа гараад байна. Код: local h = game.Players.LocalPlayer.Character.Humanoid",
+      "must": [
+        "(CharacterAdded|WaitForChild)"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "en-gamepass-2x",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Add a 2x coins game pass to my simulator.",
+      "must": [
+        "UserOwnsGamePassAsync",
+        "(server|Server)",
+        "PromptGamePassPurchaseFinished"
+      ],
+      "must_not": [
+        "PlayerOwnsAsset\\s*\\("
+      ]
+    },
+    {
+      "id": "en-dev-product",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "I want to sell 500 coins for Robux as a developer product. Write the server code.",
+      "must": [
+        "ProcessReceipt",
+        "PurchaseId",
+        "NotProcessedYet"
+      ],
+      "must_not": [
+        "PromptProductPurchaseFinished\\s*:\\s*Connect"
+      ]
+    },
+    {
+      "id": "en-trading",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Build a pet trading system between two players. Exploiters have duped items in my last game.",
+      "must": [
+        "(atomic|atomically|same synchronous|no yield)",
+        "(version|quiet|cooldown|confirm)",
+        "(re-?validat|revalidat|check .* again)"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "en-td-1000",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Plan the architecture for a tower defense game that must handle 1,000 enemies without lag.",
+      "must": [
+        "(client|clients).{0,80}(render|interpolat)",
+        "(spatial|grid|quadtree|octree)",
+        "(batch|delta|buffer)"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "mn-collision-groups",
+      "kind": "trigger",
+      "lang": "mn",
+      "prompt": "Тоглогчид бие биетэйгээ мөргөлддөггүй болгох collision group скрипт бичиж өг.",
+      "must": [
+        "RegisterCollisionGroup",
+        "CollisionGroupSetCollidable"
+      ],
+      "must_not": [
+        "PhysicsService\\s*:"
+      ]
+    },
+    {
+      "id": "en-reserved-server",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Teleport a party of 4 players from my lobby into a private reserved server of my match place.",
+      "must": [
+        "TeleportAsync",
+        "ReservedServerId",
+        "GenerateGUID"
+      ],
+      "must_not": [
+        "ReserveServer(Async)?\\s*\\(",
+        "ShouldReserveServer"
+      ]
+    },
+    {
+      "id": "en-admin-group",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Only players with rank 200+ in my group should be able to use admin commands.",
+      "must": [
+        "GetRolesInGroupAsync",
+        "(server|Server)"
+      ],
+      "must_not": [
+        "GetRankInGroup",
+        "GetRoleInGroup\\b"
+      ]
+    },
+    {
+      "id": "en-input-sprint",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Add sprinting that works on keyboard, gamepad and mobile.",
+      "must": [
+        "(InputAction|InputContext|InputBinding)"
+      ],
+      "must_not": [
+        "GetMouse\\s*\\("
+      ]
+    },
+    {
+      "id": "en-blender-export",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "What Blender export settings and triangle budget should I use for my sword models?",
+      "must": [
+        "(FBX|glTF)",
+        "20,?000",
+        "(Unit System|FBX Unit Scale|Apply Scalings)"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "mn-launch-checklist",
+      "kind": "trigger",
+      "lang": "mn",
+      "prompt": "Обби тоглоомоо нийтлэхийн өмнө юу шалгах вэ? Checklist гаргаж өг.",
+      "must": [
+        "(thumbnail|Thumbnail|зураг)",
+        "(Content|questionnaire|рейтинг|Rating|rating)",
+        "(утас|phone|Android|device)"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "en-review-prompt",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Review this server code:\n```lua\nlocal prompt = workspace.Chest.ProximityPrompt\nprompt.Triggered:Connect(function(player, amount)\n  task.wait(1)\n  player.leaderstats.Coins.Value += amount\nend)\n```",
+      "must": [
+        "(CRITICAL|HIGH|critical|high)",
+        "(distance|Magnitude|range)",
+        "(amount|client)"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "en-mathpow-valid",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Is math.pow valid in Roblox Luau or do I have to rewrite it?",
+      "must": [
+        "(valid|exists|works|supported)"
+      ],
+      "must_not": [
+        "(does not|doesn't) exist"
+      ]
+    },
+    {
+      "id": "en-round-system",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Make a round system with intermission and a countdown everyone sees the same.",
+      "must": [
+        "GetServerTimeNow",
+        "(EndsAt|attribute|Attribute)"
+      ],
+      "must_not": [
+        "FireAllClients\\([^)]*(timeLeft|seconds)"
+      ]
+    },
+    {
+      "id": "mn-ui-polish",
+      "kind": "trigger",
+      "lang": "mn",
+      "prompt": "Миний тоглоомын UI AI хийсэн юм шиг харагдаад байна. Яаж гоё, мэргэжлийн болгох вэ?",
+      "must": [
+        "(token|өнгө|palette|Theme)",
+        "(UIScale|hover|pressed|төлөв)"
+      ],
+      "must_not": [
+        "[\\U0001F300-\\U0001FAFF]"
+      ]
+    },
+    {
+      "id": "no-python",
+      "kind": "no-trigger",
+      "lang": "en",
+      "prompt": "Write a Python function that reverses a string.",
+      "must": [
+        "def "
+      ],
+      "must_not": [
+        "Roblox",
+        "Luau",
+        "ServerScriptService"
+      ]
+    },
+    {
+      "id": "no-science",
+      "kind": "no-trigger",
+      "lang": "en",
+      "prompt": "Explain photosynthesis in two sentences.",
+      "must": [
+        "(light|sunlight|chlorophyll)"
+      ],
+      "must_not": [
+        "Roblox",
+        "Luau"
+      ]
+    },
+    {
+      "id": "en-npc-chase",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Make zombies that patrol and chase the nearest player around obstacles, for about 20 zombies.",
+      "must": [
+        "CreatePath",
+        "ComputeAsync",
+        "(Blocked|blocked)",
+        "(SetNetworkOwner|server)"
+      ],
+      "must_not": [
+        "FindPathAsync",
+        "ComputeRawPathAsync",
+        "while true do\\s*wait\\("
+      ]
+    },
+    {
+      "id": "mn-audio-mixer",
+      "kind": "trigger",
+      "lang": "mn",
+      "prompt": "Хөгжим болон дууны эффектийн дууны түвшинг тус тусад нь тохируулдаг тохиргоо хийж өг.",
+      "must": [
+        "(AudioFader|SoundGroup|Volume)",
+        "(Music|хөгжим)"
+      ],
+      "must_not": [
+        "\\.Pitch\\s*="
+      ]
+    },
+    {
+      "id": "en-ci-publish",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "How do I publish my Rojo place to Roblox automatically from GitHub Actions?",
+      "must": [
+        "x-api-key",
+        "(assets/v1/assets|Open Cloud)",
+        "(secret|Secrets)"
+      ],
+      "must_not": [
+        "\\.ROBLOSECURITY"
+      ]
+    },
+    {
+      "id": "en-migrate-old",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "Modernize this 2019 script:\n```lua\nlocal p = game.Players.LocalPlayer\nwait(2)\nlocal anim = p.Character.Humanoid:LoadAnimation(script.Run)\nanim:Play()\nscript.Parent.Touched:connect(function(h) end)\n```",
+      "must": [
+        "task\\.wait",
+        "Animator",
+        "Connect",
+        "GetService"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "en-economy-tune",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "My simulator's 5th upgrade takes players 2 hours. Help me fix the economy curve.",
+      "must": [
+        "(sink|source)",
+        "(multiplier|rebirth)",
+        "(minute|time-to|pacing)"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "en-mcp-verify",
+      "kind": "trigger",
+      "lang": "en",
+      "prompt": "I connected Roblox Studio MCP to Claude. How should you verify a script change actually works?",
+      "must": [
+        "start_stop_play",
+        "get_console_output",
+        "(screen_capture|screenshot)"
+      ],
+      "must_not": []
+    },
+    {
+      "id": "mn-global-shop",
+      "kind": "trigger",
+      "lang": "mn",
+      "prompt": "Бүх сервер дээр ижил харагддаг, 5 минут тутам шинэчлэгддэг дэлгүүр хийж өг.",
+      "must": [
+        "(os\\.time|GetServerTimeNow)",
+        "(300|5 минут)",
+        "(серверт|server|Server)"
+      ],
+      "must_not": [
+        "FireAllClients\\([^)]*(stock|Stock)[^)]*\\)\\s*end\\s*\\)\\s*while"
+      ]
+    }
   ]
 }

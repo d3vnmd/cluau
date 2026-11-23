@@ -31,14 +31,22 @@ Modern strict Luau · Exploit-proof networking · Session-locked DataStores · F
 | Хэсэг | Агуулга |
 |---|---|
 | `SKILL.md` | Гол "prompt": ажиллах дараалал, заавал хийх өөрийгөө шалгах жагсаалт, архитектур, аюулгүй байдал, UI зарчим, өгөгдөл, монетизаци, гүйцэтгэл |
-| `references/` | 19 гүнзгий гарын авлага: modern Luau, deprecated API (албан ёсны docs-оос автоматаар үүсгэсэн ~560 API), архитектур, **тоглоомын 14 төрлийн playbook**, Server Authority, аюулгүй байдал, DataStore, UI design system, гүйцэтгэлийн хатуу төсөв, монетизаци ба 2026 оны бодлого, **3D загвар/Blender/asset pipeline**, **polish, QA, launch**, sharp-edges (35 алдаа), toolchain, монгол нэр томьёо |
-| `templates/` | 21 бэлэн Luau модуль: bootstrap, `Net`, `Guard`, `RateLimiter`, `Trove`, `Config`, `BufferCodec`, session-lock-той `DataService`, давхардалгүй `MonetizationService`, `ShopService`, `ModerationService`, **`TradeLogic`/`TradeService` (dupe-гүй солилцоо)**, **`RoundService`**, **`LeaderboardService`**, **`InputController` (Input Action System)**, `MovementService`, `Theme`, `Components`, `UIController` |
+| `references/` | 27 гүнзгий гарын авлага: modern Luau, deprecated API (албан ёсны docs-оос автоматаар үүсгэсэн ~560 API), архитектур, **тоглоомын 14 төрлийн playbook**, Server Authority, аюулгүй байдал, DataStore, UI design system, гүйцэтгэлийн хатуу төсөв, монетизаци ба 2026 оны бодлого, **3D загвар/Blender/asset pipeline**, **polish, QA, launch**, sharp-edges (35 алдаа), toolchain, монгол нэр томьёо |
+| `templates/` | 25 бэлэн Luau модуль (`Restock`, `LiveOpsService`, `NpcService`, `AudioController` шинээр орсон): bootstrap, `Net`, `Guard`, `RateLimiter`, `Trove`, `Config`, `BufferCodec`, session-lock-той `DataService`, давхардалгүй `MonetizationService`, `ShopService`, `ModerationService`, **`TradeLogic`/`TradeService` (dupe-гүй солилцоо)**, **`RoundService`**, **`LeaderboardService`**, **`InputController` (Input Action System)**, `MovementService`, `Theme`, `Components`, `UIController` |
 | `scripts/luau_lint.py` | 59 гар дүрэм (аюулгүй байдлын CL110–CL118 орсон) + **Roblox-ийн албан ёсны docs-оос үүсгэсэн 391 deprecated нэр**. Зөв Luau-г (`math.pow`, `unpack`) буруу гэж тэмдэглэдэггүй |
 | `scripts/scaffold.py` | Rojo төсөл үүсгэгч (Selene, StyLua, Rokit, `.luaurc`) |
 
+### 1.3 хувилбарт юу шинэ вэ? — бусад шилдэг skill-ээс дутуу байсныг нөхсөн
+
+- **Workflow + router:** "шинэ тоглоом", "алдаа засах", "хуучин код шинэчлэх", "exploit хайх", "гацалт засах", "эдийн засаг тааруулах", "retention", "UI", "launch" гэх мэт 10 алхамчилсан playbook.
+- **Өөр ямар ч Roblox skill-д байхгүй 3 хэрэгсэл:** хуучин кодыг автоматаар шинэчлэгч (`migrate_legacy.py`), төслийн аюулгүй байдлын зураглал (`audit_project.py` — remote бүр шалгагдсан уу, хурд хязгаарласан уу), эдийн засгийн симулятор (`economy_sim.py` — "grind wall"-ийг тоглогчоос өмнө олно).
+- **Шинэ мэргэжлийн гарын авлага:** Studio MCP, Open Cloud (CI-аас publish), NPC AI, физик/машин, VFX, Audio API ба анимэйшн, ёс зүйтэй retention.
+- **Шинэ template:** глобал дэлгүүрийн rotation (`Restock`, тесттэй), `LiveOpsService`, `NpcService`, `AudioController`, тоглоомын дизайны баримт бичгийн загварууд.
+- **Хосолсон eval:** skill-тэй ба skill-гүй ижил асуултаар харьцуулж skill-ийн үр нөлөөг хэмждэг.
+
 ### 1.2 хувилбарт юу шинэ вэ? — өөрийгөө шалгадаг болсон
 
-- **Тест:** цэвэр логиктой template-үүдэд (`RateLimiter`, `Guard`, `BufferCodec`, `Trove`, `TradeLogic`) Lune дээр Studio-гүйгээр ажилладаг 51 тест бий. Хамгаалалтыг санаатай устгахад тест унадаг эсэхийг (mutation) шалгасан.
+- **Тест:** цэвэр логиктой template-үүдэд (`RateLimiter`, `Guard`, `BufferCodec`, `Trove`, `TradeLogic`) Lune дээр Studio-гүйгээр ажилладаг 57 тест бий. Хамгаалалтыг санаатай устгахад тест унадаг эсэхийг (mutation) шалгасан.
 - **Бие даасан review-г өөр дээрээ туршсан:** reviewer agent энэ хувилбарын шинэ template-үүдээс 2 HIGH, 7 MEDIUM алдаа олсон (trade crash-ийн үеийн dupe, map stream болоогүй үед унах, `writer(0)` төгсгөлгүй давталт…) — бүгдийг зассан.
 - **Бие даасан review:** код бичсэний дараа зохиогчийн бодлыг мэдэхгүй шинэ `cluau-reviewer` agent кодыг "эвдэрсэн" гэж үзээд шалгана. Алдааны каталог 65 болж өргөжсөн (trade dupe, respawn race, streaming nil, teleport data trust…).
 - **Хамгийн эрсдэлтэй системүүдийн template:** Trade, Round, Leaderboard, Input Action System.
@@ -118,7 +126,7 @@ cluau/
 ├── .claude-plugin/            plugin.json + marketplace.json (Claude Code plugin)
 ├── skills/cluau/
 │   ├── SKILL.md               the core prompt (operating loop, rules, self-review gate)
-│   ├── references/            19 deep-dive guides, loaded on demand
+│   ├── references/            27 deep-dive guides, loaded on demand
 │   │   ├── luau-modern.md         strict types, task library, idioms, pitfalls
 │   │   ├── deprecated-apis.md     hand-written migration guide + "NOT deprecated" table
 │   │   ├── deprecated-index.md    GENERATED from official docs: ~560 deprecated members
@@ -138,7 +146,7 @@ cluau/
 │   │   ├── game-design.md         loops per genre, progression math, economy, FTUE
 │   │   ├── debugging-testing.md   error → cause → fix table, test checklists
 │   │   └── mongolian-glossary.md  consistent Mongolian terminology
-│   ├── templates/             21 production Luau modules (all --!strict, lint-clean; pure ones unit-tested)
+│   ├── templates/             25 production Luau modules + design-doc templates (lint-clean; pure ones unit-tested)
 │   │   ├── server/            Main.server, DataService, MonetizationService, ShopService, ModerationService,
 │   │   │                      TradeLogic + TradeService, RoundService, LeaderboardService, MovementService
 │   │   ├── client/            Main.client, UIController, InputController
@@ -147,12 +155,16 @@ cluau/
 │   ├── scripts/
 │   │   ├── luau_lint.py       59 hand rules (incl. security CL110–CL118) + 391 generated deprecated names
 │   │   ├── data/              deprecated_apis.json (generated)
-│   │   └── scaffold.py        Rojo project generator
+│   │   ├── scaffold.py        Rojo project generator
+│   │   ├── migrate_legacy.py  safe automatic modernization of legacy Luau
+│   │   ├── audit_project.py   remote/placement/persistence map of a codebase
+│   │   └── economy_sim.py     progression simulator with grind-wall detection
 │   └── assets/project/        default.project.json, selene.toml, stylua.toml, rokit.toml, .luaurc
+├── skills/cluau/workflows/    10 step-by-step playbooks (new game, debug, migrate, audits, UI, launch)
 ├── agents/cluau-reviewer.md   independent adversarial reviewer (Claude Code plugin agent)
 ├── evals/cases.json           19 Mongolian/English behavioral evals
 ├── tests/
-│   ├── luau/                  Lune specs for pure templates (51 tests)
+│   ├── luau/                  Lune specs for pure templates (57 tests)
 │   ├── fixtures/              good/bad/security fixtures for the linter
 │   └── test_*.py              linter, eval-grader tests
 ├── tools/
@@ -225,6 +237,7 @@ The **Release** workflow tests, packages and publishes the GitHub Release with i
 | API verifier | Every API the skill mentions exists in Roblox's official docs | `python3 tools/verify_api_refs.py <creator-docs>` |
 | Independent review | A fresh agent with no author context hunts shippable defects | `cluau-reviewer` agent / `references/review-workflow.md` |
 | Evals | The skill triggers, answers in Mongolian, and emits lint-clean code | `python3 tools/run_evals.py run --cmd "claude -p"` |
+| Paired evals | The skill beats the same model without it | `run_evals.py compare <baseline> <skill>` |
 | Studio playtest | Real engine behavior — **still required**; nothing above replaces it | Server & Clients + a low-end phone |
 
 ### Staying current with Roblox

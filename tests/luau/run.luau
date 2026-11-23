@@ -9,6 +9,7 @@ local SPECS = {
 	"./BufferCodec.spec",
 	"./Trove.spec",
 	"./TradeLogic.spec",
+	"./Restock.spec",
 }
 
 for _, path in SPECS do

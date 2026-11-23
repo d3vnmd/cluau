@@ -333,7 +333,7 @@ local function onSetOffer(player: Player, rawOffer: unknown)
 end
 
 local function onSetReady(player: Player, version: unknown)
-	if not actionLimiter:check(player) then
+	if not Guard.integer(version, 0, 2 ^ 31) or not actionLimiter:check(player) then
 		return
 	end
 	local session = sessionsByUser[player.UserId]

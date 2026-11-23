@@ -103,5 +103,19 @@ class GraderTests(unittest.TestCase):
             self.assertEqual(statuses["en-dev-product"], "missing")
 
 
+class CompareTests(unittest.TestCase):
+    def test_compare_writes_side_by_side_table(self):
+        with tempfile.TemporaryDirectory() as base, tempfile.TemporaryDirectory() as skill:
+            with open(os.path.join(base, "report.json"), "w", encoding="utf-8") as fh:
+                json.dump([{"id": "no-python", "status": "fail"}, {"id": "en-dev-product", "status": "fail"}], fh)
+            with open(os.path.join(skill, "report.json"), "w", encoding="utf-8") as fh:
+                json.dump([{"id": "no-python", "status": "pass"}, {"id": "en-dev-product", "status": "pass"}], fh)
+            self.assertEqual(run_evals.compare(base, skill), 0)
+            with open(os.path.join(skill, "COMPARISON.md"), encoding="utf-8") as fh:
+                text = fh.read()
+            self.assertIn("Baseline 0/2", text)
+            self.assertIn("With cluau 2/2", text)
+
+
 if __name__ == "__main__":
     unittest.main()

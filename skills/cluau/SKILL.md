@@ -1,6 +1,6 @@
 ---
 name: cluau
-description: Senior Roblox studio team in one skill - lead Luau engineer, game designer, UI artist, technical artist and QA. Writes modern strict Luau verified against Roblox's 2026 docs (task library, Async APIs, WorldRoot collision groups, Input Action System, TextChatService, Server Authority), exploit-proof server-authoritative networking, session-locked DataStores, policy-compliant monetization, genre-specific architecture, lag-free performance budgets, hand-crafted non-generic UI, and quality 3D models, polish and launch. Use for ANY Roblox task even if Roblox is not named - Studio, Luau, scripts, remotes, DataStore/ProfileStore, UI/HUD/shop, obby/simulator/tycoon/tower defense/shooter/horror/RPG/farming/steal/fishing games, Blender models, Output errors, lag, exploits, game passes, Rojo - and Mongolian requests like Roblox тоглоом хийх, скрипт бичиж өг, UI гоё болгох, алдаа засах, загвар хийх.
+description: Senior Roblox studio team in one skill - lead Luau engineer, game designer, UI artist, technical artist and QA, with step-by-step workflows and tools (legacy-code migrator, project security/remote auditor, economy simulator, linter verified against Roblox's 2026 docs). Writes modern strict Luau (task library, Async APIs, WorldRoot collision groups, Input Action System, TextChatService, Server Authority), exploit-proof remotes, session-locked DataStores, dupe-proof trading, fair monetization, genre architecture, lag budgets, hand-crafted UI, NPC AI, physics/vehicles, VFX, Audio API, animation, 3D models, Open Cloud, Studio MCP, polish and launch. Use for ANY Roblox task even if Roblox is not named - Studio, Luau, scripts, remotes, DataStore, UI, obby/simulator/tycoon/tower defense/shooter/horror/RPG/farming games, Output errors, lag, exploits, game passes, Rojo - and Mongolian requests like Roblox тоглоом хийх, скрипт бичиж өг, UI гоё болгох, алдаа засах.
 ---
 
 # Cluau — Roblox Studio Game Engineering
@@ -15,6 +15,24 @@ Two promises define this skill. Break neither:
 2. **No AI-slop UI.** Every interface has a deliberate visual identity derived from the game itself, a coherent token system, real interaction states, and works on phone, tablet, desktop, console, and VR-safe areas.
 
 ---
+
+## Router — pick the workflow first
+
+| The user wants to… | Follow | Key tools / templates |
+|---|---|---|
+| make a new game | `workflows/new-game.md` | genre-playbooks, `scripts/economy_sim.py`, `scripts/scaffold.py`, `templates/docs/game-design-doc.md` |
+| add a feature/system | `workflows/implement-feature.md` | templates (§10), `scripts/audit_project.py`, reviewer |
+| fix an error / "doesn't work" | `workflows/debug-error.md` | debugging-testing.md, Studio MCP |
+| modernize old / free-model code | `workflows/migrate-legacy.md` | `scripts/migrate_legacy.py` |
+| find exploits / dupes | `workflows/security-audit.md` | `scripts/audit_project.py`, sharp-edges, reviewer |
+| fix lag / memory / network | `workflows/performance-audit.md` | performance.md budgets |
+| tune economy / prices | `workflows/economy-audit.md` | `scripts/economy_sim.py` |
+| improve retention / first session | `workflows/retention-audit.md` | retention-design.md |
+| design a screen / HUD | `workflows/ui-screen.md` | Theme/Components, ui-design-system.md |
+| launch / big update | `workflows/launch.md` | polish-qa-launch.md, open-cloud.md |
+| models / art / NPCs / physics / VFX / audio | references in §10 | assets-pipeline, npc-ai, physics-vehicles, vfx, audio-animation |
+
+A quick question ("is `math.pow` valid?") needs no workflow — answer directly.
 
 ## 0. Operating loop (do this every time)
 
@@ -342,7 +360,14 @@ Full detail: `references/performance.md`.
 | Models, Blender, textures, rigs, animation, lighting, free models, AI assets | `references/assets-pipeline.md` |
 | Game feel, audio, accessibility, QA, launch, live-ops | `references/polish-qa-launch.md` |
 | Code review, bug hunting, "what can go wrong" | `references/sharp-edges.md` (65 ID'd bugs), `references/review-workflow.md` (independent reviewer) |
-| Rojo, CI, Studio MCP verification, evidence levels | `references/toolchain-workflow.md` |
+| Rojo, CI, evidence levels | `references/toolchain-workflow.md` |
+| Studio MCP: inspect, edit, playtest, screenshot; Open Cloud via MCP | `references/studio-mcp.md` |
+| Publishing from CI, API keys, 429s, support tooling, bans | `references/open-cloud.md` |
+| NPCs, pathfinding, enemies, monsters | `references/npc-ai.md` |
+| Constraints, vehicles, network ownership, physics stepping | `references/physics-vehicles.md` |
+| Particles, beams, trails, highlights | `references/vfx.md` |
+| Audio API mixing, animation playback, IK, characters | `references/audio-animation.md` |
+| D1/D7, first session, hooks (ethical) | `references/retention-design.md` |
 | Is API X deprecated? What replaced it? | `references/deprecated-index.md` (generated, complete), `references/platform-features.md` (official "use now" feed) |
 
 Templates (copy, then adapt names). All are `--!strict` and lint-clean; the pure modules (`Guard`, `RateLimiter`, `BufferCodec`, `Trove`, `TradeLogic`) have Lune unit tests in the repository (`tests/luau/`). Engine-facing modules are linted and API-verified but still need a Studio playtest:
@@ -366,6 +391,10 @@ Templates (copy, then adapt names). All are `--!strict` and lint-clean; the pure
 | `templates/server/LeaderboardService.luau` | Live MemoryStore board + slow OrderedDataStore persistence, batched flushes | ModuleScript in `ServerScriptService/Services` |
 | `templates/client/InputController.luau` | Input Action System: Gameplay/Menu contexts, keyboard+gamepad+touch bindings, glyphs | ModuleScript in `StarterPlayerScripts/Controllers` |
 | `templates/server/MovementService.luau` | Server-owned WalkSpeed: sprint intents + status-effect multipliers, `MaxLegitSpeed` for anti-cheat | ModuleScript in `ServerScriptService/Services` |
+| `templates/shared/Restock.luau` + `templates/server/LiveOpsService.luau` | Deterministic global shop rotations (every server agrees, unit-tested), ConfigService live values, server-wide events via MessagingService + MemoryStore | ModuleScripts in `ReplicatedStorage/Shared`, `ServerScriptService/Services` |
+| `templates/server/NpcService.luau` | Patrol/chase/return/attack AI for all NPCs in one 5 Hz loop, pathfinding with blocked-path recovery | ModuleScript in `ServerScriptService/Services` |
+| `templates/client/AudioController.luau` | Audio API mixer: Music/SFX buses → compressor → output, pooled UI sounds, 3D one-shots, saved volumes | ModuleScript in `StarterPlayerScripts/Controllers` |
+| `templates/docs/*.md` | Game design doc, system design (ownership map, remotes, failure modes), plan | Documents, not code |
 | `templates/ui/Theme.luau` | Design tokens | ModuleScript in `ReplicatedStorage/Shared/UI` |
 | `templates/ui/Components.luau` | Button/Panel/Label/Modal with states, gamepad, safe areas | ModuleScript in `ReplicatedStorage/Shared/UI` |
 | `templates/client/UIController.luau` | Example HUD + shop screen built from components | ModuleScript in `StarterPlayerScripts/Controllers` |
@@ -373,6 +402,9 @@ Templates (copy, then adapt names). All are `--!strict` and lint-clean; the pure
 Tools bundled with this skill (Python 3, no dependencies):
 
 - `scripts/luau_lint.py <paths>` — flags deprecated APIs, unsafe patterns and UI-slop markers (`--list-rules` for all rules, `--format json` for machine output). Exit code 1 on errors.
+- `scripts/migrate_legacy.py <paths> [--write]` — safe automatic modernization (wait→task.wait, :connect→:Connect, game.X→GetService, SetPrimaryPartCFrame→PivotTo, pre-2025 names→…Async…); strings/comments untouched; lists what needs manual migration.
+- `scripts/audit_project.py <src>` — studio-style map: every remote handler (validated? rate-limited? yields?), client/server placement errors, DataStore map, ProcessReceipt/BindToClose, lint summary.
+- `scripts/economy_sim.py <economy.json>` (`--example` for a starter) — time-to-unlock table with SLOW_START / GRIND_WALL / SPIKE / TRIVIAL / UNREACHABLE flags.
 - `scripts/scaffold.py <dir>` — writes a Rojo project (`default.project.json`, Selene, StyLua, Rokit, `.luaurc`) with every template in the right place. Use it when the user works with Rojo/VS Code; for Studio-only users give the Explorer hierarchy instead.
 
 ---
