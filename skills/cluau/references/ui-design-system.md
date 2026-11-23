@@ -32,6 +32,52 @@ The goal: a player should believe a professional UI artist designed this interfa
 
 If the user has no direction, propose two distinct directions in one line each and pick the one that best fits the genre — don't default to "dark mode with purple gradient".
 
+## 1b. How designers actually work (do this, in this order)
+
+1. **Mood line first** — one sentence of concrete nouns (§1). If you can't write it, you can't design the screen.
+2. **Style tile before screens.** Run `python3 <skill>/scripts/style_tile.py` (all presets) or
+   `style_tile.py meadow candy` and show the HTML (or a screenshot) to the user. A style tile is cheap to change;
+   ten built screens are not. Agree on direction here.
+3. **Start from a preset, then make it yours.** Presets (`assets/themes/*.json`) are complete, contrast-checked
+   systems: palette roles, two font families (+ numbers face), shape language, depth, motion personality.
+   Change at least one signature element (accent hue, display font, radius, or gloss) so the game has its own
+   face. Rebuild with `tools/build_themes.py` — it rejects contrast failures and non-Roblox fonts.
+4. **Wireframe the hierarchy** (one primary action per screen), mobile-first, then fill with components.
+5. **Squint test** on the real screen: blur your eyes — the primary action and the key number must still pop;
+   everything else should recede.
+6. **Check every state** (hover, pressed, disabled = neutral, selected, loading, empty, error).
+
+| Preset | Mood | Shape language | Depth | Motion | Fits |
+|---|---|---|---|---|---|
+| `lantern` | warm leather + amber | rounded 10 px, thin edges | soft drop | calm | adventure, exploration |
+| `meadow` | cream paper + ink outlines | 16 px, 3 px dark outlines | hard 5 px, gloss | bouncy | farming, pets, cozy sims |
+| `candy` | deep teal + cherry/sun | 14 px, 4 px black outlines | hard 6 px, gloss | snappy | simulators, obbies, party |
+| `orbit` | graphite + one cyan | 4 px, hairline outlines, caps | none | precise | sci-fi, shooters, racing |
+| `grimoire` | parchment on dark world | 6 px, serif heads | soft | measured | fantasy RPG, story |
+| `hush` | text on darkness | 0 px, no boxes | none | slow | horror, mystery |
+| `arena` | slate + team colors | 3 px, flat caps | none | instant | competitive, sports |
+
+### Designer techniques that separate "made" from "generated"
+
+- **60-30-10 color:** ~60% neutral surfaces, ~30% secondary neutrals/structure, ~10% accent. If the accent is
+  everywhere, nothing is important.
+- **Value before hue:** hierarchy comes from light/dark contrast; check the screen in grayscale.
+- **Shape language matches the genre:** round + thick outlines = friendly/kids/cozy; sharp + thin = tech/competitive;
+  ornament + serif = fantasy; no shapes at all = horror tension.
+- **Depth is a system, not decoration:** pick ONE (hard offset shadow, soft drop, or flat) and use it everywhere.
+  Chunky buttons physically sink into their shadow on press (Components does this).
+- **Gloss only on colored faces** (a top highlight ≈ +18% lightness), never on neutral panels or text.
+- **Light text on colored faces gets an outline** in the edge color (sticker look); dark text never gets a shadow.
+- **Disabled is neutral**, not "accent at 50% opacity".
+- **Nested radii:** inner radius = outer radius − padding.
+- **Numbers get their own face** (tabular/mono or the display face) and fixed-width containers so they don't jitter.
+- **One icon family**, same stroke/fill, drawn on a consistent grid (e.g. 24 px with 2 px stroke), white source
+  images tinted with `ImageColor3`.
+- **Real copy, real data:** design with the longest realistic strings and numbers ("1,250,000", German-length labels).
+- **Text on the world** uses `TextOnBackground` (light panels on a dark world need it — see Grimoire).
+
+See `ui-screen-recipes.md` for concrete layouts of the 10 most common Roblox screens.
+
 ## 2. Art-direction presets
 
 Use as seeds; always tint/adjust to the game.

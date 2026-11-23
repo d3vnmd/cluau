@@ -10,6 +10,8 @@ local SPECS = {
 	"./Trove.spec",
 	"./TradeLogic.spec",
 	"./Restock.spec",
+	"./Spring.spec",
+	"./Compile.spec",
 }
 
 for _, path in SPECS do

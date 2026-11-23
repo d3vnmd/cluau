@@ -32,8 +32,21 @@ type Snapshot = {
 	Equipped: { [string]: string },
 }
 
+-- The card height is DERIVED from tokens (padding + art + text lines + description + button incl. its depth +
+-- gaps), so a chunky theme with a deep shadow never pushes the buy button out of its grid cell.
 local CARD_WIDTH = 196
-local CARD_HEIGHT = 248
+local ART_HEIGHT = 104
+local DESCRIPTION_HEIGHT = 34
+local function lineHeight(textSize: number): number
+	return math.ceil(textSize * 1.25)
+end
+local CARD_HEIGHT = Theme.Space.MD * 2
+	+ ART_HEIGHT
+	+ lineHeight(Theme.TextSize.Body)
+	+ lineHeight(Theme.TextSize.Caption - 1)
+	+ DESCRIPTION_HEIGHT
+	+ Components.buttonHeight("sm")
+	+ Theme.Space.SM * 4
 
 local UIController = {}
 
@@ -57,7 +70,8 @@ local function buildCurrencyPill(parent: Instance)
 	pill.BackgroundColor3 = Theme.Color.Surface
 	Components.bindPreferredTransparency(pill, 0.06)
 	Components.corner(pill, Theme.Radius.Pill)
-	Components.stroke(pill, Theme.Color.Border, Theme.Stroke.Thin)
+	local chunky = Theme.Shape.ButtonStyle == "chunky"
+	Components.stroke(pill, if chunky then Theme.Color.BorderStrong else Theme.Color.Border, if chunky then Theme.Stroke.Bold else Theme.Stroke.Thin)
 	local pad = Instance.new("UIPadding")
 	pad.PaddingLeft = UDim.new(0, Theme.Space.SM)
 	pad.PaddingRight = UDim.new(0, Theme.Space.LG)
@@ -78,7 +92,7 @@ local function buildCurrencyPill(parent: Instance)
 
 	coinsLabel = Components.label({
 		text = "0",
-		font = Theme.Font.BodyBold,
+		font = Theme.Font.Numbers, -- the theme's numbers face (tabular in sci-fi/competitive presets)
 		size = Theme.TextSize.Heading,
 		layoutOrder = 2,
 		parent = pill,
@@ -141,7 +155,7 @@ local function buildItemCard(item: CatalogItem, parent: Instance)
 	art.BorderSizePixel = 0
 	art.Name = "Art"
 	art.BackgroundColor3 = Theme.Color.SurfaceSunken
-	art.Size = UDim2.new(1, 0, 0, 104)
+	art.Size = UDim2.new(1, 0, 0, ART_HEIGHT)
 	art.LayoutOrder = 1
 	Components.corner(art, Theme.Radius.SM)
 	art.Parent = card
@@ -182,7 +196,7 @@ local function buildItemCard(item: CatalogItem, parent: Instance)
 		layoutOrder = 4,
 		parent = card,
 	})
-	description.Size = UDim2.new(1, 0, 0, 34)
+	description.Size = UDim2.new(1, 0, 0, DESCRIPTION_HEIGHT)
 	description.AutomaticSize = Enum.AutomaticSize.None
 	description.TextYAlignment = Enum.TextYAlignment.Top
 	description.TextTruncate = Enum.TextTruncate.AtEnd
@@ -191,11 +205,10 @@ local function buildItemCard(item: CatalogItem, parent: Instance)
 		text = `Buy  {Components.formatNumber(item.price)}`,
 		variant = "primary",
 		size = "sm",
+		fill = true,
 		layoutOrder = 5,
 		parent = card,
 	})
-	action.instance.AutomaticSize = Enum.AutomaticSize.None
-	action.instance.Size = UDim2.new(1, 0, 0, Theme.HitTarget)
 
 	local function refresh()
 		local owned = (state.Inventory[item.id] or 0) > 0

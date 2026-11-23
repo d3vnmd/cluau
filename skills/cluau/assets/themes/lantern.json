@@ -1,0 +1,77 @@
+{
+  "name": "Lantern",
+  "mood": "Lantern-lit explorer's kit: warm charcoal leather, one amber lantern accent, sturdy rounded shapes, calm confident motion.",
+  "genres": [
+    "adventure",
+    "exploration",
+    "RPG-lite",
+    "horror-lite"
+  ],
+  "colors": {
+    "Background": "#15120E",
+    "Surface": "#1E1A15",
+    "SurfaceRaised": "#29231C",
+    "SurfaceSunken": "#110F0C",
+    "Border": "#3B3329",
+    "BorderStrong": "#56493A",
+    "TextMuted": "#A39786",
+    "Text": "#F3EBDF",
+    "TextOnBackground": "#F3EBDF",
+    "Accent": "#E8A23B",
+    "AccentHover": "#F2B65C",
+    "AccentPressed": "#C7862A",
+    "AccentShadow": "#8A5A17",
+    "OnAccent": "#23170A",
+    "Success": "#7FB26B",
+    "Warning": "#E2B44A",
+    "Danger": "#D7654F",
+    "OnDanger": "#2A0E08",
+    "Scrim": "#000000",
+    "Currency": "#F2C14E"
+  },
+  "rarity": {
+    "Common": "#B9AE9F",
+    "Uncommon": "#8DBB6F",
+    "Rare": "#6FA6D6",
+    "Epic": "#B48AD8",
+    "Legendary": "#F0B548"
+  },
+  "fonts": {
+    "display": [
+      "Montserrat",
+      "Bold"
+    ],
+    "heading": [
+      "Montserrat",
+      "SemiBold"
+    ],
+    "body": [
+      "BuilderSans",
+      "Medium"
+    ],
+    "bodyBold": [
+      "BuilderSans",
+      "Bold"
+    ],
+    "numbers": [
+      "BuilderSans",
+      "Bold"
+    ]
+  },
+  "shape": {
+    "radiusSM": 6,
+    "radiusMD": 10,
+    "strokeThin": 1,
+    "strokeBold": 2,
+    "buttonStyle": "raised",
+    "shadow": "soft",
+    "shadowOffset": 3,
+    "gloss": false
+  },
+  "motion": {
+    "personality": "calm",
+    "springFrequency": 5,
+    "springDamping": 0.85
+  },
+  "rarityNote": "Rarity colors are desaturated to sit inside the palette; rarity is always also shown as text."
+}

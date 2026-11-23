@@ -25,6 +25,9 @@ jobs:
       - name: Unit tests (linter)
         run: python -m unittest discover -s tests -v
 
+      - name: Theme presets (contrast, fonts, generated Luau in sync)
+        run: python tools/build_themes.py --check
+
       - name: Skill check (frontmatter, links, manifests, clean templates)
         run: python tools/build.py check
 

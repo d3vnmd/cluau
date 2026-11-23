@@ -1,0 +1,77 @@
+{
+  "name": "Arena",
+  "mood": "Broadcast scoreboard: dark slate, team blue vs team orange as the only saturated colors, condensed uppercase labels, tabular numbers, zero decoration.",
+  "genres": [
+    "competitive",
+    "PvP",
+    "sports",
+    "round-based"
+  ],
+  "colors": {
+    "Background": "#0F1216",
+    "Surface": "#171B21",
+    "SurfaceRaised": "#20262E",
+    "SurfaceSunken": "#0B0D10",
+    "Border": "#2C333D",
+    "BorderStrong": "#3E4753",
+    "TextMuted": "#8D97A3",
+    "Text": "#F1F4F7",
+    "TextOnBackground": "#F1F4F7",
+    "Accent": "#1D6FE0",
+    "AccentHover": "#2573E3",
+    "AccentPressed": "#1558B8",
+    "AccentShadow": "#0E3B7D",
+    "OnAccent": "#FFFFFF",
+    "Success": "#3CCB7F",
+    "Warning": "#FF9F1C",
+    "Danger": "#CC2F2D",
+    "OnDanger": "#FFFFFF",
+    "Scrim": "#000000",
+    "Currency": "#FFC94A"
+  },
+  "rarity": {
+    "Common": "#A7B0BA",
+    "Uncommon": "#3CCB7F",
+    "Rare": "#2F80ED",
+    "Epic": "#9B6DF0",
+    "Legendary": "#FF9F1C"
+  },
+  "fonts": {
+    "display": [
+      "Oswald",
+      "Bold"
+    ],
+    "heading": [
+      "Oswald",
+      "SemiBold"
+    ],
+    "body": [
+      "BuilderSans",
+      "Medium"
+    ],
+    "bodyBold": [
+      "BuilderSans",
+      "Bold"
+    ],
+    "numbers": [
+      "RobotoMono",
+      "Bold"
+    ]
+  },
+  "shape": {
+    "radiusSM": 2,
+    "radiusMD": 3,
+    "strokeThin": 1,
+    "strokeBold": 2,
+    "buttonStyle": "flat",
+    "shadow": "none",
+    "shadowOffset": 0,
+    "gloss": false
+  },
+  "motion": {
+    "personality": "instant",
+    "springFrequency": 8,
+    "springDamping": 1.0
+  },
+  "rarityNote": "Rarity colors are desaturated to sit inside the palette; rarity is always also shown as text."
+}

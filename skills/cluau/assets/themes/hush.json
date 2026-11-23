@@ -1,0 +1,76 @@
+{
+  "name": "Hush",
+  "mood": "Found-footage notebook: near-black warmth, bone-white type, one blood accent used once per screen, no boxes — text floats on darkness.",
+  "genres": [
+    "horror",
+    "mystery",
+    "story"
+  ],
+  "colors": {
+    "Background": "#0B0A09",
+    "Surface": "#121110",
+    "SurfaceRaised": "#1A1816",
+    "SurfaceSunken": "#070606",
+    "Border": "#2A2623",
+    "BorderStrong": "#3D3733",
+    "TextMuted": "#8F877C",
+    "Text": "#DCD5C9",
+    "TextOnBackground": "#DCD5C9",
+    "Accent": "#B3261E",
+    "AccentHover": "#C8352C",
+    "AccentPressed": "#8F1D17",
+    "AccentShadow": "#4A0E0B",
+    "OnAccent": "#F4ECE2",
+    "Success": "#7E9A6A",
+    "Warning": "#B89A52",
+    "Danger": "#B3261E",
+    "OnDanger": "#F4ECE2",
+    "Scrim": "#000000",
+    "Currency": "#B89A52"
+  },
+  "rarity": {
+    "Common": "#8F877C",
+    "Uncommon": "#7E9A6A",
+    "Rare": "#6C8CA8",
+    "Epic": "#8E6FA3",
+    "Legendary": "#B89A52"
+  },
+  "fonts": {
+    "display": [
+      "SpecialElite",
+      "Regular"
+    ],
+    "heading": [
+      "SpecialElite",
+      "Regular"
+    ],
+    "body": [
+      "BuilderSans",
+      "Regular"
+    ],
+    "bodyBold": [
+      "BuilderSans",
+      "Medium"
+    ],
+    "numbers": [
+      "SpecialElite",
+      "Regular"
+    ]
+  },
+  "shape": {
+    "radiusSM": 0,
+    "radiusMD": 0,
+    "strokeThin": 1,
+    "strokeBold": 1,
+    "buttonStyle": "text",
+    "shadow": "none",
+    "shadowOffset": 0,
+    "gloss": false
+  },
+  "motion": {
+    "personality": "slow",
+    "springFrequency": 2.2,
+    "springDamping": 1.0
+  },
+  "rarityNote": "Rarity colors are desaturated to sit inside the palette; rarity is always also shown as text."
+}

@@ -18,7 +18,10 @@ local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
+local RunService = game:GetService("RunService")
+
 local Theme = require(script.Parent:WaitForChild("Theme"))
+local Spring = require(script.Parent.Parent:WaitForChild("Spring"))
 
 local Components = {}
 
@@ -220,34 +223,36 @@ export type ButtonProps = {
 	variant: ButtonVariant?,
 	size: ButtonSize?,
 	width: number?, -- fixed width in reference px; omit to hug content
+	fill: boolean?, -- stretch to the parent's width (cards, modals)
 	icon: string?, -- rbxassetid:// (white icon, tinted by tokens)
 	layoutOrder: number?,
 	parent: Instance?,
 }
 
 export type Button = {
-	instance: TextButton,
+	instance: TextButton, -- the root: connect Activated, set LayoutOrder/Parent here
+	face: Frame, -- the visible face: put custom glyphs/icons here
 	setEnabled: (enabled: boolean) -> (),
 	setLoading: (loadingText: string?) -> (),
 	setText: (text: string) -> (),
 }
 
-type Palette = { bg: Color3, hover: Color3, pressed: Color3, text: Color3, border: Color3, bgTransparency: number }
+type Palette = { face: Color3, hover: Color3, pressed: Color3, text: Color3, edge: Color3, outline: Color3, faceTransparency: number }
 
 local function paletteFor(variant: ButtonVariant): Palette
 	local C = Theme.Color
 	if variant == "primary" then
-		return { bg = C.Accent, hover = C.AccentHover, pressed = C.AccentPressed, text = C.OnAccent, border = C.AccentShadow, bgTransparency = 0 }
+		return { face = C.Accent, hover = C.AccentHover, pressed = C.AccentPressed, text = C.OnAccent, edge = C.AccentShadow, outline = C.BorderStrong, faceTransparency = 0 }
 	elseif variant == "danger" then
-		return { bg = C.Danger, hover = C.Danger:Lerp(C.Text, 0.12), pressed = C.Danger:Lerp(C.Background, 0.2), text = C.OnDanger, border = C.Danger:Lerp(C.Background, 0.45), bgTransparency = 0 }
+		return { face = C.Danger, hover = C.Danger:Lerp(C.OnDanger, 0.08), pressed = C.Danger:Lerp(C.SurfaceSunken, 0.2), text = C.OnDanger, edge = C.Danger:Lerp(C.SurfaceSunken, 0.5), outline = C.BorderStrong, faceTransparency = 0 }
 	elseif variant == "ghost" then
-		return { bg = C.Surface, hover = C.SurfaceRaised, pressed = C.SurfaceSunken, text = C.Text, border = C.Border, bgTransparency = 1 }
+		return { face = C.Surface, hover = C.SurfaceRaised, pressed = C.SurfaceSunken, text = C.Text, edge = C.Border, outline = C.Border, faceTransparency = 1 }
 	end
-	return { bg = C.SurfaceRaised, hover = C.SurfaceRaised:Lerp(C.Text, 0.06), pressed = C.Surface, text = C.Text, border = C.BorderStrong, bgTransparency = 0 }
+	return { face = C.SurfaceRaised, hover = C.SurfaceRaised:Lerp(C.Text, 0.06), pressed = C.Surface, text = C.Text, edge = C.BorderStrong, outline = C.BorderStrong, faceTransparency = 0 }
 end
 
 local HEIGHTS: { [ButtonSize]: number } = { sm = Theme.HitTarget, md = 52, lg = 60 }
-local TEXT_SIZES: { [ButtonSize]: number } = { sm = Theme.TextSize.Caption + 1, md = Theme.TextSize.Body, lg = Theme.TextSize.Heading }
+local TEXT_SIZES: { [ButtonSize]: number } = { sm = Theme.TextSize.Caption + 2, md = Theme.TextSize.Body + 1, lg = Theme.TextSize.Heading }
 
 local selectionTemplate: Frame? = nil
 local function getSelectionImage(): Frame
@@ -267,120 +272,306 @@ local function getSelectionImage(): Frame
 	return ring
 end
 
+-- ─── spring runner: one RenderStepped connection animates every UI spring ────
+
+type SpringJob = { spring: Spring.Spring, apply: (number) -> () }
+local springJobs: { [Instance]: { [string]: SpringJob } } = setmetatable({}, { __mode = "k" }) :: any
+local springConnection: RBXScriptConnection? = nil
+
+local function ensureSpringRunner()
+	if springConnection then
+		return
+	end
+	springConnection = RunService.RenderStepped:Connect(function(dt: number)
+		local any = false
+		for owner, jobs in springJobs do
+			for name, job in jobs do
+				job.apply(job.spring:step(dt))
+				if job.spring:isSettled(1e-4) then
+					job.apply(job.spring.target)
+					jobs[name] = nil
+				else
+					any = true
+				end
+			end
+			if next(jobs) == nil then
+				springJobs[owner] = nil
+			end
+		end
+		if not any and next(springJobs) == nil and springConnection then
+			springConnection:Disconnect()
+			springConnection = nil
+		end
+	end)
+end
+
+--- Springs a number toward `target` using the theme's motion personality. `apply` writes the value.
+--- Reduced Motion snaps instantly. Re-targeting keeps velocity (continuous feel).
+function Components.springTo(owner: Instance, name: string, current: number, target: number, apply: (number) -> ())
+	if GuiService.ReducedMotionEnabled then
+		apply(target)
+		local jobs = springJobs[owner]
+		if jobs then
+			jobs[name] = nil
+		end
+		return
+	end
+	local jobs = springJobs[owner]
+	if jobs == nil then
+		jobs = {}
+		springJobs[owner] = jobs
+	end
+	local job = jobs[name]
+	if job == nil then
+		job = { spring = Spring.new(current, Theme.Spring.Frequency, Theme.Spring.Damping), apply = apply }
+		jobs[name] = job
+	end
+	job.apply = apply
+	job.spring:setTarget(target)
+	ensureSpringRunner()
+end
+
+-- ─── button ────────────────────────────────────────────────────────────────
+-- Structure (so depth styles work under ZIndexBehavior.Sibling):
+--   Root (TextButton, transparent: input + layout, height = face + shadow offset)
+--   ├─ Shadow (Frame: hard/soft depth under the face)
+--   └─ Face (Frame: color, stroke, gloss gradient, padding, list layout)
+--        ├─ Icon (ImageLabel, optional)   └─ Text (TextLabel)
+
+local function luminance(c: Color3): number
+	return 0.2126 * c.R + 0.7152 * c.G + 0.0722 * c.B
+end
+
+local function buttonShadowKind(): string -- "hard" | "soft" | "none"
+	local style = Theme.Shape.ButtonStyle
+	return if style == "chunky" then "hard" elseif style == "raised" then "soft" else "none"
+end
+
+--- Total height a button occupies (face + depth), for laying out fixed-size cells around it.
+function Components.buttonHeight(size: ButtonSize?): number
+	return HEIGHTS[size or "md"] + (if buttonShadowKind() == "none" then 0 else Theme.Shape.ShadowOffset)
+end
+
 function Components.button(props: ButtonProps): Button
 	local variant: ButtonVariant = props.variant or "secondary"
 	local size: ButtonSize = props.size or "md"
 	local palette = paletteFor(variant)
+	local style = Theme.Shape.ButtonStyle
+	local shadowKind = buttonShadowKind()
+	local offset = if shadowKind == "none" then 0 else Theme.Shape.ShadowOffset
 	local height = HEIGHTS[size]
+	local uppercase = style == "flat" or style == "outline"
+	local transparentFace = style == "outline" or style == "text" or palette.faceTransparency >= 1
 
-	local button = Instance.new("TextButton")
-	button.BorderSizePixel = 0
-	button.Name = props.text:gsub("%W", "") .. "Button"
-	button.AutoButtonColor = false
-	button.BackgroundColor3 = palette.bg
-	button.BackgroundTransparency = palette.bgTransparency
-	button.Text = props.text
-	button.FontFace = Theme.Font.BodyBold
-	button.TextSize = TEXT_SIZES[size]
-	button.TextColor3 = palette.text
-	button.LayoutOrder = props.layoutOrder or 0
-	button.Selectable = true
-	button.SelectionImageObject = getSelectionImage()
-	if props.width then
-		button.Size = UDim2.new(0, props.width, 0, height)
+	local root = Instance.new("TextButton")
+	root.Name = props.text:gsub("%W", "") .. "Button"
+	root.BorderSizePixel = 0
+	root.AutoButtonColor = false
+	root.BackgroundTransparency = 1
+	root.Text = ""
+	root.LayoutOrder = props.layoutOrder or 0
+	root.Selectable = true
+	root.SelectionImageObject = getSelectionImage()
+	if props.fill then
+		root.Size = UDim2.new(1, 0, 0, height + offset)
+	elseif props.width then
+		root.Size = UDim2.new(0, props.width, 0, height + offset)
 	else
-		button.Size = UDim2.new(0, 0, 0, height)
-		button.AutomaticSize = Enum.AutomaticSize.X
+		root.Size = UDim2.new(0, 0, 0, height + offset)
+		root.AutomaticSize = Enum.AutomaticSize.X
 	end
-	corner(button, Theme.Radius.MD)
-	local border = stroke(button, palette.border, if variant == "primary" then Theme.Stroke.Bold else Theme.Stroke.Thin)
-	padding(button, Theme.Space.XL, 0)
 
-	local scale = Instance.new("UIScale")
-	scale.Parent = button
+	local shadow = Instance.new("Frame")
+	shadow.Name = "Shadow"
+	shadow.BorderSizePixel = 0
+	shadow.Size = UDim2.new(1, 0, 0, height)
+	shadow.Position = UDim2.new(0, 0, 0, offset)
+	shadow.BackgroundColor3 = if shadowKind == "soft" then Theme.Color.Scrim else palette.edge
+	shadow.BackgroundTransparency = if shadowKind == "hard" then 0 elseif shadowKind == "soft" then 0.65 else 1
+	corner(shadow, Theme.Radius.MD)
+	shadow.Parent = root
+
+	local face = Instance.new("Frame")
+	face.Name = "Face"
+	face.BorderSizePixel = 0
+	face.Size = if props.fill or props.width then UDim2.new(1, 0, 0, height) else UDim2.new(0, 0, 0, height)
+	face.AutomaticSize = if props.fill or props.width then Enum.AutomaticSize.None else Enum.AutomaticSize.X
+	corner(face, if style == "text" then UDim.new(0, 0) else Theme.Radius.MD)
+	padding(face, if style == "text" then Theme.Space.XS else Theme.Space.XL, 0)
+	local row = listLayout(face, Enum.FillDirection.Horizontal, Theme.Space.SM)
+	row.VerticalAlignment = Enum.VerticalAlignment.Center
+	row.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	face.Parent = root
+
+	-- Outline: chunky = thick dark outline; outline style = hairline in the text color; others = subtle edge.
+	local outlineColor = if style == "chunky" then palette.outline
+		elseif style == "outline" then (if variant == "primary" then Theme.Color.Accent else Theme.Color.Text)
+		else palette.edge
+	local outlineWidth = if style == "chunky" then Theme.Stroke.Bold elseif style == "text" or style == "flat" then 0 else Theme.Stroke.Thin
+	local border = stroke(face, outlineColor, outlineWidth)
+	border.Enabled = outlineWidth > 0
+
+	-- Gloss: a top highlight baked into a UIGradient (face color set to white, gradient carries the color).
+	local gloss: UIGradient? = nil
+	if Theme.Shape.Gloss and not transparentFace then
+		local g = Instance.new("UIGradient")
+		g.Rotation = 90
+		g.Parent = face
+		gloss = g
+	end
+
+	local underline: Frame? = nil
+	if style == "text" then
+		local bar = Instance.new("Frame")
+		bar.Name = "Underline"
+		bar.BorderSizePixel = 0
+		bar.AnchorPoint = Vector2.new(0, 1)
+		bar.Position = UDim2.new(0, 0, 1, 0)
+		bar.Size = UDim2.new(1, 0, 0, 2)
+		bar.BackgroundColor3 = if variant == "primary" then Theme.Color.Accent else Theme.Color.BorderStrong
+		bar.ZIndex = 2
+		bar.Parent = root
+		underline = bar
+	end
+
+	local textColor = if style == "outline" and variant == "primary" then Theme.Color.Accent
+		elseif style == "text" then (if variant == "primary" then Theme.Color.Text else Theme.Color.TextMuted)
+		else palette.text
+	local label = Components.label({
+		text = if uppercase then string.upper(props.text) else props.text,
+		font = if style == "chunky" and size ~= "sm" then Theme.Font.Display else Theme.Font.BodyBold,
+		size = TEXT_SIZES[size],
+		color = textColor,
+		layoutOrder = 2,
+		parent = face,
+	})
+	label.Name = "Text"
+	-- Cartoon styles outline light text on colored faces (reads on any background, the "sticker" look).
+	local textStroke: UIStroke? = nil
+	if style == "chunky" and luminance(textColor) > 0.6 then
+		local ts = Instance.new("UIStroke")
+		ts.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+		ts.Color = palette.edge
+		ts.Thickness = 1.5
+		ts.Parent = label
+		textStroke = ts
+	end
 
 	if props.icon then
-		-- Icon + text: let a horizontal layout place them; text moves into its own label.
-		button.Text = ""
-		listLayout(button, Enum.FillDirection.Horizontal, Theme.Space.SM)
-		local layout = button:FindFirstChildOfClass("UIListLayout") :: UIListLayout
-		layout.VerticalAlignment = Enum.VerticalAlignment.Center
-		layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 		local icon = Instance.new("ImageLabel")
-		icon.BorderSizePixel = 0
 		icon.Name = "Icon"
+		icon.BorderSizePixel = 0
 		icon.BackgroundTransparency = 1
 		icon.Image = props.icon
-		icon.ImageColor3 = palette.text
+		icon.ImageColor3 = textColor
 		icon.Size = UDim2.new(0, TEXT_SIZES[size] + 6, 0, TEXT_SIZES[size] + 6)
 		icon.LayoutOrder = 1
-		icon.Parent = button
-		Components.label({
-			text = props.text,
-			font = Theme.Font.BodyBold,
-			size = TEXT_SIZES[size],
-			color = palette.text,
-			layoutOrder = 2,
-			parent = button,
-		}).Name = "Text"
+		icon.Parent = face
 	end
 
-	local enabled = true
-	local loading = false
-	local hovered = false
-	local pressed = false
-	local label = props.text
+	local scale = Instance.new("UIScale")
+	scale.Parent = root
+
+	local enabled, loading, hovered, pressed = true, false, false, false
+	local labelText = props.text
+
+	local function setFaceColor(color: Color3, transparency: number, lit: boolean)
+		if gloss and not lit then
+			-- Disabled faces are matte: drop the highlight but keep the gradient object for re-enable.
+			face.BackgroundColor3 = color
+			face.BackgroundTransparency = transparency
+			gloss.Enabled = false
+		elseif gloss then
+			gloss.Enabled = true
+			face.BackgroundColor3 = Color3.new(1, 1, 1) -- cluau-ignore CL097 (white = gloss light, not a palette color)
+			face.BackgroundTransparency = transparency
+			gloss.Color = ColorSequence.new({
+				ColorSequenceKeypoint.new(0, color:Lerp(Color3.new(1, 1, 1), 0.18)), -- cluau-ignore CL097
+				ColorSequenceKeypoint.new(0.55, color),
+				ColorSequenceKeypoint.new(1, color),
+			})
+		else
+			face.BackgroundColor3 = color
+			face.BackgroundTransparency = transparency
+		end
+	end
 
 	local function render()
 		local interactive = enabled and not loading
-		local bg = palette.bg
-		local bgTransparency = palette.bgTransparency
-		if interactive and pressed then
-			bg = palette.pressed
-		elseif interactive and hovered then
-			bg = palette.hover
+		local color = palette.face
+		local transparency = if transparentFace then 1 else palette.faceTransparency
+		if not enabled then
+			-- Disabled goes NEUTRAL (never "faded accent"): sunken face, muted text, no depth.
+			color = Theme.Color.SurfaceSunken
+			transparency = if style == "text" then 1 else 0
+			label.TextColor3 = Theme.Color.TextMuted
+			shadow.Visible = false
+			border.Color = Theme.Color.Border
+		else
+			label.TextColor3 = textColor
+			shadow.Visible = shadowKind ~= "none"
+			border.Color = outlineColor
+			if interactive and pressed then
+				color = palette.pressed
+			elseif interactive and hovered then
+				color = palette.hover
+			end
+			if transparentFace and interactive and (hovered or pressed) and style ~= "text" then
+				transparency = 0.86 -- outline/ghost buttons show a faint fill while engaged
+				color = if variant == "primary" then Theme.Color.Accent else Theme.Color.Text
+			end
 		end
-		if variant == "ghost" and interactive and (hovered or pressed) then
-			bgTransparency = 0 -- ghost buttons only show a surface while engaged
+		if textStroke then
+			textStroke.Enabled = enabled
 		end
-		Components.tween(button, Theme.Motion.Hover, {
-			BackgroundColor3 = bg,
-			TextTransparency = if interactive then 0 else 0.45,
-			BackgroundTransparency = if interactive then bgTransparency else math.max(bgTransparency, 0.35),
-		}, "color")
-		Components.tween(border, Theme.Motion.Hover, { Transparency = if interactive then 0 else 0.5 }, "stroke")
-		local targetScale = if not interactive then 1 elseif pressed then 0.96 elseif hovered then 1.02 else 1
-		Components.tween(scale, if pressed then Theme.Motion.Press else Theme.Motion.Hover, { Scale = targetScale }, "scale")
+		setFaceColor(color, transparency, enabled)
+		if underline then
+			underline.BackgroundColor3 = if not enabled then Theme.Color.Border
+				elseif variant == "primary" or hovered then Theme.Color.Accent
+				else Theme.Color.BorderStrong
+		end
+		-- Motion: chunky faces sink into their shadow; everything else scales slightly.
+		if style == "chunky" then
+			local sink = if interactive and pressed then offset elseif interactive and hovered then -1 else 0
+			Components.springTo(face, "sink", face.Position.Y.Offset, sink, function(v)
+				face.Position = UDim2.new(0, 0, 0, v)
+			end)
+		else
+			local target = if not interactive then 1 elseif pressed then 0.96 elseif hovered then 1.02 else 1
+			Components.springTo(scale, "scale", scale.Scale, target, function(v)
+				scale.Scale = v
+			end)
+		end
 	end
 
-	button.MouseEnter:Connect(function()
+	root.MouseEnter:Connect(function()
 		if currentInput == "KeyboardMouse" then
 			hovered = true
 			render()
 		end
 	end)
-	button.MouseLeave:Connect(function()
+	root.MouseLeave:Connect(function()
 		hovered = false
 		pressed = false
 		render()
 	end)
-	button.SelectionGained:Connect(function()
+	root.SelectionGained:Connect(function()
 		hovered = true
 		render()
 	end)
-	button.SelectionLost:Connect(function()
+	root.SelectionLost:Connect(function()
 		hovered = false
 		pressed = false
 		render()
 	end)
-	button.InputBegan:Connect(function(input)
+	root.InputBegan:Connect(function(input)
 		local t = input.UserInputType
 		if t == Enum.UserInputType.MouseButton1 or t == Enum.UserInputType.Touch or input.KeyCode == Enum.KeyCode.ButtonA then
 			pressed = true
 			render()
 		end
 	end)
-	button.InputEnded:Connect(function(input)
+	root.InputEnded:Connect(function(input)
 		local t = input.UserInputType
 		if t == Enum.UserInputType.MouseButton1 or t == Enum.UserInputType.Touch or input.KeyCode == Enum.KeyCode.ButtonA then
 			pressed = false
@@ -390,12 +581,13 @@ function Components.button(props: ButtonProps): Button
 
 	local function applyInteractable()
 		local interactive = enabled and not loading
-		button.Active = interactive
-		button.Interactable = interactive
+		root.Active = interactive
+		root.Interactable = interactive
 	end
 
 	local api: Button = {
-		instance = button,
+		instance = root,
+		face = face,
 		setEnabled = function(value: boolean)
 			enabled = value
 			applyInteractable()
@@ -403,28 +595,19 @@ function Components.button(props: ButtonProps): Button
 		end,
 		setLoading = function(loadingText: string?)
 			loading = loadingText ~= nil
-			local shown = loadingText or label
-			local textLabel = button:FindFirstChild("Text")
-			if textLabel and textLabel:IsA("TextLabel") then
-				textLabel.Text = shown
-			else
-				button.Text = shown
-			end
+			local shown = loadingText or labelText
+			label.Text = if uppercase then string.upper(shown) else shown
 			applyInteractable()
 			render()
 		end,
 		setText = function(text: string)
-			label = text
-			local textLabel = button:FindFirstChild("Text")
-			if textLabel and textLabel:IsA("TextLabel") then
-				textLabel.Text = text
-			else
-				button.Text = text
-			end
+			labelText = text
+			label.Text = if uppercase then string.upper(text) else text
 		end,
 	}
 
-	button.Parent = props.parent
+	render()
+	root.Parent = props.parent
 	return api
 end
 
@@ -439,25 +622,58 @@ export type PanelProps = {
 }
 
 export type Panel = {
-	instance: Frame,
+	instance: Frame, -- root: position/scale/parent this
+	face: Frame, -- the visible surface
 	body: Frame, -- put content here (vertical list)
 	closeButton: TextButton?,
 }
 
+--- Adds the theme's depth under `root` (behind a face that fills it): hard offset shadow, soft drop, or nothing.
+function Components.depth(root: GuiObject, radius: UDim): Frame?
+	local kind = Theme.Shape.Shadow
+	if kind == "none" then
+		return nil
+	end
+	local shadow = Instance.new("Frame")
+	shadow.BorderSizePixel = 0
+	shadow.Name = "Shadow"
+	shadow.Size = UDim2.fromScale(1, 1)
+	shadow.Position = UDim2.new(0, 0, 0, math.max(2, Theme.Shape.ShadowOffset))
+	shadow.BackgroundColor3 = if kind == "hard" then Theme.Color.BorderStrong else Theme.Color.Scrim
+	shadow.BackgroundTransparency = if kind == "hard" then 0 else 0.7
+	shadow.ZIndex = 0
+	corner(shadow, radius)
+	shadow.Parent = root
+	return shadow
+end
+
 function Components.panel(props: PanelProps): Panel
+	-- Root holds depth + face so the shadow follows the panel when modals move/scale it.
+	local root = Instance.new("Frame")
+	root.BorderSizePixel = 0
+	root.Name = "Panel"
+	root.BackgroundTransparency = 1
+	root.Size = UDim2.new(0, props.width, 0, 0)
+	root.AutomaticSize = Enum.AutomaticSize.Y
+	root.AnchorPoint = Vector2.new(0.5, 0.5)
+	root.Position = UDim2.fromScale(0.5, 0.5)
+	root.SelectionGroup = true
+	Components.depth(root, Theme.Radius.MD)
+
 	local frame = Instance.new("Frame")
 	frame.BorderSizePixel = 0
-	frame.Name = "Panel"
-	frame.BackgroundColor3 = Theme.Color.Surface
-	frame.Size = UDim2.new(0, props.width, 0, 0)
+	frame.Name = "Face"
+	frame.ZIndex = 1
+	frame.Size = UDim2.new(1, 0, 0, 0)
 	frame.AutomaticSize = Enum.AutomaticSize.Y
-	frame.AnchorPoint = Vector2.new(0.5, 0.5)
-	frame.Position = UDim2.fromScale(0.5, 0.5)
-	frame.SelectionGroup = true
+	Components.bindPreferredTransparency(frame, 0)
+	frame.BackgroundColor3 = Theme.Color.Surface
 	corner(frame, Theme.Radius.MD)
-	stroke(frame, Theme.Color.Border, Theme.Stroke.Thin)
+	local chunky = Theme.Shape.ButtonStyle == "chunky"
+	stroke(frame, if chunky then Theme.Color.BorderStrong else Theme.Color.Border, if chunky then Theme.Stroke.Bold else Theme.Stroke.Thin)
 	padding(frame, Theme.Space.XL, Theme.Space.XL)
 	listLayout(frame, Enum.FillDirection.Vertical, Theme.Space.LG)
+	frame.Parent = root
 
 	local closeButton: TextButton? = nil
 	if props.title then
@@ -490,14 +706,25 @@ function Components.panel(props: PanelProps): Panel
 		end
 
 		if props.onClose then
-			local close = Components.button({ text = "Close", variant = "ghost", size = "sm", parent = header })
+			local close = Components.button({ text = "", variant = "secondary", size = "sm", width = Theme.HitTarget, parent = header })
 			local inst = close.instance
-			inst.AutomaticSize = Enum.AutomaticSize.None
-			inst.Size = UDim2.new(0, Theme.HitTarget, 0, Theme.HitTarget)
+			inst.Name = "CloseButton"
 			inst.AnchorPoint = Vector2.new(1, 0.5)
 			inst.Position = UDim2.new(1, 0, 0.5, 0)
-			inst.Text = ""
+			local facePadding = close.face:FindFirstChildOfClass("UIPadding")
+			if facePadding then
+				facePadding.PaddingLeft = UDim.new(0, 0)
+				facePadding.PaddingRight = UDim.new(0, 0)
+			end
 			-- Draw the "X" from two bars so it never depends on a font glyph (swap for your icon set's image).
+			-- The bars live in their own container so the face's list layout doesn't move them.
+			local glyph = Instance.new("Frame")
+			glyph.BorderSizePixel = 0
+			glyph.Name = "XGlyph"
+			glyph.BackgroundTransparency = 1
+			glyph.Size = UDim2.new(0, 18, 0, 18)
+			glyph.LayoutOrder = 3
+			glyph.Parent = close.face
 			for index, rotation in { 45, -45 } do
 				local bar = Instance.new("Frame")
 				bar.BorderSizePixel = 0
@@ -508,11 +735,11 @@ function Components.panel(props: PanelProps): Panel
 				bar.Size = UDim2.new(0, 18, 0, 2)
 				bar.Rotation = rotation
 				corner(bar, Theme.Radius.Pill)
-				bar.Parent = inst
+				bar.Parent = glyph
 			end
-			local uiPadding = inst:FindFirstChildOfClass("UIPadding")
-			if uiPadding then
-				uiPadding:Destroy()
+			local emptyLabel = close.face:FindFirstChild("Text")
+			if emptyLabel then
+				emptyLabel:Destroy()
 			end
 			local onClose = props.onClose
 			inst.Activated:Connect(function()
@@ -532,8 +759,8 @@ function Components.panel(props: PanelProps): Panel
 	body.Parent = frame
 	listLayout(body, Enum.FillDirection.Vertical, Theme.Space.MD)
 
-	frame.Parent = props.parent
-	return { instance = frame, body = body, closeButton = closeButton }
+	root.Parent = props.parent
+	return { instance = root, face = frame, body = body, closeButton = closeButton }
 end
 
 -- ─── modal ─────────────────────────────────────────────────────────────────
@@ -580,6 +807,7 @@ function Components.modal(name: string, props: { width: number, title: string, s
 		end,
 		parent = gui,
 	})
+	panel.instance.ZIndex = 2 -- always above the click-to-close scrim (Sibling ZIndex), never relying on child order
 	local panelScale = Components.autoScale(panel.instance) -- also follows viewport resizes while open
 	local baseScale = panelScale.Scale
 
@@ -728,8 +956,10 @@ function Components.toast(text: string, kind: ("info" | "success" | "error")?)
 			return
 		end
 		local out = Components.tween(toast, Theme.Motion.PanelOut, { GroupTransparency = 1 }, "fade")
-		out.Completed:Wait()
-		toast:Destroy()
+		-- Connect, don't Wait: if the toast is evicted mid-fade the tween never completes and a Wait would hang.
+		out.Completed:Connect(function()
+			toast:Destroy()
+		end)
 	end)
 end
 

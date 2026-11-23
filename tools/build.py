@@ -135,6 +135,15 @@ def check() -> str:
             for f in luau_lint.lint_source(fh.read(), path):
                 errors.append(f"{os.path.relpath(path, ROOT)}:{f.line}: {f.rule} {f.message}")
 
+    # Theme presets: valid (contrast, real fonts) and ThemePresets.luau in sync with assets/themes/*.json.
+    import subprocess
+
+    themes = subprocess.run(
+        [sys.executable, os.path.join(ROOT, "tools", "build_themes.py"), "--check"], capture_output=True, text=True
+    )
+    if themes.returncode != 0:
+        errors.append("theme presets: " + (themes.stdout + themes.stderr).strip().replace("\n", "; "))
+
     if errors:
         print("cluau check failed:")
         fail(errors)

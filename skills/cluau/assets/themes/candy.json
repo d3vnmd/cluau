@@ -1,0 +1,77 @@
+{
+  "name": "Candy Arcade",
+  "mood": "Saturday-morning arcade cabinet: deep teal night, cherry-red and sunshine-yellow candy buttons, thick black outlines, big punchy numbers.",
+  "genres": [
+    "simulator",
+    "incremental",
+    "obby",
+    "party minigames"
+  ],
+  "colors": {
+    "Background": "#0E2A33",
+    "Surface": "#14404B",
+    "SurfaceRaised": "#1B5361",
+    "SurfaceSunken": "#0A2129",
+    "Border": "#06161B",
+    "BorderStrong": "#000000",
+    "TextMuted": "#9CC7CF",
+    "Text": "#FFFFFF",
+    "TextOnBackground": "#FFFFFF",
+    "Accent": "#DC2F45",
+    "AccentHover": "#DE3249",
+    "AccentPressed": "#B8202F",
+    "AccentShadow": "#7A1220",
+    "OnAccent": "#FFFFFF",
+    "Success": "#3DDC84",
+    "Warning": "#FFD23F",
+    "Danger": "#C9253A",
+    "OnDanger": "#FFFFFF",
+    "Scrim": "#000000",
+    "Currency": "#FFD23F"
+  },
+  "rarity": {
+    "Common": "#B8C7CC",
+    "Uncommon": "#5BE08F",
+    "Rare": "#4DB8FF",
+    "Epic": "#C77DFF",
+    "Legendary": "#FFC93C"
+  },
+  "fonts": {
+    "display": [
+      "LuckiestGuy",
+      "Regular"
+    ],
+    "heading": [
+      "LuckiestGuy",
+      "Regular"
+    ],
+    "body": [
+      "BuilderSans",
+      "Bold"
+    ],
+    "bodyBold": [
+      "BuilderSans",
+      "ExtraBold"
+    ],
+    "numbers": [
+      "LuckiestGuy",
+      "Regular"
+    ]
+  },
+  "shape": {
+    "radiusSM": 10,
+    "radiusMD": 14,
+    "strokeThin": 2,
+    "strokeBold": 4,
+    "buttonStyle": "chunky",
+    "shadow": "hard",
+    "shadowOffset": 6,
+    "gloss": true
+  },
+  "motion": {
+    "personality": "snappy",
+    "springFrequency": 6,
+    "springDamping": 0.5
+  },
+  "rarityNote": "Rarity colors are desaturated to sit inside the palette; rarity is always also shown as text."
+}

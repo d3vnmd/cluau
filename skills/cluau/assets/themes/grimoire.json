@@ -1,0 +1,76 @@
+{
+  "name": "Grimoire",
+  "mood": "Illuminated manuscript: aged parchment, oxblood ink, gold-leaf trim used sparingly, serif headings, measured page-turn motion.",
+  "genres": [
+    "fantasy RPG",
+    "adventure",
+    "story"
+  ],
+  "colors": {
+    "Background": "#2A1E16",
+    "Surface": "#E9DCC0",
+    "SurfaceRaised": "#F3E9D2",
+    "SurfaceSunken": "#D8C7A4",
+    "Border": "#7A5A2E",
+    "BorderStrong": "#4E3A1E",
+    "TextMuted": "#6B5A43",
+    "Text": "#2B1D12",
+    "TextOnBackground": "#EDE0C4",
+    "Accent": "#7A1E22",
+    "AccentHover": "#93282D",
+    "AccentPressed": "#5E1619",
+    "AccentShadow": "#3E0D10",
+    "OnAccent": "#F6EAD3",
+    "Success": "#4F7A3A",
+    "Warning": "#B07A1E",
+    "Danger": "#9B2C2C",
+    "OnDanger": "#FBEFE6",
+    "Scrim": "#120C08",
+    "Currency": "#C9A44C"
+  },
+  "rarity": {
+    "Common": "#7D6F5C",
+    "Uncommon": "#4F7A3A",
+    "Rare": "#2F5F8F",
+    "Epic": "#6A3F8C",
+    "Legendary": "#B58A2E"
+  },
+  "fonts": {
+    "display": [
+      "Merriweather",
+      "Bold"
+    ],
+    "heading": [
+      "Merriweather",
+      "Bold"
+    ],
+    "body": [
+      "BuilderSans",
+      "Medium"
+    ],
+    "bodyBold": [
+      "BuilderSans",
+      "Bold"
+    ],
+    "numbers": [
+      "Merriweather",
+      "Bold"
+    ]
+  },
+  "shape": {
+    "radiusSM": 3,
+    "radiusMD": 6,
+    "strokeThin": 1,
+    "strokeBold": 2,
+    "buttonStyle": "raised",
+    "shadow": "soft",
+    "shadowOffset": 3,
+    "gloss": false
+  },
+  "motion": {
+    "personality": "measured",
+    "springFrequency": 3.5,
+    "springDamping": 0.9
+  },
+  "rarityNote": "Rarity colors are desaturated to sit inside the palette; rarity is always also shown as text."
+}

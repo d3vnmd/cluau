@@ -1,64 +1,82 @@
 --!strict
 --[[
-	Theme — design tokens. Every color, size, font and timing in the UI comes from here.
-	Location: ReplicatedStorage/Shared/UI/Theme (ModuleScript)
+	Theme — design tokens for every screen. Components read ONLY from here.
+	Location: ReplicatedStorage/Shared/UI/Theme (ModuleScript). Needs ThemePresets next to it.
 
-	Art direction (rewrite this line for YOUR game, then retune the tokens):
-	  "Lantern-lit explorer's kit: warm charcoal leather neutrals, one amber lantern accent,
-	   sturdy rounded shapes, quiet confident motion."
+	1. Pick the preset that matches the game's art direction (preview them first:
+	   `python3 scripts/style_tile.py` renders all presets as a style tile):
+	     lantern  — warm adventure, amber accent, raised buttons, calm
+	     meadow   — cozy farming/pets, cream paper, chunky outlined buttons, bouncy
+	     candy    — simulator/obby arcade, thick outlines, hard shadows, snappy
+	     orbit    — clean sci-fi/shooter, hairline outlines, monospace numbers, precise
+	     grimoire — fantasy RPG, parchment panels on a dark world, serif headings, measured
+	     hush     — horror, text on darkness, no boxes, slow
+	     arena    — competitive/sports, flat team colors, condensed caps, instant
+	2. Then make it YOURS: change the accent, the display font, or a radius so the game doesn't look like
+	   every other game using the same preset. Edit assets/themes/<preset>.json and run
+	   tools/build_themes.py (it re-checks contrast), or set COLOR_OVERRIDES below and re-render the style
+	   tile with your values to check contrast.
 
-	Do not add colors inline in components. Add a token here, named by ROLE (not by hue).
+	Never add colors inline in components — add a token here, named by ROLE (not by hue).
 ]]
 
-local function hex(value: string): Color3
-	return Color3.fromHex(value)
+local ThemePresets = require(script.Parent:WaitForChild("ThemePresets"))
+
+local PRESET = "lantern"
+
+-- "Make it yours": replace preset roles for this game only. Keys are role names (Accent, Surface, …).
+local COLOR_OVERRIDES: { [string]: Color3 } = {
+	-- Accent = Color3.fromHex("#2F8F6B"),
+	-- AccentHover = Color3.fromHex("#33996F"),
+}
+
+local preset = ThemePresets[PRESET]
+assert(preset, `[Theme] unknown preset "{PRESET}"`)
+
+local color = table.clone(preset.Color)
+local writableColor = color :: any
+for role, value in COLOR_OVERRIDES do
+	assert(writableColor[role] ~= nil, `[Theme] COLOR_OVERRIDES: unknown color role "{role}"`)
+	writableColor[role] = value
+end
+
+-- Motion personality → timing scale and easing for tweens (springs use Theme.Spring directly).
+local PERSONALITY: { [string]: { scale: number, style: Enum.EasingStyle } } = {
+	instant = { scale = 0.6, style = Enum.EasingStyle.Quad },
+	precise = { scale = 0.8, style = Enum.EasingStyle.Quad },
+	snappy = { scale = 0.8, style = Enum.EasingStyle.Back },
+	bouncy = { scale = 1.0, style = Enum.EasingStyle.Back },
+	calm = { scale = 1.1, style = Enum.EasingStyle.Quint },
+	measured = { scale = 1.25, style = Enum.EasingStyle.Quint },
+	slow = { scale = 1.6, style = Enum.EasingStyle.Sine },
+}
+local personality = PERSONALITY[preset.Motion.Personality] or PERSONALITY.calm
+
+local function timing(seconds: number, style: Enum.EasingStyle?, direction: Enum.EasingDirection?): TweenInfo
+	return TweenInfo.new(seconds * personality.scale, style or Enum.EasingStyle.Quad, direction or Enum.EasingDirection.Out)
 end
 
 local Theme = {}
 
-Theme.Color = {
-	-- Neutrals, tinted warm toward the accent (pure grey looks unfinished).
-	Background = hex("#15120E"),
-	Surface = hex("#1E1A15"),
-	SurfaceRaised = hex("#29231C"),
-	SurfaceSunken = hex("#110F0C"),
-	Border = hex("#3B3329"),
-	BorderStrong = hex("#56493A"),
-	TextMuted = hex("#A39786"),
-	Text = hex("#F3EBDF"),
+Theme.Name = preset.Name
+Theme.Mood = preset.Mood
+Theme.Color = color
+Theme.Rarity = preset.Rarity
 
-	-- Single accent.
-	Accent = hex("#E8A23B"),
-	AccentHover = hex("#F2B65C"),
-	AccentPressed = hex("#C7862A"),
-	AccentShadow = hex("#8A5A17"),
-	OnAccent = hex("#23170A"),
-
-	-- Semantic (muted to sit inside the palette).
-	Success = hex("#7FB26B"),
-	Warning = hex("#E2B44A"),
-	Danger = hex("#D7654F"),
-	OnDanger = hex("#2A0E08"),
-
-	Scrim = hex("#000000"),
-	Currency = hex("#F2C14E"),
-}
-
-Theme.Rarity = {
-	Common = hex("#B9AE9F"),
-	Uncommon = hex("#8DBB6F"),
-	Rare = hex("#6FA6D6"),
-	Epic = hex("#B48AD8"),
-	Legendary = hex("#F0B548"),
-}
-
--- Two families max: one display, one UI.
+-- Two families (+ an optional numbers face). Numbers that change (coins, timers) use Font.Numbers.
 Theme.Font = {
-	Display = Font.new("rbxasset://fonts/families/Montserrat.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
-	Heading = Font.new("rbxasset://fonts/families/Montserrat.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
-	Body = Font.new("rbxasset://fonts/families/BuilderSans.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
-	BodyBold = Font.new("rbxasset://fonts/families/BuilderSans.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
+	Display = preset.Font.Display,
+	Heading = preset.Font.Heading,
+	Body = preset.Font.Body,
+	BodyBold = preset.Font.BodyBold,
+	Numbers = preset.Font.Numbers,
 }
+
+-- Shape language: how buttons and panels are built (see Components.button).
+--   ButtonStyle: "chunky" (outlined, hard bottom shadow, squishes), "raised" (soft shadow),
+--                "flat" (solid, caps), "outline" (hairline, caps), "text" (label + underline)
+--   Shadow: "hard" | "soft" | "none"; ShadowOffset in reference px; Gloss: top highlight on colored faces
+Theme.Shape = preset.Shape
 
 -- Text sizes in reference pixels (1080p). Components scale with UIScale, not TextScaled.
 Theme.TextSize = {
@@ -82,26 +100,32 @@ Theme.Space = {
 }
 
 Theme.Radius = {
-	SM = UDim.new(0, 6),
-	MD = UDim.new(0, 10),
+	SM = UDim.new(0, preset.Shape.RadiusSM),
+	MD = UDim.new(0, preset.Shape.RadiusMD),
 	Pill = UDim.new(0.5, 0),
 }
 
 Theme.Stroke = {
-	Thin = 1,
-	Bold = 2,
+	Thin = preset.Shape.StrokeThin,
+	Bold = preset.Shape.StrokeBold,
 }
 
 -- Minimum interactive size (touch target) in reference pixels.
 Theme.HitTarget = 44
 
+-- Spring personality for interactive motion (press, hover, pop). See Spring.luau.
+Theme.Spring = {
+	Frequency = preset.Motion.SpringFrequency,
+	Damping = preset.Motion.SpringDamping,
+}
+
 Theme.Motion = {
-	Instant = TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-	Press = TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-	Hover = TweenInfo.new(0.18, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
-	PanelIn = TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
-	PanelOut = TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
-	Count = TweenInfo.new(0.45, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+	Instant = timing(0.08),
+	Press = timing(0.12),
+	Hover = timing(0.18, Enum.EasingStyle.Quint),
+	PanelIn = timing(0.3, personality.style),
+	PanelOut = timing(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.In), -- exits are faster than entrances
+	Count = timing(0.45, Enum.EasingStyle.Quart),
 }
 
 -- ScreenGui layering. Use DisplayOrder between ScreenGuis instead of giant ZIndex values.
@@ -118,7 +142,7 @@ Theme.MinScale = 0.62
 Theme.MaxScale = 1.2
 
 for _, group in Theme do
-	if type(group) == "table" then
+	if type(group) == "table" and not table.isfrozen(group) then
 		table.freeze(group)
 	end
 end

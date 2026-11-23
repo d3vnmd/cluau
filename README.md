@@ -31,10 +31,21 @@ Modern strict Luau · Exploit-proof networking · Session-locked DataStores · F
 | Хэсэг | Агуулга |
 |---|---|
 | `SKILL.md` | Гол "prompt": ажиллах дараалал, заавал хийх өөрийгөө шалгах жагсаалт, архитектур, аюулгүй байдал, UI зарчим, өгөгдөл, монетизаци, гүйцэтгэл |
-| `references/` | 27 гүнзгий гарын авлага: modern Luau, deprecated API (албан ёсны docs-оос автоматаар үүсгэсэн ~560 API), архитектур, **тоглоомын 14 төрлийн playbook**, Server Authority, аюулгүй байдал, DataStore, UI design system, гүйцэтгэлийн хатуу төсөв, монетизаци ба 2026 оны бодлого, **3D загвар/Blender/asset pipeline**, **polish, QA, launch**, sharp-edges (35 алдаа), toolchain, монгол нэр томьёо |
-| `templates/` | 25 бэлэн Luau модуль (`Restock`, `LiveOpsService`, `NpcService`, `AudioController` шинээр орсон): bootstrap, `Net`, `Guard`, `RateLimiter`, `Trove`, `Config`, `BufferCodec`, session-lock-той `DataService`, давхардалгүй `MonetizationService`, `ShopService`, `ModerationService`, **`TradeLogic`/`TradeService` (dupe-гүй солилцоо)**, **`RoundService`**, **`LeaderboardService`**, **`InputController` (Input Action System)**, `MovementService`, `Theme`, `Components`, `UIController` |
-| `scripts/luau_lint.py` | 59 гар дүрэм (аюулгүй байдлын CL110–CL118 орсон) + **Roblox-ийн албан ёсны docs-оос үүсгэсэн 391 deprecated нэр**. Зөв Luau-г (`math.pow`, `unpack`) буруу гэж тэмдэглэдэггүй |
+| `references/` | 28 гүнзгий гарын авлага (шинэ: **UI дэлгэцийн 10 жор**): modern Luau, deprecated API (албан ёсны docs-оос автоматаар үүсгэсэн ~560 API), архитектур, **тоглоомын 14 төрлийн playbook**, Server Authority, аюулгүй байдал, DataStore, UI design system, гүйцэтгэлийн хатуу төсөв, монетизаци ба 2026 оны бодлого, **3D загвар/Blender/asset pipeline**, **polish, QA, launch**, sharp-edges (35 алдаа), toolchain, монгол нэр томьёо |
+| `templates/` | 27 бэлэн Luau модуль (`Restock`, `LiveOpsService`, `NpcService`, `AudioController` шинээр орсон): bootstrap, `Net`, `Guard`, `RateLimiter`, `Trove`, `Config`, `BufferCodec`, session-lock-той `DataService`, давхардалгүй `MonetizationService`, `ShopService`, `ModerationService`, **`TradeLogic`/`TradeService` (dupe-гүй солилцоо)**, **`RoundService`**, **`LeaderboardService`**, **`InputController` (Input Action System)**, `MovementService`, `Theme` (+ **7 дизайн preset**), `Components` (spring хөдөлгөөнтэй товч), `Spring`, `UIController` |
+| `scripts/luau_lint.py` | 61 гар дүрэм (шинэ: UI-д шууд `Color3`, хэт олон фонт) (аюулгүй байдлын CL110–CL118 орсон) + **Roblox-ийн албан ёсны docs-оос үүсгэсэн 391 deprecated нэр**. Зөв Luau-г (`math.pow`, `unpack`) буруу гэж тэмдэглэдэггүй |
 | `scripts/scaffold.py` | Rojo төсөл үүсгэгч (Selene, StyLua, Rokit, `.luaurc`) |
+| `scripts/style_tile.py` | **Style tile:** өнгө, фонт, товчны бүх төлөв, HUD/дэлгүүрийн жишээг HTML-ээр зурж, код бичихээс өмнө харуулна |
+
+### 1.4 хувилбарт юу шинэ вэ? — UI-г AI биш дизайнер хийсэн мэт
+
+- **Дизайнер шиг ажилладаг:** mood (нэг мөр) → style tile → preset сонгох → "өөрийн болгох" → wireframe → squint test → бүх төлөв. Claude шууд Frame бичихгүй, эхлээд харагдах байдлыг харуулна.
+- **7 preset, тус бүр өөр "хэлбэрийн хэл":** `lantern` (адал явдал), `meadow` (тайван ферм/pet), `candy` (simulator/obby — зузаан хүрээ, хатуу сүүдэр), `orbit` (sci-fi/shooter), `grimoire` (fantasy RPG — илгэн цаас), `hush` (horror — хайрцаггүй, удаан), `arena` (өрсөлдөөн — хавтгай, том үсэг). Зөвхөн өнгө биш: товчны хэлбэр, сүүдэр, гялалзалт, фонт, хөдөлгөөний "зан чанар".
+- **Амьд товч:** chunky товч дарахад сүүдэр рүүгээ "суудаг", raised товч зөөлөн сүүдэр дээр хөвдөг — spring физикээр. Идэвхгүй товч бүдгэрсэн өнгө биш, саарал "унтраалттай" харагдана.
+- **Контрастыг автоматаар шалгадаг:** preset бүр WCAG контрастын 6 дүрэм, жинхэнэ Roblox фонт, ≤ 3 фонтын гэр бүлийг давж байж л орно.
+- **10 дэлгэцийн жор:** HUD (төрөл бүрээр), дэлгүүр, inventory, өдөр тутмын шагнал, quest, тохиргоо, үр дүн, trade, loading.
+- **Lint:** UI кодонд шууд `Color3` бичих, нэг файлд 4+ фонт хэрэглэх — "AI slop"-ийн хоёр гол шинжийг барина.
+- **Засвар:** modal-ийн panel scrim-ийн доор орох, toast-ийн thread гацах, chunky theme-д дэлгүүрийн карт хальж гарах алдааг зассан.
 
 ### 1.3 хувилбарт юу шинэ вэ? — бусад шилдэг skill-ээс дутуу байсныг нөхсөн
 
@@ -117,7 +128,7 @@ src/Hud.luau:43:7: warn CL090 `TextScaled = true` causes inconsistent text sizes
 **Cluau** turns Claude into a senior Roblox engineer, systems-minded game designer and UI artist. It is built on two promises:
 
 1. **No broken, deprecated or insecure code.** Every API exists today and is not deprecated; logic runs on the correct side of the client/server boundary; every remote is validated for type, range, rate, ownership and state; nothing about currency, damage, prices or rewards is trusted from the client; code survives lag, StreamingEnabled, respawns, players leaving mid-call and server shutdown.
-2. **No AI-slop UI.** No default purple-blue gradients, emoji buttons, glass-on-glass, `TextScaled` everywhere or "Welcome to the Game!". Instead: an art direction derived from the game, a token system (color, type, space, radius, motion), real interaction states, safe-area-aware responsive layouts, and full mouse/touch/gamepad parity.
+2. **No AI-slop UI.** No default purple-blue gradients, emoji buttons, glass-on-glass, `TextScaled` everywhere or "Welcome to the Game!". Instead Claude works like a UI designer: a mood line from the game → a **style tile** rendered before any Frame → one of **7 genre presets** (each a full shape language: button style, depth, gloss, type pairing, spring motion) made the game's own → a wireframe from 10 screen recipes → real interaction states, safe-area-aware responsive layouts, and full mouse/touch/gamepad parity. Contrast is checked automatically.
 
 ### What's inside
 
@@ -126,7 +137,7 @@ cluau/
 ├── .claude-plugin/            plugin.json + marketplace.json (Claude Code plugin)
 ├── skills/cluau/
 │   ├── SKILL.md               the core prompt (operating loop, rules, self-review gate)
-│   ├── references/            27 deep-dive guides, loaded on demand
+│   ├── references/            28 deep-dive guides, loaded on demand
 │   │   ├── luau-modern.md         strict types, task library, idioms, pitfalls
 │   │   ├── deprecated-apis.md     hand-written migration guide + "NOT deprecated" table
 │   │   ├── deprecated-index.md    GENERATED from official docs: ~560 deprecated members
@@ -140,35 +151,40 @@ cluau/
 │   │   ├── architecture.md        containers, replication, services/controllers, streaming
 │   │   ├── networking-security.md threat model, validation, rate limits, anti-cheat
 │   │   ├── data-persistence.md    session locking, ProfileStore, budgets, failure modes
-│   │   ├── ui-design-system.md    art direction → tokens → components → anti-slop audit
+│   │   ├── ui-design-system.md    how designers work → presets → tokens → components → anti-slop audit
+│   │   ├── ui-screen-recipes.md   10 screen layouts (HUD by genre, shop, inventory, rewards, trade…)
 │   │   ├── performance.md         profiling workflow, scripts, physics, network, memory
 │   │   ├── monetization-policy.md ProcessReceipt, passes, loot-box odds, dark patterns
 │   │   ├── game-design.md         loops per genre, progression math, economy, FTUE
 │   │   ├── debugging-testing.md   error → cause → fix table, test checklists
 │   │   └── mongolian-glossary.md  consistent Mongolian terminology
-│   ├── templates/             25 production Luau modules + design-doc templates (lint-clean; pure ones unit-tested)
+│   ├── templates/             27 production Luau modules + design-doc templates (lint-clean; pure ones unit-tested)
 │   │   ├── server/            Main.server, DataService, MonetizationService, ShopService, ModerationService,
 │   │   │                      TradeLogic + TradeService, RoundService, LeaderboardService, MovementService
 │   │   ├── client/            Main.client, UIController, InputController
-│   │   ├── shared/            Net, Guard, RateLimiter, Trove, Config, BufferCodec
-│   │   └── ui/                Theme (design tokens), Components (stateful primitives)
+│   │   ├── shared/            Net, Guard, RateLimiter, Trove, Config, BufferCodec, Restock, Spring
+│   │   └── ui/                Theme (tokens from a preset), ThemePresets (generated), Components (stateful, sprung)
 │   ├── scripts/
-│   │   ├── luau_lint.py       59 hand rules (incl. security CL110–CL118) + 391 generated deprecated names
+│   │   ├── luau_lint.py       61 hand rules (incl. security CL110–CL118, UI tokens CL097–CL098) + 391 generated deprecated names
 │   │   ├── data/              deprecated_apis.json (generated)
 │   │   ├── scaffold.py        Rojo project generator
 │   │   ├── migrate_legacy.py  safe automatic modernization of legacy Luau
 │   │   ├── audit_project.py   remote/placement/persistence map of a codebase
-│   │   └── economy_sim.py     progression simulator with grind-wall detection
-│   └── assets/project/        default.project.json, selene.toml, stylua.toml, rokit.toml, .luaurc
+│   │   ├── economy_sim.py     progression simulator with grind-wall detection
+│   │   └── style_tile.py      renders theme presets as HTML style tiles (palette, type, buttons, HUD mock)
+│   └── assets/
+│       ├── project/           default.project.json, selene.toml, stylua.toml, rokit.toml, .luaurc
+│       └── themes/            7 design presets (JSON source of truth)
 ├── skills/cluau/workflows/    10 step-by-step playbooks (new game, debug, migrate, audits, UI, launch)
 ├── agents/cluau-reviewer.md   independent adversarial reviewer (Claude Code plugin agent)
 ├── evals/cases.json           19 Mongolian/English behavioral evals
 ├── tests/
-│   ├── luau/                  Lune specs for pure templates (57 tests)
+│   ├── luau/                  Lune specs for pure templates + compile check of every template (91 tests)
 │   ├── fixtures/              good/bad/security fixtures for the linter
 │   └── test_*.py              linter, eval-grader tests
 ├── tools/
 │   ├── build.py               validate + package release zips
+│   ├── build_themes.py        validate presets (contrast, fonts) → generate ThemePresets.luau
 │   ├── sync_deprecations.py   regenerate deprecation data from Roblox/creator-docs
 │   └── verify_api_refs.py     every Class:Member in the skill must exist in the docs
 └── .github/workflows/         CI (tests, skill check, Luau syntax, docs verify), weekly docs drift, releases
@@ -208,6 +224,9 @@ python3 skills/cluau/scripts/luau_lint.py src/ --format json
 # Generate a Rojo project with every template wired up
 python3 skills/cluau/scripts/scaffold.py ./my-game --name my-game
 cd my-game && rokit install && rojo serve
+
+# Preview the UI presets (or your own theme JSON) before building screens
+python3 skills/cluau/scripts/style_tile.py candy orbit -o tiles.html
 ```
 
 Suppress a finding with `-- cluau-ignore CL060` on the line, or `--!cluau-ignore-file` in the first lines of a file.

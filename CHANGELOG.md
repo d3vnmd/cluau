@@ -6,6 +6,48 @@ All notable changes to **cluau** are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-23
+
+Designer-quality UI: Cluau now works the way a UI designer does (mood → style tile → preset → wireframe →
+states), so screens stop looking like the same AI template with a different hue.
+
+### Added
+- **7 theme presets** (`skills/cluau/assets/themes/*.json`): lantern, meadow, candy, orbit, grimoire, hush, arena.
+  Each is a whole *shape language* — button style (chunky / raised / flat / outline / text), shadow (hard / soft /
+  none), gloss, radii, stroke weights, two font families + a numbers face, and a motion personality (spring
+  frequency/damping) — matched to genres, not just a palette.
+- **`tools/build_themes.py`** — validates presets (WCAG contrast for Text/Surface, TextMuted, TextOnBackground,
+  OnAccent, OnDanger; real Roblox font families only; ≤ 3 families) and generates
+  `templates/ui/ThemePresets.luau`; `--check` runs in CI and `tools/build.py check`.
+- **`scripts/style_tile.py`** — renders presets (or a custom theme JSON) to an HTML style tile: palette with
+  contrast ratios, type specimen, buttons in every state, currency pill, progress, toast, rarity cards, and a
+  16:9 HUD/shop mock. Judge the look before writing a Frame.
+- **`templates/shared/Spring.luau`** — damped spring (fixed substeps, Lune-tested) used by Components for press,
+  hover and sink motion; Reduced Motion snaps.
+- **`references/ui-screen-recipes.md`** — 10 layouts designers reuse (HUD per genre, shop, inventory, item detail,
+  daily rewards, quest tracker, settings, results, trade, loading) with states and mistakes.
+- **ui-design-system.md §1b "How designers actually work"** and designer techniques (60-30-10, value before hue,
+  depth system, gloss rules, neutral disabled, nested radii, numbers face, real copy).
+- **Lint:** CL097 raw `Color3` in UI code (use role tokens), CL098 more than 3 font families in one file.
+- **Tests:** `tests/test_themes.py` (contrast math, preset validity, distinct presets, generated file in sync,
+  style tile renders) and `tests/luau/Compile.spec.luau` (every template parses and compiles with Luau).
+
+### Changed
+- `Theme.luau` reads the chosen preset (`local PRESET = "lantern"`) and supports `COLOR_OVERRIDES` to make a
+  preset your own; exposes `Shape`, `Spring`, `Font.Numbers`, `TextOnBackground`, personality-scaled motion.
+- `Components.button` is built as root → depth shadow + face, so chunky buttons sink into a hard shadow,
+  raised buttons lift on a soft one, flat/outline use caps; gloss is a gradient; disabled is neutral and matte.
+  New `fill` prop, `face` handle and `Components.buttonHeight`.
+- `Components.panel` returns `{instance, face, body, closeButton}` with theme depth; close button is a real
+  themed button with a drawn X.
+- `UIController` shop cards derive their height from tokens (no overflow on deep-shadow themes); coin counter
+  uses the numbers face.
+- `scaffold.py` places `ThemePresets.luau` and `Spring.luau`.
+
+### Fixed
+- Modal panel could sit under its own click-to-close scrim (same Sibling ZIndex) — panel now ZIndex 2.
+- Toast fade-out could hang a thread forever when the toast was evicted mid-fade.
+
 ## [1.3.0] - 2026-11-23
 
 Competitive gap release: what the best Roblox skills (roblox-suite, ro-engineer) and Anthropic's skill
@@ -156,7 +198,8 @@ big-studio practice, with ideas adapted from excaldev/ro-engineer (MIT).
 - `tools/build.py` validation and packaging; CI and tag-driven GitHub Release workflows.
 - Bilingual (Mongolian / English) README, example prompts, contributing guide.
 
-[Unreleased]: https://github.com/d3vnmd/cluau/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/d3vnmd/cluau/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.4.0
 [1.3.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.3.0
 [1.2.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.2.0
 [1.1.0]: https://github.com/d3vnmd/cluau/releases/tag/v1.1.0

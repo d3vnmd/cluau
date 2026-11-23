@@ -1,0 +1,77 @@
+{
+  "name": "Meadow",
+  "mood": "Hand-drawn garden journal: cream paper, ink-brown outlines, sage and tomato accents, chunky friendly buttons that squish.",
+  "genres": [
+    "farming",
+    "pets",
+    "cozy simulator",
+    "hangout"
+  ],
+  "colors": {
+    "Background": "#EFE4CF",
+    "Surface": "#FBF4E6",
+    "SurfaceRaised": "#FFFBF2",
+    "SurfaceSunken": "#E3D5BC",
+    "Border": "#4A3A2C",
+    "BorderStrong": "#2E241B",
+    "TextMuted": "#6E5D4C",
+    "Text": "#2E241B",
+    "TextOnBackground": "#2E241B",
+    "Accent": "#BC4A2B",
+    "AccentHover": "#BF4C2C",
+    "AccentPressed": "#A83F25",
+    "AccentShadow": "#6E2814",
+    "OnAccent": "#FFF8EE",
+    "Success": "#5F9A4A",
+    "Warning": "#D99A2B",
+    "Danger": "#B33A2F",
+    "OnDanger": "#FFF5F0",
+    "Scrim": "#2E241B",
+    "Currency": "#E9A825"
+  },
+  "rarity": {
+    "Common": "#9C8F7E",
+    "Uncommon": "#6DA35A",
+    "Rare": "#4F8FC0",
+    "Epic": "#9C6BC2",
+    "Legendary": "#E2A12A"
+  },
+  "fonts": {
+    "display": [
+      "FredokaOne",
+      "Regular"
+    ],
+    "heading": [
+      "FredokaOne",
+      "Regular"
+    ],
+    "body": [
+      "Nunito",
+      "SemiBold"
+    ],
+    "bodyBold": [
+      "Nunito",
+      "Bold"
+    ],
+    "numbers": [
+      "FredokaOne",
+      "Regular"
+    ]
+  },
+  "shape": {
+    "radiusSM": 10,
+    "radiusMD": 16,
+    "strokeThin": 2,
+    "strokeBold": 3,
+    "buttonStyle": "chunky",
+    "shadow": "hard",
+    "shadowOffset": 5,
+    "gloss": true
+  },
+  "motion": {
+    "personality": "bouncy",
+    "springFrequency": 4.2,
+    "springDamping": 0.55
+  },
+  "rarityNote": "Rarity colors are desaturated to sit inside the palette; rarity is always also shown as text."
+}

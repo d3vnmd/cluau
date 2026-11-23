@@ -1,0 +1,77 @@
+{
+  "name": "Orbit",
+  "mood": "Clean orbital HUD: graphite glass-free panels, one cyan signal color, hairline strokes, monospace telemetry, instant responses.",
+  "genres": [
+    "sci-fi",
+    "shooter",
+    "space",
+    "racing"
+  ],
+  "colors": {
+    "Background": "#0B0E12",
+    "Surface": "#12171D",
+    "SurfaceRaised": "#1A2129",
+    "SurfaceSunken": "#080A0D",
+    "Border": "#26303B",
+    "BorderStrong": "#3A4856",
+    "TextMuted": "#8796A6",
+    "Text": "#E6EDF3",
+    "TextOnBackground": "#E6EDF3",
+    "Accent": "#3FD5E8",
+    "AccentHover": "#68E1F0",
+    "AccentPressed": "#26B7CA",
+    "AccentShadow": "#167784",
+    "OnAccent": "#04181B",
+    "Success": "#53D18B",
+    "Warning": "#F1C04F",
+    "Danger": "#F2555A",
+    "OnDanger": "#1C0607",
+    "Scrim": "#000000",
+    "Currency": "#F1C04F"
+  },
+  "rarity": {
+    "Common": "#9AA8B5",
+    "Uncommon": "#53D18B",
+    "Rare": "#4FA3F7",
+    "Epic": "#A97CF2",
+    "Legendary": "#F1C04F"
+  },
+  "fonts": {
+    "display": [
+      "Michroma",
+      "Regular"
+    ],
+    "heading": [
+      "TitilliumWeb",
+      "Bold"
+    ],
+    "body": [
+      "TitilliumWeb",
+      "Regular"
+    ],
+    "bodyBold": [
+      "TitilliumWeb",
+      "SemiBold"
+    ],
+    "numbers": [
+      "RobotoMono",
+      "Medium"
+    ]
+  },
+  "shape": {
+    "radiusSM": 2,
+    "radiusMD": 4,
+    "strokeThin": 1,
+    "strokeBold": 1,
+    "buttonStyle": "outline",
+    "shadow": "none",
+    "shadowOffset": 0,
+    "gloss": false
+  },
+  "motion": {
+    "personality": "precise",
+    "springFrequency": 7,
+    "springDamping": 1.0
+  },
+  "rarityNote": "Rarity colors are desaturated to sit inside the palette; rarity is always also shown as text."
+}

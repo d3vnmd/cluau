@@ -11,8 +11,8 @@ Produces:
     <target>/src/server/Services/{DataService,MonetizationService,ShopService}.luau
     <target>/src/client/Main.client.luau
     <target>/src/client/Controllers/UIController.luau
-    <target>/src/shared/{Config,Net,Guard,RateLimiter,Trove}.luau
-    <target>/src/shared/UI/{Theme,Components}.luau
+    <target>/src/shared/{Config,Net,Guard,RateLimiter,Trove,Spring}.luau
+    <target>/src/shared/UI/{Theme,ThemePresets,Components}.luau
 
 Studio-only users: create the same hierarchy by hand (see SKILL.md §10 for Instance types).
 """
@@ -54,6 +54,8 @@ FILE_MAP = {
     "shared/Trove.luau": "src/shared/Trove.luau",
     "ui/Theme.luau": "src/shared/UI/Theme.luau",
     "ui/Components.luau": "src/shared/UI/Components.luau",
+    "ui/ThemePresets.luau": "src/shared/UI/ThemePresets.luau",
+    "shared/Spring.luau": "src/shared/Spring.luau",
 }
 
 ASSET_MAP = {

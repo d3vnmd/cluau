@@ -269,8 +269,8 @@ Full system: `references/ui-design-system.md`. Code: `templates/ui/`.
 
 ### 6.2 What to do instead
 
-1. **Derive a visual identity from the game** before touching a Frame. Write a one-line art direction: *"Hand-painted medieval tavern: parchment neutrals, oxblood accent, chunky serif headers"*, *"Clean sci-fi HUD: graphite, one cyan accent, thin strokes, monospace numbers"*. Every choice follows from that line.
-2. **Use a token system** (`templates/ui/Theme.luau`): 1 primary accent, 1 optional secondary, a 5–7 step neutral ramp tinted toward the accent hue, semantic success/warning/danger. Spacing scale on a 4 px grid (4, 8, 12, 16, 24, 32, 48). Type scale with 4–5 sizes. Radius scale with 2–3 values (e.g. 4 / 8 / 999 for pills). Motion: 0.12 s (press), 0.18 s (hover), 0.25–0.35 s (panel), `Quad`/`Quint` `Out`.
+1. **Work like a designer, not a generator** (ui-design-system.md §1b): mood line → pick the closest preset (`assets/themes/*.json`: lantern, meadow, candy, orbit, grimoire, hush, arena — each a full shape/type/motion language, not a palette) → *make it yours* (change the accent, one font, the radius) → render a style tile (`scripts/style_tile.py`) and judge it before writing a Frame → wireframe the screen (`references/ui-screen-recipes.md`) → squint test → every state. Write the mood line: *"Hand-painted medieval tavern: parchment neutrals, oxblood accent, chunky serif headers"*.
+2. **Use a token system** (`templates/ui/Theme.luau` reads the preset from `ThemePresets.luau`; buttons follow `Theme.Shape.ButtonStyle` — chunky/raised/flat/outline/text — and press with a spring, `Theme.Spring`): 1 primary accent, 1 optional secondary, a 5–7 step neutral ramp tinted toward the accent hue, semantic success/warning/danger. Spacing scale on a 4 px grid (4, 8, 12, 16, 24, 32, 48). Type scale with 4–5 sizes. Radius scale with 2–3 values (e.g. 4 / 8 / 999 for pills). Motion: 0.12 s (press), 0.18 s (hover), 0.25–0.35 s (panel), `Quad`/`Quint` `Out`.
 3. **Max two font families** (one display, one UI) via `FontFace`. Numbers that change (coins, timers) use tabular-feeling fonts or fixed-width containers so they don't jitter.
 4. **Hierarchy through size, weight, color and space** — not boxes inside boxes. Not every element needs a background.
 5. **Layout with `UIListLayout`/`UIGridLayout`/`UIPadding`/`UIFlexItem`**, not hand-placed offsets. Mix Scale + Offset deliberately; constrain with `UIAspectRatioConstraint` / `UISizeConstraint` / `UITextSizeConstraint`.
@@ -288,7 +288,7 @@ Full system: `references/ui-design-system.md`. Code: `templates/ui/`.
 
 ### 6.3 UI self-check (run before showing UI code)
 
-Would a player think "a designer made this for *this* game"? Is there exactly one obvious primary action per screen? Does it work at 1280×720, 1920×1080, and an iPhone portrait/landscape with notch? Can it be fully used with a gamepad? Is every color from the token table? Are there zero emoji? If any answer is no — fix before replying.
+Would a player think "a designer made this for *this* game"? Is there exactly one obvious primary action per screen? Does it work at 1280×720, 1920×1080, and an iPhone portrait/landscape with notch? Can it be fully used with a gamepad? Is every color from the token table (lint CL097)? Two font families plus a numbers face at most (CL098)? Are there zero emoji? Does the disabled state read as *off* (neutral), not as a faded accent? If any answer is no — fix before replying.
 
 ---
 
@@ -349,7 +349,7 @@ Full detail: `references/performance.md`.
 | New project / "where do I put this" | `references/architecture.md`, `assets/project/` |
 | Remotes, anti-cheat, admin, trading | `references/networking-security.md` |
 | Saving, leaderboards, cross-server | `references/data-persistence.md` |
-| Any UI/GUI/HUD/menu/shop | `references/ui-design-system.md`, `templates/ui/*` |
+| Any UI/GUI/HUD/menu/shop | `references/ui-design-system.md`, `references/ui-screen-recipes.md` (10 screen layouts), `templates/ui/*`, `assets/themes/` |
 | Lag, memory, network usage | `references/performance.md` |
 | Game passes, products, gacha, ads | `references/monetization-policy.md` |
 | Game concept, loops, progression, retention | `references/game-design.md` |
@@ -370,7 +370,7 @@ Full detail: `references/performance.md`.
 | D1/D7, first session, hooks (ethical) | `references/retention-design.md` |
 | Is API X deprecated? What replaced it? | `references/deprecated-index.md` (generated, complete), `references/platform-features.md` (official "use now" feed) |
 
-Templates (copy, then adapt names). All are `--!strict` and lint-clean; the pure modules (`Guard`, `RateLimiter`, `BufferCodec`, `Trove`, `TradeLogic`) have Lune unit tests in the repository (`tests/luau/`). Engine-facing modules are linted and API-verified but still need a Studio playtest:
+Templates (copy, then adapt names). All are `--!strict` and lint-clean; the pure modules (`Guard`, `RateLimiter`, `BufferCodec`, `Trove`, `TradeLogic`, `Restock`, `Spring`) have Lune unit tests in the repository (`tests/luau/`). Engine-facing modules are linted and API-verified but still need a Studio playtest:
 
 | File | Purpose | Type / Location |
 |---|---|---|
@@ -395,8 +395,10 @@ Templates (copy, then adapt names). All are `--!strict` and lint-clean; the pure
 | `templates/server/NpcService.luau` | Patrol/chase/return/attack AI for all NPCs in one 5 Hz loop, pathfinding with blocked-path recovery | ModuleScript in `ServerScriptService/Services` |
 | `templates/client/AudioController.luau` | Audio API mixer: Music/SFX buses → compressor → output, pooled UI sounds, 3D one-shots, saved volumes | ModuleScript in `StarterPlayerScripts/Controllers` |
 | `templates/docs/*.md` | Game design doc, system design (ownership map, remotes, failure modes), plan | Documents, not code |
-| `templates/ui/Theme.luau` | Design tokens | ModuleScript in `ReplicatedStorage/Shared/UI` |
-| `templates/ui/Components.luau` | Button/Panel/Label/Modal with states, gamepad, safe areas | ModuleScript in `ReplicatedStorage/Shared/UI` |
+| `templates/ui/Theme.luau` | Design tokens from the chosen preset (`local PRESET = "lantern"`) | ModuleScript in `ReplicatedStorage/Shared/UI` |
+| `templates/ui/ThemePresets.luau` | 7 presets, generated from `assets/themes/*.json` (never hand-edit) | ModuleScript in `ReplicatedStorage/Shared/UI` |
+| `templates/ui/Components.luau` | Button (5 shape styles, spring press, gloss)/Panel (depth)/Label/Modal with states, gamepad, safe areas | ModuleScript in `ReplicatedStorage/Shared/UI` |
+| `templates/shared/Spring.luau` | Critically/under-damped spring for UI motion (unit-tested) | ModuleScript in `ReplicatedStorage/Shared` |
 | `templates/client/UIController.luau` | Example HUD + shop screen built from components | ModuleScript in `StarterPlayerScripts/Controllers` |
 
 Tools bundled with this skill (Python 3, no dependencies):
@@ -405,6 +407,7 @@ Tools bundled with this skill (Python 3, no dependencies):
 - `scripts/migrate_legacy.py <paths> [--write]` — safe automatic modernization (wait→task.wait, :connect→:Connect, game.X→GetService, SetPrimaryPartCFrame→PivotTo, pre-2025 names→…Async…); strings/comments untouched; lists what needs manual migration.
 - `scripts/audit_project.py <src>` — studio-style map: every remote handler (validated? rate-limited? yields?), client/server placement errors, DataStore map, ProcessReceipt/BindToClose, lint summary.
 - `scripts/economy_sim.py <economy.json>` (`--example` for a starter) — time-to-unlock table with SLOW_START / GRIND_WALL / SPIKE / TRIVIAL / UNREACHABLE flags.
+- `scripts/style_tile.py [preset…] -o tiles.html` — renders presets (or your own theme JSON) as style tiles: palette with contrast ratios, type, buttons in every state, currency pill, rarity cards and a HUD/shop mock. Show it to the user before building screens.
 - `scripts/scaffold.py <dir>` — writes a Rojo project (`default.project.json`, Selene, StyLua, Rokit, `.luaurc`) with every template in the right place. Use it when the user works with Rojo/VS Code; for Studio-only users give the Explorer hierarchy instead.
 
 ---
