@@ -40,6 +40,7 @@ export type PlayerData = {
 	Settings: { Music: number, Sfx: number, ReducedMotion: boolean },
 	ProcessedReceipts: { [string]: number },
 	AppliedTrades: { [string]: number }, -- tradeId -> os.time(); lets TradeService reconcile half-saved trades
+	StockPurchases: { Slot: number, Counts: { [string]: number } }, -- LiveOps per-player stock for the current slot
 	Stats: { JoinCount: number, PlaytimeSeconds: number },
 }
 
@@ -81,6 +82,7 @@ local TEMPLATE: PlayerData = {
 	Settings = { Music = 0.6, Sfx = 0.8, ReducedMotion = false },
 	ProcessedReceipts = {},
 	AppliedTrades = {},
+	StockPurchases = { Slot = -1, Counts = {} },
 	Stats = { JoinCount = 0, PlaytimeSeconds = 0 },
 }
 

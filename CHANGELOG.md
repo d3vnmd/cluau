@@ -32,6 +32,18 @@ practices have that Cluau lacked — rebuilt around Cluau's strengths (tests, ve
   (Audio API mixer), and design docs (`templates/docs/`: game design doc, system design, plan).
 - **Paired evals:** `run_evals.py compare <baseline> <skill>`; 7 new cases (26 total).
 
+### Fixed (independent review of this release's new templates)
+- **LiveOpsService:** per-player stock limits lived in server memory and reset on rejoin/server hop → now in the
+  session-locked profile (`StockPurchases`); `ReleaseStock` added; guidance not to gate ProcessReceipt on stock;
+  events are only announced after the MemoryStore flag is stored (a failed write used to self-cancel the event
+  everywhere); out-of-order messages can't replace a newer event.
+- **NpcService:** a tagged template outside workspace (e.g. ServerStorage) made `SetNetworkOwner` throw and
+  stopped every NPC → workspace-only registration, `CanSetNetworkOwnership` guard, per-instance `pcall`, re-register
+  on ancestry change; stale path results (from an old mode/goal) are dropped via request ids.
+- **AudioController:** crossfades now fade the track, not the bus — saved volumes can't be overwritten and rapid
+  track changes can't ratchet music toward silence; previous fades are cancelled.
+- `sharp-edges.md`: CX-66 (in-memory per-player limits), CX-67 (stale async results), CX-68 (startup loops).
+
 ### Changed
 - `tools/build.py` also verifies `workflows/` links. Lune suite: 57 specs.
 

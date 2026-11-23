@@ -359,7 +359,7 @@ Full detail: `references/performance.md`.
 | Competitive movement, prediction, `AuthorityMode` | `references/server-authority.md` |
 | Models, Blender, textures, rigs, animation, lighting, free models, AI assets | `references/assets-pipeline.md` |
 | Game feel, audio, accessibility, QA, launch, live-ops | `references/polish-qa-launch.md` |
-| Code review, bug hunting, "what can go wrong" | `references/sharp-edges.md` (65 ID'd bugs), `references/review-workflow.md` (independent reviewer) |
+| Code review, bug hunting, "what can go wrong" | `references/sharp-edges.md` (68 ID'd bugs), `references/review-workflow.md` (independent reviewer) |
 | Rojo, CI, evidence levels | `references/toolchain-workflow.md` |
 | Studio MCP: inspect, edit, playtest, screenshot; Open Cloud via MCP | `references/studio-mcp.md` |
 | Publishing from CI, API keys, 429s, support tooling, bans | `references/open-cloud.md` |

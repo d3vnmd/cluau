@@ -40,6 +40,7 @@ type Npc = {
 	waypoints: { PathWaypoint },
 	waypointIndex: number,
 	computing: boolean,
+	requestId: number, -- bumped whenever plans change; late path results with an old id are dropped
 	lastPathAt: number,
 	lastGoal: Vector3?,
 	patrolIndex: number,
@@ -105,11 +106,18 @@ local function findTarget(npc: Npc): Player?
 	return best
 end
 
+-- Invalidate any in-flight path and clear the current one (call on every mode/goal change).
+local function resetPlan(npc: Npc)
+	npc.requestId += 1
+	npc.waypoints = {}
+end
+
 local function requestPath(npc: Npc, goal: Vector3)
 	if npc.computing then
 		return
 	end
 	npc.computing = true
+	local myRequest = npc.requestId
 	npc.lastPathAt = os.clock()
 	npc.lastGoal = goal
 	task.spawn(function()
@@ -122,8 +130,8 @@ local function requestPath(npc: Npc, goal: Vector3)
 		})
 		local ok = pcall(path.ComputeAsync, path, npc.root.Position, goal)
 		npc.computing = false
-		if npcs[npc.model] ~= npc then
-			return -- NPC removed while computing
+		if npcs[npc.model] ~= npc or npc.requestId ~= myRequest then
+			return -- NPC removed, or its mode/goal changed while computing: this path is stale
 		end
 		if npc.blockedConnection then
 			npc.blockedConnection:Disconnect()
@@ -189,14 +197,14 @@ local function step(npc: Npc)
 		or (targetRoot.Position - npc.root.Position).Magnitude > attribute(npc.model, "LoseRange", 60)) then
 		npc.target = nil
 		npc.mode = "Return"
-		npc.waypoints = {}
+		resetPlan(npc)
 	end
 	if npc.target == nil then
 		local found = findTarget(npc)
 		if found then
 			npc.target = found
 			npc.mode = "Chase"
-			npc.waypoints = {}
+			resetPlan(npc)
 			targetRoot = aliveRoot(found)
 		end
 	end
@@ -204,7 +212,7 @@ local function step(npc: Npc)
 	if npc.mode == "Chase" and targetRoot then
 		local distance = (targetRoot.Position - npc.root.Position).Magnitude
 		if distance < DIRECT_CHASE_DISTANCE and hasLineOfSight(npc, targetRoot) then
-			npc.waypoints = {}
+			resetPlan(npc)
 			npc.humanoid:MoveTo(targetRoot.Position)
 		else
 			local moved = npc.lastGoal == nil or (targetRoot.Position - (npc.lastGoal :: Vector3)).Magnitude > REPATH_TARGET_MOVED
@@ -220,7 +228,7 @@ local function step(npc: Npc)
 	if npc.mode == "Return" then
 		if (npc.home - npc.root.Position).Magnitude < WAYPOINT_REACHED * 2 then
 			npc.mode = "Patrol"
-			npc.waypoints = {}
+			resetPlan(npc)
 		elseif #npc.waypoints == 0 or now - npc.lastPathAt > REPATH_SECONDS * 2 then
 			requestPath(npc, npc.home)
 		end
@@ -236,7 +244,7 @@ local function step(npc: Npc)
 	local point = points[(npc.patrolIndex - 1) % #points + 1]
 	if (point.Position - npc.root.Position).Magnitude < WAYPOINT_REACHED * 2 then
 		npc.patrolIndex += 1
-		npc.waypoints = {}
+		resetPlan(npc)
 		return
 	end
 	if #npc.waypoints == 0 or now - npc.lastPathAt > REPATH_SECONDS * 3 then
@@ -245,8 +253,27 @@ local function step(npc: Npc)
 	followPath(npc)
 end
 
+local pendingAncestry: { [Instance]: RBXScriptConnection } = {}
+
 local function register(instance: Instance)
 	if not instance:IsA("Model") or npcs[instance] then
+		return
+	end
+	-- Tagged templates often live in ServerStorage: only simulate NPCs that are in the world,
+	-- and register them later if they get moved into workspace.
+	if not instance:IsDescendantOf(workspace) then
+		if pendingAncestry[instance] == nil then
+			pendingAncestry[instance] = instance.AncestryChanged:Connect(function()
+				if instance:IsDescendantOf(workspace) then
+					pendingAncestry[instance]:Disconnect()
+					pendingAncestry[instance] = nil
+					register(instance)
+				elseif instance.Parent == nil then
+					pendingAncestry[instance]:Disconnect()
+					pendingAncestry[instance] = nil
+				end
+			end)
+		end
 		return
 	end
 	local humanoid = instance:FindFirstChildOfClass("Humanoid")
@@ -255,7 +282,8 @@ local function register(instance: Instance)
 		warn(`[NpcService] {instance:GetFullName()} needs a Humanoid and a HumanoidRootPart`)
 		return
 	end
-	if not root.Anchored then
+	local canSetOwner = root:CanSetNetworkOwnership() -- false for anchored/welded-to-anchored parts
+	if canSetOwner then
 		root:SetNetworkOwner(nil)
 	end
 	npcs[instance] = {
@@ -268,6 +296,7 @@ local function register(instance: Instance)
 		waypoints = {},
 		waypointIndex = 1,
 		computing = false,
+		requestId = 0,
 		lastPathAt = 0,
 		lastGoal = nil,
 		patrolIndex = 1,
@@ -289,16 +318,25 @@ end
 function NpcService.Init() end
 
 function NpcService.Start()
-	CollectionService:GetInstanceAddedSignal(TAG):Connect(register)
+	local function safeRegister(instance: Instance)
+		local ok, err = pcall(register, instance)
+		if not ok then
+			warn(`[NpcService] failed to register {instance:GetFullName()}: {err}`)
+		end
+	end
+	CollectionService:GetInstanceAddedSignal(TAG):Connect(safeRegister)
 	CollectionService:GetInstanceRemovedSignal(TAG):Connect(unregister)
 	for _, instance in CollectionService:GetTagged(TAG) do
-		register(instance)
+		safeRegister(instance)
 	end
 	task.spawn(function()
 		while true do
 			for model, npc in npcs do
-				if model.Parent == nil then
+				if not model:IsDescendantOf(workspace) then
 					unregister(model)
+					if model.Parent ~= nil and model:HasTag(TAG) then
+						safeRegister(model) -- moved out of the world: wait for it to come back
+					end
 				else
 					local ok, err = pcall(step, npc)
 					if not ok then

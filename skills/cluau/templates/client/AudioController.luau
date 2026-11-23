@@ -33,6 +33,7 @@ local AudioController = {}
 local root: Folder
 local buses: { [Bus]: AudioFader } = {}
 local musicPlayer: AudioPlayer
+local musicFade: thread? = nil -- the running crossfade, cancelled when a new track starts
 local uiPool: { AudioPlayer } = {}
 local uiNext = 1
 
@@ -101,13 +102,17 @@ function AudioController.SetVolume(bus: Bus, volume: number)
 end
 
 --- Crossfades to a new looping track ("" or nil stops music).
+--- Fades the track's own AudioPlayer.Volume, never the bus: the bus holds the player's saved setting, so
+--- SetVolume during a fade and rapid track changes can't corrupt it.
 function AudioController.PlayMusic(asset: string?)
-	local fader = buses.Music
-	local target = fader.Volume
-	task.spawn(function()
+	if musicFade then
+		task.cancel(musicFade)
+	end
+	musicFade = task.spawn(function()
 		local steps = 15
+		local from = musicPlayer.Volume
 		for i = steps, 0, -1 do
-			fader.Volume = target * (i / steps)
+			musicPlayer.Volume = from * (i / steps)
 			task.wait(MUSIC_FADE_SECONDS / 2 / steps)
 		end
 		musicPlayer:Stop()
@@ -115,11 +120,12 @@ function AudioController.PlayMusic(asset: string?)
 			musicPlayer.Asset = asset
 			musicPlayer.TimePosition = 0
 			musicPlayer:Play()
+			for i = 0, steps do
+				musicPlayer.Volume = i / steps
+				task.wait(MUSIC_FADE_SECONDS / 2 / steps)
+			end
 		end
-		for i = 0, steps do
-			fader.Volume = target * (i / steps)
-			task.wait(MUSIC_FADE_SECONDS / 2 / steps)
-		end
+		musicFade = nil
 	end)
 end
 

@@ -73,6 +73,9 @@ Severity: **CRITICAL** = data loss, duplication, money, or full exploit · **HIG
 | CX-62 | MEDIUM | Randomness | Predictable or biased loot | `math.random` with ad-hoc weights; client-side rolls | Server `Random.new()` + cumulative weights; publish the same odds | — |
 | CX-63 | HIGH | Text | Moderation strike from player-named pets/signs | Filtering once at creation, showing forever | Filter when displayed to others; on failure show default | — |
 | CX-64 | MEDIUM | Input | Abilities fire while typing in chat or with a menu open | Ignoring `gameProcessedEvent`; no menu context | Input Action System contexts (disable Gameplay when menus open) | — |
+| CX-66 | HIGH | Economy | Per-player limits (stock, daily claims) bypassed by rejoining or hopping servers | Limit tracked in a server-memory table keyed by `Player`, cleared on leave | Store limits in the session-locked profile (or MemoryStore for global limits) and check+increment with the charge | — |
+| CX-67 | MEDIUM | Async | AI/UI acts on outdated results (walks to an old goal, shows old data) | A yielding request's result applied after the state that requested it changed | Request ids / generation counters; drop results whose id is stale | — |
+| CX-68 | HIGH | Startup | One bad tagged instance stops a whole service | Unprotected per-instance setup (e.g. `SetNetworkOwner` on a template in ServerStorage) inside the startup loop | Guard preconditions (`CanSetNetworkOwnership`, `IsDescendantOf(workspace)`), `pcall` per instance, log and continue | — |
 | CX-65 | MEDIUM | Performance | Server FPS drops with many NPCs | One Humanoid + script per NPC | Plain server tables + client rendering; single update loop at 5–10 Hz | — |
 
 ## How to spot them fast (review heuristics)
